@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'globals.dart';
@@ -8,7 +9,7 @@ void killedBy(Monster? monster, int other) {
   //signal(SIGINT, SIG_IGN)
 
   if (other != QUIT) {
-    rogue.gold = (rogue.gold * 9 / 10).toInt();
+    rogue.gold = rogue.gold * 9 ~/ 10;
   }
 
   String buf;
@@ -82,13 +83,14 @@ void putScores(Monster? monster, int other) {
   int i = 0;
   while (i < 10) {
     //L:
-    scores[i] = f.readLineSync();
+    scores[i] = ascii.decode(f.readSync(18));
     if (scores[i] == "") {
       break;
     }
     if (scores[i].length < 18) {
       message("error in score file format", 1);
-      cleanup("sorry, score file is out of order");
+      // TODO(sma): this function doesn't exist
+      // cleanup("sorry, score file is out of order");
    
 
  }
@@ -160,7 +162,7 @@ void putScores(Monster? monster, int other) {
   cleanUp("");
 }
 
-void insertScore(List<String> scores, int rank, int n, Monster monster, int other) {
+void insertScore(List<String> scores, int rank, int n, Monster? monster, int other) {
   for (int i = n - 1; i >= rank; i--) {
     if (i < 9) {
       scores[i + 1] = scores[i];
@@ -178,7 +180,7 @@ void insertScore(List<String> scores, int rank, int n, Monster monster, int othe
     buf += "a total winner";
   } else {
     buf += "killed by ";
-    String name = monsterNames[monster.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+    String name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
     if (isVowel(name)) {
       buf += "an ";
     } else {
@@ -187,7 +189,7 @@ void insertScore(List<String> scores, int rank, int n, Monster monster, int othe
     buf += name;
   }
   buf += " on level ${g.maxLevel} ";
-  if (other != WIN && g.hasAmulet == 1) {
+  if (other != WIN && g.hasAmulet) {
     buf += "with amulet";
   }
   buf += "\n";
@@ -205,7 +207,7 @@ void sellPack() {
 
   clear();
 
-  Object obj = rogue.pack.nextObject;
+  Object? obj = rogue.pack.nextObject;
   while (obj != null) {
     mvaddstr(1, 0, "Value      Item");
     if (obj.whatIs != FOOD) {

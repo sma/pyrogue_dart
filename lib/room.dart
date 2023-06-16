@@ -1,7 +1,7 @@
 import 'globals.dart';
 
 void lightUpRoom() {
-  if (g.blind) return;
+  if (g.blind > 0) return;
   Room r = rooms[g.currentRoom];
   for (int i = r.topRow; i <= r.bottomRow; i++) {
     for (int j = r.leftCol; j <= r.rightCol; j++) {
@@ -12,7 +12,7 @@ void lightUpRoom() {
 }
 
 void lightPassage(int row, int col) {
-  if (g.blind) return;
+  if (g.blind > 0) return;
   int iEnd = row < LINES - 2 ? 1 : 0;
   int jEnd = col < COLS - 1 ? 1 : 0;
 
@@ -28,7 +28,7 @@ void lightPassage(int row, int col) {
 }
 
 void darkenRoom(int rn) {
-  if (g.blind) return;
+  if (g.blind > 0) return;
   Room r = rooms[rn];
   for (int i = r.topRow + 1; i < r.bottomRow; i++) {
     for (int j = r.leftCol + 1; j < r.rightCol; j++) {
@@ -42,49 +42,49 @@ void darkenRoom(int rn) {
 }
 
 String getRoomChar(int mask, int row, int col) {
-  if (mask & MONSTER) {
+  if ((mask & MONSTER) != 0) {
     return getMonsterCharRowCol(row, col);
   }
-  if (mask & SCROLL) {
+  if ((mask & SCROLL) != 0) {
     return '?';
   }
-  if (mask & POTION) {
+  if ((mask & POTION) != 0) {
     return '!';
   }
-  if (mask & FOOD) {
+  if ((mask & FOOD) != 0) {
     return ':';
   }
-  if (mask & WAND) {
+  if ((mask & WAND) != 0) {
     return '/';
   }
-  if (mask & ARMOR) {
+  if ((mask & ARMOR) != 0) {
     return ']';
   }
-  if (mask & WEAPON) {
+  if ((mask & WEAPON) != 0) {
     return ')';
   }
-  if (mask & GOLD) {
+  if ((mask & GOLD) != 0) {
     return '*';
   }
-  if (mask & TUNNEL) {
+  if ((mask & TUNNEL) != 0) {
     return '#';
   }
-  if (mask & HORWALL) {
+  if ((mask & HORWALL) != 0) {
     return '-';
   }
-  if (mask & VERTWALL) {
+  if ((mask & VERTWALL) != 0) {
     return '|';
   }
-  if (mask & AMULET) {
+  if ((mask & AMULET) != 0) {
     return ',';
   }
-  if (mask & FLOOR) {
+  if ((mask & FLOOR) != 0) {
     return '.';
   }
-  if (mask & DOOR) {
+  if ((mask & DOOR) != 0) {
     return '+';
   }
-  if (mask & STAIRS) {
+  if ((mask & STAIRS) != 0) {
     return '%';
   }
   return ' ';
@@ -103,9 +103,7 @@ String getRoomChar(int mask, int row, int col) {
 
 int getRandRoom() {
   while (true) {
-    int i = getRand(0, MAXROOMS
-
- - 1);
+    int i = getRand(0, MAXROOMS - 1);
     if (rooms[i].isRoom) {
       return i;
     }
@@ -119,9 +117,11 @@ int fillRoomWithObjects(int rn) {
   if (n > N) n = N - 2;
 
   for (int i = 0; i < n; i++) {
+    int row;
+    int col;
     while (true) {
-      int row = getRand(r.topRow + 1, r.bottomRow - 1);
-      int col = getRand(r.leftCol + 1, r.rightCol - 1);
+      row = getRand(r.topRow + 1, r.bottomRow - 1);
+      col = getRand(r.leftCol + 1, r.rightCol - 1);
       if (screen[row][col] == FLOOR) break;
     }
     Object obj = getRandObject();

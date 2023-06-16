@@ -21,3 +21,4 @@ The `Object` didn't correctly initialize variables. `globals.dart` is done. (539
 `level.dart`, `main.dart`, `messages.dart` are done. (289 errors)
 `monster.dart` is done. (202 errors)
 `move.dart`, `object.dart`, `pack.dart`, `play.dart` are done (113 errors)
+`room.dart`, `score.dart` are done (88 errors)
