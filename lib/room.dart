@@ -2,7 +2,7 @@ import 'globals.dart';
 
 void lightUpRoom() {
   if (g.blind) return;
-  Room r = rooms[g.current_room];
+  Room r = rooms[g.currentRoom];
   for (int i = r.topRow; i <= r.bottomRow; i++) {
     for (int j = r.leftCol; j <= r.rightCol; j++) {
       mvaddch(i, j, getRoomChar(screen[i][j], i, j));

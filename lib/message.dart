@@ -4,44 +4,44 @@ void message(String msg, [int intrpt = 0]) {
   if (intrpt != 0) {
     g.interrupted = 1;
   }
-  g.cant_int = 1;
+  g.cantInt = 1;
   slurp();
 
-  if (g.message_cleared == false) {
-    mvaddstr(MIN_ROW - 1, g.message_col, MORE);
+  if (g.messageCleared == false) {
+    mvaddstr(MIN_ROW - 1, g.messageCol, MORE);
     refresh();
     wait_for_ack("");
     check_message();
   }
 
-  g.message_line = msg;
+  g.messageLine = msg;
   mvaddstr(MIN_ROW - 1, 0, msg);
   addch(' ');
   refresh();
-  g.message_cleared = false;
-  g.message_col = msg.length;
+  g.messageCleared = false;
+  g.messageCol = msg.length;
 
-  if (g.did_int != 0) {
+  if (g.didInt != 0) {
     onintr();
   }
-  g.cant_int = 0;
+  g.cantInt = 0;
 }
 
 void remessage() {
-  if (g.message_line != null) {
-    message(g.message_line, 0);
+  if (g.messageLine != null) {
+    message(g.messageLine, 0);
   }
 }
 
 void check_message() {
-  if (g.message_cleared) {
+  if (g.messageCleared) {
     return;
   }
   move(MIN_ROW - 1, 0);
   clrtoeol();
   move(rogue.row, rogue.col);
   refresh();
-  g.message_cleared = true;
+  g.messageCleared = true;
 }
 
 void get_input_line(StringBuffer buf, int if_cancelled) {

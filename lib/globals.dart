@@ -492,6 +492,8 @@ class G {
   //int detectMonster = 0;
 }
 
+final g = G();
+
 // random.c
 Random _random = Random();
 

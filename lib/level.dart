@@ -22,12 +22,12 @@ var level_points = [
 ];
 
 void makeLevel() {
-  g.party_room = -1;
-  if (g.current_level < 126) {
-    g.current_level += 1;
+  g.partyRoom = -1;
+  if (g.currentLevel < 126) {
+    g.currentLevel += 1;
   }
-  if (g.current_level > g.max_level) {
-    g.max_level = g.current_level;
+  if (g.currentLevel > g.maxLevel) {
+    g.maxLevel = g.currentLevel;
   }
 
   int must_exists1;
@@ -57,7 +57,7 @@ void makeLevel() {
   }
   addDeadEnds();
 
-  if (!g.has_amulet && g.current_level >= AMULET_LEVEL) {
+  if (!g.hasAmulet && g.currentLevel >= AMULET_LEVEL) {
     putAmulet();
   }
 }
@@ -232,14 +232,14 @@ void clearLevel() {
       screen[i][j] = BLANK;
     }
   }
-  g.detect_monster = 0;
-  g.being_held = 0;
+  g.detectMonster = 0;
+  g.beingHeld = 0;
 }
 
 void printStats() {
-  var m = "Level: ${g.current_level}  Gold: ${rogue.gold}  Hp: ${rogue.hp_current}(${rogue.hp_max})" +
+  var m = "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hp_current}(${rogue.hp_max})" +
       "  Str: ${rogue.strength_current}(${rogue.strength_max})  Arm: ${getArmorClass(rogue.armor)}" +
-      "  Exp: ${rogue.exp}/${rogue.exp_points} ${g.hunger_str}";
+      "  Exp: ${rogue.exp}/${rogue.exp_points} ${g.hungerStr}";
 
   mvaddstr(LINES - 1, 0, m);
   clrtoeol();
@@ -344,12 +344,12 @@ bool onSameCol(int room1, int room2) {
 }
 
 void addDeadEnds() {
-  if (g.current_level <= 2) {
+  if (g.currentLevel <= 2) {
     return;
   }
 
   int start = getRand(0, MAXROOMS - 1);
-  int dead_end_percent = 12 + g.current_level * 2;
+  int dead_end_percent = 12 + g.currentLevel * 2;
 
   for (int i = 0; i < MAXROOMS; i++) {
     int j = (start + i) % MAXROOMS;
@@ -532,8 +532,8 @@ void putPlayer() {
     var row_col = getRandRowCol(FLOOR | IS_OBJECT);
     int row = row_col[0];
     int col = row_col[1];
-    g.current_room = getRoomNumber(row, col);
-    if (g.current_room != g.party_room) {
+    g.currentRoom = getRoomNumber(row, col);
+    if (g.currentRoom != g.partyRoom) {
       break;
     }
   }
@@ -554,23 +554,23 @@ bool checkUp() {
     message("I see no way up", 0);
     return false;
   }
-  if (!g.has_amulet) {
+  if (!g.hasAmulet) {
     message("your way is magically blocked", 0);
     return false;
   }
-  if (g.current_level == 1) {
+  if (g.currentLevel == 1) {
     win();
   } else {
-    g.current_level -= 2;
+    g.currentLevel -= 2;
     return true;
   }
 }
 
 void addExp(int e) {
-  rogue.exp_points += e;
+  rogue.expPoints += e;
 
-  if (rogue.exp_points >= level_points[rogue.exp - 1]) {
-    int new_exp = getExpLevel(rogue.exp_points);
+  if (rogue.expPoints >= level_points[rogue.exp - 1]) {
+    int new_exp = getExpLevel(rogue.expPoints);
     for (int i = rogue.exp + 1; i <= new_exp; i++) {
       message("welcome to level " + i.toString(), 0);
       int hp = getRand(3, 10);
