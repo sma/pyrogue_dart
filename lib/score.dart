@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'globals.dart';
+
 const String SCOREFILE = "scores";
 
 void killedBy(Monster monster, int other) {

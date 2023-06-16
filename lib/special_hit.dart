@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void specialHit(Monster monster) {
   String k = monster.ichar;
   if (k == 'A') {

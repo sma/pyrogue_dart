@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void zapp() {
   var firstMiss = true;
   var dir = getchar();

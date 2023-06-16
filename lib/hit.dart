@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void monsterHit(Monster monster, Object other) {
   if (g.fightMonster != null && monster != g.fightMonster) {
     g.fightMonster = null;

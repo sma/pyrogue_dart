@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void throwObject() {
   int firstMiss = 1;
   int dir = getchar();

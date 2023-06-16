@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void putMonsters() {
   var n = getRandom(3, 7);
 

@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void main() {
   init();
   while (true) {

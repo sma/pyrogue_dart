@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 int moves = 0;
 int h_exp = -1;
 int h_n = 0;

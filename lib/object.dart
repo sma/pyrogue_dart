@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void putObjects() {
   if (g.currentLevel < g.maxLevel) return;
 

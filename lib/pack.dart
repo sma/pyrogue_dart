@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 String CURSE_MESSAGE = "you can't, it appears to be cursed";
 
 Object addToPack(Object obj, Object pack, bool condense) {

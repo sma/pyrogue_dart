@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'dart:ffi'; // for Signal Handling
+
+import 'globals.dart';
 
 void init() {
   g.playerName = Platform.environment['USER'] ?? Platform.environment['USERNAME'];

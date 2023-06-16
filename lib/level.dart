@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 var level_points = [
   10,
   20,

@@ -1,3 +1,24 @@
+import 'dart:math';
+
+export 'hit.dart';
+export 'init.dart';
+export 'inventory.dart';
+export 'level.dart';
+export 'main.dart';
+export 'message.dart';
+export 'monster.dart';
+export 'move.dart';
+export 'object.dart';
+export 'pack.dart';
+export 'play.dart';
+export 'room.dart';
+export 'score.dart';
+export 'special_hit.dart';
+export 'throw.dart';
+export 'ui.dart';
+export 'use.dart';
+export 'zap.dart';
+
 // global constants and variables, without `g` prefix for convenience
 
 // monster.h
@@ -472,8 +493,6 @@ class G {
 }
 
 // random.c
-import 'dart:math';
-
 Random _random = Random();
 
 void srandom(int x) {

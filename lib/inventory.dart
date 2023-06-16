@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'globals.dart';
+
 List<String> metals = [
   "steel ",
   "bronze ",

@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void quaff() {
   final ch = getPackLetter("quaff what? ", POTION);
   if (ch == CANCEL) {

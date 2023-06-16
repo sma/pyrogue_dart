@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void message(String msg, [int intrpt = 0]) {
   if (intrpt != 0) {
     g.interrupted = 1;

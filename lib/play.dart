@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void playLevel() {
   int count = 0;
   while (true) {

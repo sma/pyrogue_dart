@@ -1,3 +1,5 @@
+import 'globals.dart';
+
 void lightUpRoom() {
   if (g.blind) return;
   Room r = rooms[g.current_room];
