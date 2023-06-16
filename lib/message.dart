@@ -10,7 +10,7 @@ void message(String msg, [int intrpt = 0]) {
   if (g.messageCleared == false) {
     mvaddstr(MIN_ROW - 1, g.messageCol, MORE);
     refresh();
-    wait_for_ack("");
+    waitForAck(false);
     check_message();
   }
 

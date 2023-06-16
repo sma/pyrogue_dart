@@ -61,8 +61,8 @@ Object? objectAt(ObjHolder pack, int row, int col) {
   return obj;
 }
 
-Object getLetterObject(String ch) {
-  Object obj = rogue.pack.nextObject;
+Object? getLetterObject(String ch) {
+  Object? obj = rogue.pack.nextObject;
   while (obj != null && obj.ichar != ch) {
     obj = obj.nextObject;
   }

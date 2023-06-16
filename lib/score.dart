@@ -155,7 +155,7 @@ void putScores(Monster monster, int other) {
   refresh();
   f.closeSync();
 
-  waitForAck("");
+  waitForAck(false);
 
   cleanUp("");
 }

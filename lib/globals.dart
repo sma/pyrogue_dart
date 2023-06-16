@@ -170,11 +170,11 @@ const int GOLD_PERCENT = 46;
 
 class Identity {
   final int value;
-  final String title;
+  String title;
   final String real;
   final int idStatus;
 
-  const Identity(this.value, this.title, this.real, this.idStatus);
+  Identity(this.value, this.title, this.real, this.idStatus);
 }
 
 class Object extends ObjHolder {
