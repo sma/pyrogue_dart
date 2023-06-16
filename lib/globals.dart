@@ -177,7 +177,7 @@ class Identity {
   const Identity(this.value, this.title, this.real, this.idStatus);
 }
 
-class Object {
+class Object extends ObjHolder {
   int mFlags;
   String damage;
   int quantity;
@@ -197,7 +197,7 @@ class Object {
   int toHitEnchantment;
   int whatIs;
   int pickedUp;
-  Object? nextObject;
+  // Object? nextObject;
 
   Object(
     this.mFlags,
@@ -219,8 +219,8 @@ class Object {
     tcol = 0,
     toHitEnchantment = 0,
     whatIs = 0,
-    pickedUp = 0,
-    nextObject = null;
+    pickedUp = 0;
+    // nextObject = null;
 
   Object copy() {
     return Object(
@@ -444,13 +444,13 @@ List<Room> rooms = List.generate(MAXROOMS, (_) => Room());
 class G {
   // hit.py
   Object? fightMonster;
-  int detectMonster = 0;
+  bool detectMonster = false;
   String hitMessage = "";
 
   // init.py
   String playerName = "";
-  int cantInt = 0;
-  int didInt = 0;
+  bool cantInt = false;
+  bool didInt = false;
   Exception? exc;
 
   // level.py
@@ -460,7 +460,7 @@ class G {
   int partyRoom = 0;
 
   // message.py
-  int messageCleared = 1;
+  bool messageCleared = true;
   String messageLine = "";
   int messageCol = 0;
 
@@ -476,7 +476,7 @@ class G {
   List<int> ichars = List<int>.filled(26, 0);
 
   // play.py
-  int interrupted = 0;
+  bool interrupted = false;
 
   // room.py
   int currentRoom = 0;
@@ -485,9 +485,9 @@ class G {
   int beingHeld = 0;
 
   // use.py
-  int halluc = 0;
-  int blind = 0;
-  int confused = 0;
+  bool halluc = false;
+  bool blind = false;
+  bool confused = false;
   //int detectMonster = 0;
 }
 

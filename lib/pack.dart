@@ -24,11 +24,11 @@ Object addToPack(Object obj, Object pack, bool condense) {
   return obj;
 }
 
-void removeFromPack(Object obj, Object pack) {
+void removeFromPack(Object obj, ObjHolder pack) {
   while (pack.nextObject != obj) {
     pack = pack.nextObject;
   }
-  pack.nextObject = pack.nextObject.nextObject;
+  pack.nextObject = pack.nextObject!.nextObject;
 }
 
 Object pickUp(int row, int col) {

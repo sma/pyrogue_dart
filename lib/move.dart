@@ -240,11 +240,11 @@ void moveOnto() {
   }
 }
 
-int isDirection(String c) {
+bool isDirection(String c) {
   return "hjklbyun".contains(c) || c == CANCEL;
 }
 
-int isPackLetter(String c) {
+bool isPackLetter(String c) {
   return "abcdefghijklmnopqrstuvwxyz".contains(c) || c == CANCEL || c == LIST;
 }
 

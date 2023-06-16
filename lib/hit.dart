@@ -1,16 +1,16 @@
 import 'globals.dart';
 
-void monsterHit(Monster monster, Object other) {
+void monsterHit(Monster monster, Object? other) {
   if (g.fightMonster != null && monster != g.fightMonster) {
     g.fightMonster = null;
   }
   monster.trow = -1;
-  double hitChance = monster.clasz;
+  int hitChance = monster.clasz;
   hitChance -= rogue.exp + rogue.exp;
   if (hitChance < 0) hitChance = 0;
 
   if (g.fightMonster == null) {
-    g.interrupted = 1;
+    g.interrupted = true;
   }
 
   var mn = monsterName(monster);
@@ -30,12 +30,13 @@ void monsterHit(Monster monster, Object other) {
     g.hitMessage = "";
   }
 
+  int damage;
   if (monster.ichar != 'F') {
-    var damage = getDamage(monster.damage, 1);
+    damage = getDamage(monster.damage, 1);
     var minus = (getArmorClass(rogue.armor) * 3.0) / 100.0 * damage;
     damage -= minus.toInt();
   } else {
-    var damage = monster.identified;
+    damage = monster.identified;
     monster.identified += 1;
   }
 
@@ -108,7 +109,7 @@ int getDamage(String ds, int r) {
   return total;
 }
 
-int getWDamage(Object obj) {
+int getWDamage(Object? obj) {
   if (obj == null) {
     return -1;
   }
@@ -120,7 +121,7 @@ int getWDamage(Object obj) {
   i += 1;
   var damage = getNumber(obj.damage.substring(i)) + obj.damageEnchantment;
 
-  return getDamage("$toHit"d"$damage", 1);
+  return getDamage("${toHit}d$damage", 1);
 }
 
 int getNumber(String s) {
@@ -133,7 +134,7 @@ int getNumber(String s) {
   return total;
 }
 
-int toHit(Object obj) {
+int toHit(Object? obj) {
   if (obj == null) {
     return 1;
   }
@@ -151,7 +152,7 @@ int damageForStrength(int s) {
   return 8;
 }
 
-int monsterDamage(Monster monster, int damage) {
+bool monsterDamage(Monster monster, int damage) {
   monster.quantity -= damage;
   if (monster.quantity <= 0) {
     var row = monster.row;
@@ -173,9 +174,9 @@ int monsterDamage(Monster monster, int damage) {
       g.beingHeld = 0;
     }
 
-    return 0;
+    return false;
   }
-  return 1;
+  return true;
 }
 
 void fight(bool toTheDeath) {
@@ -194,7 +195,7 @@ void fight(bool toTheDeath) {
     return;
   }
 
-  var row, col = getDirRc(ch, rogue.row, rogue.col);
+  var (row, col) = getDirRc(ch, rogue.row, rogue.col);
 
   if ((screen[row][col] & MONSTER == 0) || g.blind || hidingXeroc(row, col)) {
     //MN:
@@ -202,15 +203,15 @@ void fight(bool toTheDeath) {
     return;
   }
   g.fightMonster = objectAt(g.levelMonsters, row, col);
-  if ((g.fightMonster.mFlags & IS_INVIS != 0) && !g.detectMonster) {
+  if ((g.fightMonster!.mFlags & IS_INVIS) != 0 && !g.detectMonster) {
     //goto MN
     message("I see no monster there", 0);
     return;
   }
-  var possibleDamage = (getDamage(g.fightMonster.damage, 0) * 2 / 3);
+  var possibleDamage = (getDamage(g.fightMonster!.damage, 0) * 2 / 3);
 
   while (g.fightMonster != null) {
-    singleMoveRogue(ch, 0);
+    singleMoveRogue(ch, false);
     if (!toTheDeath && rogue.hpCurrent <= possibleDamage) {
       g.fightMonster = null;
     }
@@ -220,7 +221,7 @@ void fight(bool toTheDeath) {
   }
 }
 
-List<int> getDirRc(String dir, int row, int col) {
+(int, int) getDirRc(String dir, int row, int col) {
   if ('hyb'.contains(dir)) {
     if (col > 0) col -= 1;
   }
@@ -233,10 +234,10 @@ List<int> getDirRc(String dir, int row, int col) {
   if ('lun'.contains(dir)) {
     if (col < COLS - 1) col += 1;
   }
-  return [row, col];
+  return (row, col);
 }
 
-int getHitChance(Object weapon) {
+int getHitChance(Object? weapon) {
   var hitChance = 40;
   hitChance += 3 * toHit(weapon);
   hitChance += (rogue.exp + rogue.exp);
@@ -244,7 +245,7 @@ int getHitChance(Object weapon) {
   return hitChance;
 }
 
-int getWeaponDamage(Object weapon) {
+int getWeaponDamage(Object? weapon) {
   var damage = getWDamage(weapon);
   damage += damageForStrength(rogue.strengthCurrent);
   damage += (rogue.exp + 1) ~/ 2;

@@ -53,8 +53,8 @@ void putObjectAt(Object obj, int row, int col) {
   addToPack(obj, g.levelObjects, 0);
 }
 
-Object objectAt(Object pack, int row, int col) {
-  Object obj = pack.nextObject;
+Object? objectAt(ObjHolder pack, int row, int col) {
+  Object? obj = pack.nextObject;
   while (obj != null && (obj.row != row || obj.col != col)) {
     obj = obj.nextObject;
   }
@@ -296,7 +296,7 @@ void putStairs() {
   screen[row][col] = STAIRS;
 }
 
-int getArmorClass(Object obj) {
+int getArmorClass(Object? obj) {
   if (obj != null) {
     return obj.clasz + obj.damageEnchantment;
   }

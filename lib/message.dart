@@ -33,7 +33,7 @@ void remessage() {
   }
 }
 
-void check_message() {
+void checkMessage() {
   if (g.messageCleared) {
     return;
   }
