@@ -514,9 +514,7 @@ int doorCol(int rn, int dir) {
 
 void putPlayer() {
   while (true) {
-    var rowCol = getRandRowCol(FLOOR | IS_OBJECT);
-    int row = rowCol[0];
-    int col = rowCol[1];
+    var (row, col) = getRandRowCol(FLOOR | IS_OBJECT);
     g.currentRoom = getRoomNumber(row, col);
     if (g.currentRoom != g.partyRoom) {
       break;

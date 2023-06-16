@@ -155,11 +155,11 @@ void multipleMoveRogue(String dirch) {
   }
 }
 
-int isPassable(int row, int col) {
+bool isPassable(int row, int col) {
   if (row < MIN_ROW || row > LINES - 2 || col < 0 || col > COLS - 1) {
-    return 0;
+    return false;
   }
-  return screen[row][col] & (FLOOR | TUNNEL | DOOR | STAIRS);
+  return (screen[row][col] & (FLOOR | TUNNEL | DOOR | STAIRS)) != 0;
 }
 
 int nextToSomething(int drow, int dcol) {

@@ -317,9 +317,7 @@ bool mConfuse(Monster monster) {
   return false;
 }
 
-bool flameBro
-
-il(Monster monster) {
+bool flameBroil(Monster monster) {
   if (randPercent(50)) {
     return false;
   }

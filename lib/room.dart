@@ -32,7 +32,7 @@ void darkenRoom(int rn) {
   Room r = rooms[rn];
   for (int i = r.topRow + 1; i < r.bottomRow; i++) {
     for (int j = r.leftCol + 1; j < r.rightCol; j++) {
-      if (!isObject(i, j) && !(g.detectMonster && screen[i][j] & MONSTER)) {
+      if (!isObject(i, j) && !(g.detectMonster && (screen[i][j] & MONSTER) != 0)) {
         if (!hidingXeroc(i, j)) {
           mvaddch(i, j, ' ');
         }
@@ -90,13 +90,13 @@ String getRoomChar(int mask, int row, int col) {
   return ' ';
 }
 
-List<int> getRandRowCol(int mask) {
+(int, int) getRandRowCol(int mask) {
   while (true) {
     int row = getRand(MIN_ROW, SROWS - 2);
     int col = getRand(0, SCOLS - 1);
     int rn = getRoomNumber(row, col);
-    if (screen[row][col] & mask && !(screen[row][col] & ~mask) && rn != NO_ROOM) {
-      return [row, col];
+    if ((screen[row][col] & mask) != 0 && (screen[row][col] & ~mask) == 0 && rn != NO_ROOM) {
+      return (row, col);
     }
   }
 }

@@ -1,22 +1,23 @@
 import 'globals.dart';
 
 void putMonsters() {
-  var n = getRandom(3, 7);
+  var n = getRand(3, 7);
 
   for (var i = 0; i < n; i++) {
     var monster = getRandomMonster();
-    if (monster.mFlags & WANDERS && randPercent(50)) {
+    if ((monster.mFlags & WANDERS) != 0 && randPercent(50)) {
       wakeUp(monster);
     }
     putMonsterRandomLocation(monster);
-    addToPack(monster, g.levelMonsters, 0);
+    addToPack(monster, g.levelMonsters, false);
   }
 }
 
 Monster getRandomMonster() {
   var monster = getAnObject();
+  int mn;
   while (true) {
-    var mn = getRandom(0, MAXMONSTER - 1);
+    mn = getRand(0, MAXMONSTER - 1);
     if (g.currentLevel >= monsterTab[mn].isProtected &&
         g.currentLevel <= monsterTab[mn].isCursed) {
       break;
@@ -24,8 +25,8 @@ Monster getRandomMonster() {
   }
   monster = monsterTab[mn].copy();
   monster.whatIs = MONSTER;
-  if (monster.iChar == 'X') {
-    monster.identified = getRandomObjChar();
+  if (monster.ichar == 'X') {
+    monster.identified = getRandomObjChar().codeUnitAt(0);
   }
   if (g.currentLevel > AMULET_LEVEL + 2) {
     monster.mFlags |= HASTED;
@@ -41,15 +42,15 @@ void moveMonsters() {
     if (monster.mFlags & HASTED != 0) {
       mvMonster(monster, rogue.row, rogue.col);
     } else if (monster.mFlags & SLOWED != 0) {
-      monster.quiver = !monster.quiver;
-      if (monster.quiver) {
+      monster.quiver = 1 - monster.quiver;
+      if (monster.quiver != 0) {
         monster = monster.nextObject;
         continue;
       }
     }
-    var flew = 0;
+    var flew = false;
     if (monster.mFlags & FLIES != 0 && !monsterCanGo(monster, rogue.row, rogue.col)) {
-      flew = 1;
+      flew = true;
       mvMonster(monster, rogue.row, rogue.col);
     }
     if (!flew || !monsterCanGo(monster, rogue.row, rogue.col)) {
@@ -63,9 +64,11 @@ void fillRoomWithMonsters(int rn, int n) {
   var r = rooms[rn];
   for (var i = 0; i < n + n ~/ 2; i++) {
     if (noRoomForMonster(rn)) break;
+    int row;
+    int col;
     while (true) {
-      var row = getRandom(r.topRow + 1, r.bottomRow - 1);
-      var col = getRandom(r.leftCol + 1, r.rightCol - 1);
+      row = getRand(r.topRow + 1, r.bottomRow - 1);
+      col = getRand(r.leftCol + 1, r.rightCol - 1);
       if ((screen[row][col] & MONSTER) == 0) break;
     }
     putMonsterAt(row, col, getRandomMonster());
@@ -73,26 +76,24 @@ void fillRoomWithMonsters(int rn, int n) {
 }
 
 String getMonsterCharRowCol(int row, int col) {
-  var monster = objectAt(g.levelMonsters, row, col);
+  var monster = objectAt(g.levelMonsters, row, col)!;
   if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind) {
     return getRoomChar(screen[row][col] & ~MONSTER, row, col);
   }
-  if (monster.iChar == 'X' && monster.identified != 0) {
-    return monster.identified;
+  if (monster.ichar == 'X' && monster.identified != 0) {
+    return String.fromCharCode(monster.identified);
   }
-  return monster.iChar;
+  return monster.ichar;
 }
 
 String getMonsterChar(Monster monster) {
   if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind) {
     return getRoomChar(screen[monster.row][monster.col] & ~MONSTER, monster.row, monster.col);
   }
-  if (monster.iChar == 'X' && monster.
-
-identified != 0) {
-    return monster.identified;
+  if (monster.ichar == 'X' && monster.identified != 0) {
+    return String.fromCharCode(monster.identified);
   }
-  return monster.iChar;
+  return monster.ichar;
 }
 
 void mvMonster(Monster monster, int row, int col) {
@@ -109,28 +110,28 @@ void mvMonster(Monster monster, int row, int col) {
     return;
   }
 
-  if (monster.iChar == 'F' && !monsterCanGo(monster, rogue.row, rogue.col)) {
+  if (monster.ichar == 'F' && !monsterCanGo(monster, rogue.row, rogue.col)) {
     return;
   }
 
-  if (monster.iChar == 'I' && monster.identified == 0) {
+  if (monster.ichar == 'I' && monster.identified == 0) {
     return;
   }
 
-  if (monster.iChar == 'M' && !mConfuse(monster)) {
+  if (monster.ichar == 'M' && !mConfuse(monster)) {
     return;
   }
 
   if (monsterCanGo(monster, rogue.row, rogue.col)) {
-    monsterHit(monster, "");
+    monsterHit(monster, null);
     return;
   }
 
-  if (monster.iChar == 'D' && flameBroil(monster)) {
+  if (monster.ichar == 'D' && flameBroil(monster)) {
     return;
   }
 
-  if (monster.iChar == 'O' && orcGold(monster)) {
+  if (monster.ichar == 'O' && orcGold(monster)) {
     return;
   }
 
@@ -165,9 +166,9 @@ void mvMonster(Monster monster, int row, int col) {
     return;
   }
 
-  var tried = [0] * 6;
+  final tried = List.filled(6, 0);
   for (var i = 0; i < 6; i++) {
-    var n = getRandom(0, 5);
+    var n = getRand(0, 5);
     if (n == 0) {
       if (tried[n] == 0 && mTry(monster, row, monster.col - 1)) {
         return;
@@ -230,7 +231,7 @@ void moveMonsterTo(Monster monster, int row, int col) {
     }
   }
   if (screen[row][col] & DOOR != 0) {
-    doorCourse(monster, screen[monster.row][monster.col] & TUNNEL, row, col);
+    doorCourse(monster, (screen[monster.row][monster.col] & TUNNEL) != 0, row, col);
   } else {
     monster.row = row;
     monster.col = col;
@@ -265,7 +266,7 @@ bool monsterCanGo(Monster monster, int row, int col) {
 
   if (screen[row][col] & SCROLL != 0) {
     var obj = objectAt(g.levelObjects, row, col);
-    if (obj.whichKind == SCARE_MONSTER) {
+    if (obj!.whichKind == SCARE_MONSTER) {
       return false;
     }
   }
@@ -310,9 +311,9 @@ String monsterName(Monster monster) {
     return "something";
   }
   if (g.halluc) {
-    return monsterNames[getRandom(0, 25)];
+    return monsterNames[getRand(0, 25)];
   }
-  return monsterNames[monster.iChar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+  return monsterNames[monster.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
 }
 
 bool rogueIsAround(int row, int col) {
@@ -322,15 +323,14 @@ bool rogueIsAround(int row, int col) {
 }
 
 void startWanderer() {
+  Object monster;
   while (true) {
-    var monster = getRandomMonster();
+    monster = getRandomMonster();
     if ((monster.mFlags & WAKENS != 0) || (monster.mFlags & WANDERS != 0)) break;
   }
   wakeUp(monster);
   for (var i = 0; i < 12; i++) {
-    var rowCol = getRandomRowCol(FLOOR | TUNNEL | IS_OBJECT);
-    var row = rowCol[0];
-    var col = rowCol[1];
+    var (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
     if (!canSee(row, col)) {
       putMonsterAt(row, col, monster);
       return;
@@ -343,8 +343,8 @@ void showMonsters() {
 
   var monster = g.levelMonsters.nextObject;
   while (monster != null) {
-    mvaddch(monster.row, monster.col, monster.iChar);
-    if (monster.iChar == 'X') {
+    mvaddch(monster.row, monster.col, monster.ichar);
+    if (monster.ichar == 'X') {
       monster.identified = 0;
     }
     monster = monster.nextObject;
@@ -352,15 +352,17 @@ void showMonsters() {
 }
 
 void createMonster() {
-  var inc1 = getRandom(0, 1) == 1 ? 1 : -1;
-  var inc2 = getRandom(0, 1) == 1 ? 1 : -1;
+  var inc1 = getRand(0, 1) == 1 ? 1 : -1;
+  var inc2 = getRand(0, 1) == 1 ? 1 : -1;
 
   var found = false;
   for (var i = inc1; i < 2 * -inc1; i -= inc1) {
+    late int row;
+    late int col;
     for (var j = inc2; j < 2 * -inc2; j -= inc2) {
       if (i == 0 && j == 0) continue;
-      var row = rogue.row + i;
-      var col = rogue.col + j;
+      row = rogue.row + i;
+      col = rogue.col + j;
       if (row < MIN_ROW ||
           row > LINES - 2 ||
           col < 0 ||
@@ -374,9 +376,7 @@ void createMonster() {
       }
     }
     if (found) {
-      var monster = getRandom
-
-Monster();
+      var monster = getRandomMonster();
       putMonsterAt(row, col, monster);
       mvaddch(row, col, getMonsterChar(monster));
       if ((monster.mFlags & WANDERS != 0)) {
@@ -392,7 +392,7 @@ void putMonsterAt(int row, int col, Monster monster) {
   monster.row = row;
   monster.col = col;
   addMask(row, col, MONSTER);
-  addToPack(monster, g.levelMonsters, 0);
+  addToPack(monster, g.levelMonsters, false);
 }
 
 bool canSee(int row, int col) {
@@ -404,8 +404,8 @@ bool flit(Monster monster) {
   if (!randPercent(FLIT_PERCENT)) {
     return false;
   }
-  var inc1 = getRandom(0, 1) == 1 ? 1 : -1;
-  var inc2 = getRandom(0, 1) == 1 ? 1 : -1;
+  var inc1 = getRand(0, 1) == 1 ? 1 : -1;
+  var inc2 = getRand(0, 1) == 1 ? 1 : -1;
 
   if (randPercent(10)) {
     return true;
@@ -427,16 +427,14 @@ bool flit(Monster monster) {
 }
 
 void putMonsterRandomLocation(Monster monster) {
-  var rowCol = getRandomRowCol(FLOOR | TUNNEL | IS_OBJECT);
-  var row = rowCol[0];
-  var col = rowCol[1];
+  var (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
   addMask(row, col, MONSTER);
   monster.row = row;
   monster.col = col;
 }
 
 String getRandomObjChar() {
-  return "%!?]/):*"[getRandom(0, 7)];
+  return "%!?]/):*"[getRand(0, 7)];
 }
 
 bool noRoomForMonster(int rn) {
@@ -483,9 +481,7 @@ void mvAquatars() {
   }
 }
 
-void doorCourse(M
-
-onster monster, bool entering, int row, int col) {
+void doorCourse(Monster monster, bool entering, int row, int col) {
   monster.row = row;
   monster.col = col;
 
@@ -512,17 +508,17 @@ onster monster, bool entering, int row, int col) {
       }
     }
   } else {
-    var brc = getOtherRoom(rn, row, col);
-    if (brc[0]) {
-      monster.trow = brc[1];
-      monster.tcol = brc[2];
+    var (flag, r, c) = getOtherRoom(rn, row, col);
+    if (flag) {
+      monster.trow = r;
+      monster.tcol = c;
     } else {
       monster.trow = -1;
     }
   }
 }
 
-List<bool> getOtherRoom(int rn, int row, int col) {
+(bool, int, int) getOtherRoom(int rn, int row, int col) {
   var d = -1;
   if (screen[row][col - 1] & HORWALL != 0 &&
       screen[row][col + 1] & HORWALL != 0) {
@@ -539,7 +535,7 @@ List<bool> getOtherRoom(int rn, int row, int col) {
     }
   }
   if (d != -1 && rooms[rn].doors[d].otherRoom > 0) {
-    return [true, rooms[rn].doors[d].otherRow, rooms[rn].doors[d].otherCol];
+    return (true, rooms[rn].doors[d].otherRow, rooms[rn].doors[d].otherCol);
   }
-  return [false, 0, 0];
+  return (false, 0, 0);
 }
