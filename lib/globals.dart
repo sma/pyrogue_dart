@@ -178,16 +178,16 @@ class Identity {
 }
 
 class Object {
-  final int mFlags;
-  final String damage;
-  final int quantity;
-  final String ichar;
-  final int killExp;
-  final int isProtected;
-  final int isCursed;
-  final int clasz;
-  final int identified;
-  final int whichKind;
+  int mFlags;
+  String damage;
+  int quantity;
+  String ichar;
+  int killExp;
+  int isProtected;
+  int isCursed;
+  int clasz;
+  int identified;
+  int whichKind;
   int row;
   int col;
   int damageEnchantment;
@@ -210,18 +210,17 @@ class Object {
     this.clasz,
     this.identified,
     this.whichKind,
-  ) {
-    row = 0;
-    col = 0;
-    damageEnchantment = 0;
-    quiver = 0;
-    trow = 0;
-    tcol = 0;
-    toHitEnchantment = 0;
-    whatIs = 0;
-    pickedUp = 0;
+  ) :
+    row = 0,
+    col = 0,
+    damageEnchantment = 0,
+    quiver = 0,
+    trow = 0,
+    tcol = 0,
+    toHitEnchantment = 0,
+    whatIs = 0,
+    pickedUp = 0,
     nextObject = null;
-  }
 
   Object copy() {
     return Object(
@@ -508,3 +507,5 @@ int getRand(int x, int y) {
 bool randPercent(int percentage) {
   return getRand(1, 100) <= percentage;
 }
+
+typedef Monster = Object;
