@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'globals.dart';
 
 var level_points = [
@@ -63,90 +65,88 @@ void makeLevel() {
 }
 
 void makeRoom(int n, int r1, int r2, int r3) {
-  int left_col;
-  int right_col;
-  int top_row;
-  int bottom_row;
+  int leftCol;
+  int rightCol;
+  int topRow;
+  int bottomRow;
 
   switch (n) {
     case 0:
-      left_col = 0;
-      right_col = COL1 - 1;
-      top_row = MIN_ROW;
-      bottom_row = ROW1 - 1;
+      leftCol = 0;
+      rightCol = COL1 - 1;
+      topRow = MIN_ROW;
+      bottomRow = ROW1 - 1;
       break;
     case 1:
-      left_col = COL1 + 1;
-      right_col = COL2 - 1;
-      top_row = MIN_ROW;
-      bottom_row = ROW1 - 1;
+      leftCol = COL1 + 1;
+      rightCol = COL2 - 1;
+      topRow = MIN_ROW;
+      bottomRow = ROW1 - 1;
       break;
     case 2:
-      left_col = COL2 + 1;
-      right_col = COLS - 1;
-      top_row = MIN_ROW;
-      bottom_row = ROW1 - 1;
+      leftCol = COL2 + 1;
+      rightCol = COLS - 1;
+      topRow = MIN_ROW;
+      bottomRow = ROW1 - 1;
       break;
     case 3:
-      left_col = 0;
-      right_col = COL1 - 1;
-      top_row = ROW1 + 1;
-      bottom_row = ROW2 - 1;
+      leftCol = 0;
+      rightCol = COL1 - 1;
+      topRow = ROW1 + 1;
+      bottomRow = ROW2 - 1;
       break;
     case 4:
-      left_col = COL1 + 1;
-      right_col = COL2 - 1;
-      top_row = ROW1 + 1;
-      bottom_row = ROW2 - 1;
+      leftCol = COL1 + 1;
+      rightCol = COL2 - 1;
+      topRow = ROW1 + 1;
+      bottomRow = ROW2 - 1;
       break;
     case 5:
-      left_col = COL2 + 1;
-      right_col = COLS - 1;
-      top_row = ROW1 + 1;
-      bottom_row = ROW2 - 1;
+      leftCol = COL2 + 1;
+      rightCol = COLS - 1;
+      topRow = ROW1 + 1;
+      bottomRow = ROW2 - 1;
       break;
     case 6:
-      left_col = 0;
-      right_col = COL1 - 1;
-      top_row = ROW2 + 1;
-      bottom_row = LINES - 2;
+      leftCol = 0;
+      rightCol = COL1 - 1;
+      topRow = ROW2 + 1;
+      bottomRow = LINES - 2;
       break;
-   
-
- case 7:
-      left_col = COL1 + 1;
-      right_col = COL2 - 1;
-      top_row = ROW2 + 1;
-      bottom_row = LINES - 2;
+    case 7:
+      leftCol = COL1 + 1;
+      rightCol = COL2 - 1;
+      topRow = ROW2 + 1;
+      bottomRow = LINES - 2;
       break;
     case 8:
-      left_col = COL2 + 1;
-      right_col = COLS - 1;
-      top_row = ROW2 + 1;
-      bottom_row = LINES - 2;
+      leftCol = COL2 + 1;
+      rightCol = COLS - 1;
+      topRow = ROW2 + 1;
+      bottomRow = LINES - 2;
       break;
     default:
-      assert(false);
+      throw Error();
   }
 
   if (!(n != r1 && n != r2 && n != r3 && randPercent(45))) {
-    int height = getRand(4, bottom_row - top_row + 1);
-    int width = getRand(7, right_col - left_col - 2);
-    int row_offset = getRand(0, bottom_row - top_row - height + 1);
-    int col_offset = getRand(0, right_col - left_col - width + 1);
+    int height = getRand(4, bottomRow - topRow + 1);
+    int width = getRand(7, rightCol - leftCol - 2);
+    int row_offset = getRand(0, bottomRow - topRow - height + 1);
+    int col_offset = getRand(0, rightCol - leftCol - width + 1);
 
-    top_row += row_offset;
-    bottom_row = top_row + height - 1;
-    left_col += col_offset;
-    right_col = left_col + width - 1;
+    topRow += row_offset;
+    bottomRow = topRow + height - 1;
+    leftCol += col_offset;
+    rightCol = leftCol + width - 1;
 
-    rooms[n].is_room = true;
-    for (int i = top_row; i <= bottom_row; i++) {
-      for (int j = left_col; j <= right_col; j++) {
+    rooms[n].isRoom = true;
+    for (int i = topRow; i <= bottomRow; i++) {
+      for (int j = leftCol; j <= rightCol; j++) {
         int ch;
-        if (i == top_row || i == bottom_row) {
+        if (i == topRow || i == bottomRow) {
           ch = HORWALL;
-        } else if (j == left_col || j == right_col) {
+        } else if (j == leftCol || j == rightCol) {
           ch = VERTWALL;
         } else {
           ch = FLOOR;
@@ -155,10 +155,10 @@ void makeRoom(int n, int r1, int r2, int r3) {
       }
     }
 
-    rooms[n].top_row = top_row;
-    rooms[n].bottom_row = bottom_row;
-    rooms[n].left_col = left_col;
-    rooms[n].right_col = right_col;
+    rooms[n].topRow = topRow;
+    rooms[n].bottomRow = bottomRow;
+    rooms[n].leftCol = leftCol;
+    rooms[n].rightCol = rightCol;
     rooms[n].height = height;
     rooms[n].width = width;
   }
@@ -175,56 +175,43 @@ void doConnect(int room1, int room2) {
   int dir1;
   int dir2;
 
-  if (rooms[room1].left_col > rooms[room2].right_col && onSameRow(room1, room2)) {
+  if (rooms[room1].leftCol > rooms[room2].rightCol && onSameRow(room1, room2)) {
     dir1 = LEFT;
     dir2 = RIGHT;
-  } else if (rooms[room2].left_col > rooms[room1].right_col && onSameRow(room1, room2)) {
+  } else if (rooms[room2].leftCol > rooms[room1].rightCol && onSameRow(room1, room2)) {
     dir1 = RIGHT;
     dir2 = LEFT;
-  } else if (rooms[room1].top_row > rooms[room2].bottom_row && onSameCol(room1, room2)) {
+  } else if (rooms[room1].topRow > rooms[room2].bottomRow && onSameCol(room1, room2)) {
     dir1 = UP;
     dir2 = DOWN;
-  } else if (rooms[room2].top_row > rooms[room1].bottom_row && onSameCol(room1, room2)) {
+  } else if (rooms[room2].topRow > rooms[room1].bottomRow && onSameCol(room1, room2)) {
     dir1 = DOWN;
     dir2 = UP;
   } else {
     return;
   }
 
-  int row1, col1;
-  int row2, col2;
-  var putDoor = putDoor;
-
-  putDoor(room1, dir1, (int r, int c) {
-    row1 = r;
-    col1 = c;
-  });
-  putDoor(room2
-
-, dir2, (int r, int c) {
-    row2 = r;
-    col2 = c;
-  });
-
+  final (row1, col1) = putDoor(room1, dir1);
+  final (row2, col2) = putDoor(room2, dir2);
   drawSimplePassage(row1, col1, row2, col2, dir1);
   if (randPercent(10)) {
     drawSimplePassage(row1, col1, row2, col2, dir1);
   }
 
-  rooms[room1].doors[dir1 ~/ 2].other_room = room2;
-  rooms[room1].doors[dir1 ~/ 2].other_row = row2;
-  rooms[room1].doors[dir1 ~/ 2].other_col = col2;
+  rooms[room1].doors[dir1 ~/ 2].otherRoom = room2;
+  rooms[room1].doors[dir1 ~/ 2].otherRow = row2;
+  rooms[room1].doors[dir1 ~/ 2].otherCol = col2;
 
-  rooms[room1].doors[dir2 ~/ 2].other_room = room1;
-  rooms[room1].doors[dir2 ~/ 2].other_row = row1;
-  rooms[room1].doors[dir2 ~/ 2].other_col = col1;
+  rooms[room1].doors[dir2 ~/ 2].otherRoom = room1;
+  rooms[room1].doors[dir2 ~/ 2].otherRow = row1;
+  rooms[room1].doors[dir2 ~/ 2].otherCol = col1;
 }
 
 void clearLevel() {
   for (int i = 0; i < MAXROOMS; i++) {
-    rooms[i].is_room = false;
+    rooms[i].isRoom = false;
     for (int j = 0; j < 4; j++) {
-      rooms[i].doors[j].other_room = NO_ROOM;
+      rooms[i].doors[j].otherRoom = NO_ROOM;
     }
   }
   for (int i = 0; i < SROWS; i++) {
@@ -232,14 +219,14 @@ void clearLevel() {
       screen[i][j] = BLANK;
     }
   }
-  g.detectMonster = 0;
+  g.detectMonster = false;
   g.beingHeld = 0;
 }
 
 void printStats() {
-  var m = "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hp_current}(${rogue.hp_max})" +
-      "  Str: ${rogue.strength_current}(${rogue.strength_max})  Arm: ${getArmorClass(rogue.armor)}" +
-      "  Exp: ${rogue.exp}/${rogue.exp_points} ${g.hungerStr}";
+  var m = "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hpCurrent}(${rogue.hpMax})" +
+      "  Str: ${rogue.strengthCurrent}(${rogue.strengthMax})  Arm: ${getArmorClass(rogue.armor)}" +
+      "  Exp: ${rogue.exp}/${rogue.expPoints} ${g.hungerStr}";
 
   mvaddstr(LINES - 1, 0, m);
   clrtoeol();
@@ -259,7 +246,7 @@ void removeMask(int row, int col, int mask) {
 }
 
 bool adjascent(int room1, int room2) {
-  if (!rooms[room1].is_room || !rooms[room2].is_room) {
+  if (!rooms[room1].isRoom || !rooms[room2].isRoom) {
     return false;
   }
   if (room1 > room2) {
@@ -270,27 +257,25 @@ bool adjascent(int room1, int room2) {
   return (onSameCol(room1, room2) || onSameRow(room1, room2)) && (room2 - room1 == 1 || room2 - room1 == 3);
 }
 
-void putDoor(int rn, int dir, void callback(int, int)) {
+(int, int) putDoor(int rn, int dir) {
   int row;
   int col;
   switch (dir) {
     case UP:
     case DOWN:
-      row = (dir == UP) ? rooms[rn].top_row : rooms[rn].bottom_row;
-      col = getRand(rooms[rn].left_col + 1, rooms[rn].right_col - 1);
+      row = (dir == UP) ? rooms[rn].topRow : rooms[rn].bottomRow;
+      col = getRand(rooms[rn].leftCol + 1, rooms[rn].rightCol - 1);
       break;
     case LEFT:
     case RIGHT:
-      row = getRand(rooms[rn].top_row + 1, rooms[rn].bottom_row - 1
-
-);
-      col = (dir == LEFT) ? rooms[rn].left_col : rooms[rn].right_col;
+      row = getRand(rooms[rn].topRow + 1, rooms[rn].bottomRow - 1);
+      col = (dir == LEFT) ? rooms[rn].leftCol : rooms[rn].rightCol;
       break;
     default:
-      assert(false);
+      throw Error();
   }
   addMask(row, col, DOOR);
-  callback(row, col);
+  return (row, col);
 }
 
 void drawSimplePassage(int row1, int col1, int row2, int col2, int dir) {
@@ -354,7 +339,7 @@ void addDeadEnds() {
   for (int i = 0; i < MAXROOMS; i++) {
     int j = (start + i) % MAXROOMS;
 
-    if (rooms[j].is_room) {
+    if (rooms[j].isRoom) {
       continue;
     }
 
@@ -362,8 +347,8 @@ void addDeadEnds() {
       continue;
     }
 
-    int row = rooms[j].top_row + getRand(0, 6);
-    int col = rooms[j].left_col + getRand(0, 19);
+    int row = rooms[j].topRow + getRand(0, 6);
+    int col = rooms[j].leftCol + getRand(0, 19);
 
     bool found = false;
     while (!found) {
@@ -382,7 +367,7 @@ void addDeadEnds() {
         } else if (dir == LEFT) {
           if (col - 1 > 0) col -= 1;
         }
-        if (screen[row][col] & (VERTWALL | HORWALL | DOOR)) {
+        if ((screen[row][col] & (VERTWALL | HORWALL | DOOR)) != 0) {
           breakIn(row, col, screen[row][col], dir);
           found = true;
         } else {
@@ -401,29 +386,29 @@ void breakIn(int row, int col, int ch, int dir) {
   int rn = getRoomNumber(row, col);
 
   if (ch == VERTWALL) {
-    if (col == rooms[rn].left_col) {
-      if (rooms[rn].doors[LEFT ~/ 2].other_room != NO_ROOM) {
+    if (col == rooms[rn].leftCol) {
+      if (rooms[rn].doors[LEFT ~/ 2].otherRoom != NO_ROOM) {
         int drow = doorRow(rn, LEFT);
         for (int i = row; i < drow; i++) {
           addMask(i, col - 1, TUNNEL);
         }
       } else {
-        rooms[rn].doors[LEFT ~/ 2].other_room = DEAD_END;
+        rooms[rn].doors[LEFT ~/ 2].otherRoom = DEAD_END;
         addMask(row, col, DOOR);
       }
     } else {
-      if (rooms[rn].doors[RIGHT ~/ 2].other_room != NO_ROOM) {
+      if (rooms[rn].doors[RIGHT ~/ 2].otherRoom != NO_ROOM) {
         int drow = doorRow(rn, RIGHT);
         for (int i = row; i < drow; i++) {
           addMask(i, col + 1, TUNNEL);
         }
       } else {
-        rooms[rn].doors[RIGHT ~/ 2].other_room = DEAD_END;
+        rooms[rn].doors[RIGHT ~/ 2].otherRoom = DEAD_END;
         addMask(row, col, DOOR);
       }
     }
   } else {
-    if (col == rooms[rn].left_col) {
+    if (col == rooms[rn].leftCol) {
       if (row == MIN_ROW) {
         addMask(row + 1, col - 1, TUNNEL);
         breakIn(row + 1, col, VERTWALL, RIGHT);
@@ -431,7 +416,7 @@ void breakIn(int row, int col, int ch, int dir) {
         addMask(row - 1, col - 1, TUNNEL);
         breakIn(row - 1, col, VERTWALL, RIGHT);
       } else {
-        if (row == rooms[rn].top_row) {
+        if (row == rooms[rn].topRow) {
           if (dir == RIGHT) {
             addMask(row - 1, col - 1, TUNNEL);
             addMask(row - 1, col, TUNNEL);
@@ -448,7 +433,7 @@ void breakIn(int row, int col, int ch, int dir) {
         }
         return;
       }
-    } else if (col == rooms[rn].right_col) {
+    } else if (col == rooms[rn].rightCol) {
       if (row == MIN_ROW) {
         addMask(row + 1, col + 1, TUNNEL);
         breakIn(row + 1, col, VERTWALL, LEFT);
@@ -458,7 +443,7 @@ void breakIn(int row, int col, int ch, int dir) {
 , col + 1, TUNNEL);
         breakIn(row - 1, col, VERTWALL, LEFT);
       } else {
-        if (row == rooms[rn].top_row) {
+        if (row == rooms[rn].topRow) {
           if (dir == DOWN) {
             addMask(row - 1, col + 1, TUNNEL);
             addMask(row, col + 1, TUNNEL);
@@ -476,24 +461,24 @@ void breakIn(int row, int col, int ch, int dir) {
         return;
       }
     }
-    if (row == rooms[rn].top_row) {
-      if (rooms[rn].doors[UP ~/ 2].other_room != NO_ROOM) {
+    if (row == rooms[rn].topRow) {
+      if (rooms[rn].doors[UP ~/ 2].otherRoom != NO_ROOM) {
         int dcol = doorCol(rn, UP);
         for (int i = col; i < dcol; i++) {
           addMask(row - 1, i, TUNNEL);
         }
       } else {
-        rooms[rn].doors[UP ~/ 2].other_room = DEAD_END;
+        rooms[rn].doors[UP ~/ 2].otherRoom = DEAD_END;
         addMask(row, col, DOOR);
       }
     } else {
-      if (rooms[rn].doors[DOWN ~/ 2].other_room != NO_ROOM) {
+      if (rooms[rn].doors[DOWN ~/ 2].otherRoom != NO_ROOM) {
         int dcol = doorCol(rn, DOWN);
         for (int i = col; i < dcol; i++) {
           addMask(row + 1, i, TUNNEL);
         }
       } else {
-        rooms[rn].doors[DOWN ~/ 2].other_room = DEAD_END;
+        rooms[rn].doors[DOWN ~/ 2].otherRoom = DEAD_END;
         addMask(row, col, DOOR);
       }
     }
@@ -501,13 +486,13 @@ void breakIn(int row, int col, int ch, int dir) {
 }
 
 int doorRow(int rn, int dir) {
-  if (rooms[rn].doors[dir ~/ 2].other_room == NO_ROOM) {
+  if (rooms[rn].doors[dir ~/ 2].otherRoom == NO_ROOM) {
     return -1;
   }
 
-  int col = (dir == LEFT) ? rooms[rn].left_col : rooms[rn].right_col;
-  for (int row = rooms[rn].top_row; row < rooms[rn].bottom_row; row++) {
-    if (screen[row][col] & DOOR) {
+  int col = (dir == LEFT) ? rooms[rn].leftCol : rooms[rn].rightCol;
+  for (int row = rooms[rn].topRow; row < rooms[rn].bottomRow; row++) {
+    if ((screen[row][col] & DOOR) != 0) {
       return row;
     }
   }
@@ -515,12 +500,12 @@ int doorRow(int rn, int dir) {
 }
 
 int doorCol(int rn, int dir) {
-  if (rooms[rn].doors[dir ~/ 2].other_room == NO_ROOM) {
+  if (rooms[rn].doors[dir ~/ 2].otherRoom == NO_ROOM) {
     return -1;
   }
-  int row = (dir == UP) ? rooms[rn].top_row : rooms[rn].bottom_row;
-  for (int col = rooms[rn].left_col; col < rooms[rn].right_col; col++) {
-    if (screen[row][col] & DOOR) {
+  int row = (dir == UP) ? rooms[rn].topRow : rooms[rn].bottomRow;
+  for (int col = rooms[rn].leftCol; col < rooms[rn].rightCol; col++) {
+    if ((screen[row][col] & DOOR) != 0) {
       return col;
     }
   }
@@ -529,9 +514,9 @@ int doorCol(int rn, int dir) {
 
 void putPlayer() {
   while (true) {
-    var row_col = getRandRowCol(FLOOR | IS_OBJECT);
-    int row = row_col[0];
-    int col = row_col[1];
+    var rowCol = getRandRowCol(FLOOR | IS_OBJECT);
+    int row = rowCol[0];
+    int col = rowCol[1];
     g.currentRoom = getRoomNumber(row, col);
     if (g.currentRoom != g.partyRoom) {
       break;
@@ -540,7 +525,7 @@ void putPlayer() {
 }
 
 bool checkDown() {
-  if (screen[rogue.row][rogue.col] & STAIRS) {
+  if ((screen[rogue.row][rogue.col] & STAIRS) != 0) {
     return true;
   }
   message("I see no way down",
@@ -550,7 +535,7 @@ bool checkDown() {
 }
 
 bool checkUp() {
-  if (!(screen[rogue.row][rogue.col] & STAIRS)) {
+  if ((screen[rogue.row][rogue.col] & STAIRS) == 0) {
     message("I see no way up", 0);
     return false;
   }
@@ -560,6 +545,7 @@ bool checkUp() {
   }
   if (g.currentLevel == 1) {
     win();
+    return true;
   } else {
     g.currentLevel -= 2;
     return true;
@@ -574,8 +560,8 @@ void addExp(int e) {
     for (int i = rogue.exp + 1; i <= new_exp; i++) {
       message("welcome to level " + i.toString(), 0);
       int hp = getRand(3, 10);
-      rogue.hp_current += hp;
-      rogue.hp_max += hp;
+      rogue.hpCurrent += hp;
+      rogue.hpMax += hp;
       printStats();
     }
     rogue.exp = new_exp;
@@ -593,7 +579,7 @@ int getExpLevel(int e) {
 }
 
 void tryRooms(int r1, int r2, int r3) {
-  if (rooms[r1].is_room && !rooms[r2].is_room && rooms[r3].is_room) {
+  if (rooms[r1].isRoom && !rooms[r2].isRoom && rooms[r3].isRoom) {
     if (randPercent(75)) {
       doConnect(r1, r3);
     }

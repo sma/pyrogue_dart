@@ -18,3 +18,4 @@ The `Object` didn't correctly initialize variables. `globals.dart` is done. (539
 `hit.dart` is done. (468 errors)
 `init.dart` is done. (434 errors)
 `inventory.dart` is done. (414 errors)
+`level.dart`, `main.dart`, `messages.dart` are done. (289 errors)

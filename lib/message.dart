@@ -2,16 +2,16 @@ import 'globals.dart';
 
 void message(String msg, [int intrpt = 0]) {
   if (intrpt != 0) {
-    g.interrupted = 1;
+    g.interrupted = true;
   }
-  g.cantInt = 1;
+  g.cantInt = true;
   slurp();
 
   if (g.messageCleared == false) {
     mvaddstr(MIN_ROW - 1, g.messageCol, MORE);
     refresh();
     waitForAck(false);
-    check_message();
+    checkMessage();
   }
 
   g.messageLine = msg;
@@ -21,14 +21,14 @@ void message(String msg, [int intrpt = 0]) {
   g.messageCleared = false;
   g.messageCol = msg.length;
 
-  if (g.didInt != 0) {
+  if (g.didInt) {
     onintr();
   }
-  g.cantInt = 0;
+  g.cantInt = false;
 }
 
 void remessage() {
-  if (g.messageLine != null) {
+  if (g.messageLine.isNotEmpty) {
     message(g.messageLine, 0);
   }
 }
@@ -44,7 +44,7 @@ void checkMessage() {
   g.messageCleared = true;
 }
 
-void get_input_line(StringBuffer buf, int if_cancelled) {
+void getInputLine(StringBuffer buf, int ifCancelled) {
   throw UnimplementedError();
 }
 

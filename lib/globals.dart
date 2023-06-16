@@ -469,7 +469,7 @@ class G {
 
   // object.py
   ObjHolder levelObjects = ObjHolder();
-  int hasAmulet = 0;
+  bool hasAmulet = false;
   int foods = 0;
 
   // pack.py
