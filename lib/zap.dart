@@ -46,11 +46,9 @@ void zapp() {
   registerMove();
 }
 
-Monster getZappedMonster(final String dir, int row, int col) {
+Monster? getZappedMonster(final String dir, int row, int col) {
   while (true) {
-    final rc = getDirRc(dir, row, col);
-    final r = rc[0];
-    final c = rc[1];
+    final (r, c) = getDirRc(dir, row, col);
     if ((row == r && col == c) ||
         (screen[r][c] & (HORWALL | VERTWALL)) != 0 ||
         screen[r][c] == BLANK) {
@@ -93,12 +91,12 @@ void zapMonster(Monster monster, final int kind) {
     mvaddch(row, col, getMonsterChar(monster));
   } else if (kind == POLYMORPH) {
     if (monster.ichar == 'F') {
-      g.beingHeld = 0;
+      g.beingHeld = false;
     }
     // need to find prev to link to new one
-    var pm = g.levelMonsters;
+    ObjHolder pm = g.levelMonsters;
     while (pm.nextObject != monster) {
-      pm = pm.nextObject;
+      pm = pm.nextObject!;
     }
     while (true) {
       monster = monsterTab[getRand(0, MONSTERS - 1)].copy();
@@ -130,11 +128,9 @@ void zapMonster(Monster monster, final int kind) {
 
 void teleportAway(Monster monster) {
   if (monster.ichar == 'F') {
-    g.beingHeld = 0;
+    g.beingHeld = false;
   }
-  final rc = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
-  final row = rc[0];
-  final col = rc[1];
+  final (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
   removeMask(monster.row, monster.col, MONSTER);
   mvaddch(monster.row, monster.col,
       getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));

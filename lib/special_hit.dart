@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'globals.dart';
 
 void specialHit(Monster monster) {
@@ -5,7 +7,7 @@ void specialHit(Monster monster) {
   if (k == 'A') {
     rust(monster);
   } else if (k == 'F') {
-    g.beingHeld = 1;
+    g.beingHeld = true;
   } else if (k == 'I') {
     freeze(monster);
   } else if (k == 'L') {
@@ -24,16 +26,16 @@ void specialHit(Monster monster) {
 void rust(Monster monster) {
   if (rogue.armor == null ||
       getArmorClass(rogue.armor) <= 1 ||
-      rogue.armor.whichKind == LEATHER) {
+      rogue.armor!.whichKind == LEATHER) {
     return;
   }
-  if (rogue.armor.isProtected) {
-    if (!monster.identified) {
+  if (rogue.armor!.isProtected != 0) {
+    if (monster.identified == 0) {
       message("the rust vanishes instantly", 0);
       monster.identified = 1;
     }
   } else {
-    rogue.armor.damageEnchantment -= 1;
+    rogue.armor!.damageEnchantment -= 1;
     message("your armor weakens", 0);
     printStats();
   }
@@ -56,7 +58,7 @@ void freeze(Monster monster) {
     for (int i = 0; i < n; i++) {
       moveMonsters();
     }
-    if (randPercent(freezePercent)) {
+    if (randPercent(freezePercent.toInt())) {
       for (int i = 0; i < 50; i++) {
         moveMonsters();
       }
@@ -71,10 +73,10 @@ void stealGold(Monster monster) {
   if (randPercent(15)) return;
 
   if (rogue.gold > 50) {
-    double amount = rogue.gold > 1000
+    int amount = rogue.gold > 1000
         ? getRand(8, 15)
         : getRand(2, 5);
-    amount = rogue.gold / amount;
+    amount = rogue.gold ~/ amount;
     amount += (getRand(0, 2) - 1) * (rogue.exp + g.currentLevel);
     if (amount <= 0 && rogue.gold > 0) {
       amount = rogue.gold;
@@ -92,7 +94,7 @@ void stealItem(Monster monster) {
   if (randPercent(15)) return;
 
   bool hasSomething = false;
-  Object obj = rogue.pack.nextObject;
+  Object? obj = rogue.pack.nextObject;
   while (obj != null) {
     if (obj != rogue.armor && obj != rogue.weapon) {
       hasSomething = true;
@@ -103,10 +105,8 @@ void stealItem(Monster monster) {
   if (hasSomething) {
     int n = getRand(0, MAX_PACK_COUNT);
     obj = rogue.pack.nextObject;
-    for (int i = 0; i < n + 1;
-
- i++) {
-      obj = obj.nextObject;
+    for (int i = 0; i < n + 1; i++) {
+      obj = obj!.nextObject;
       while (obj == null || obj == rogue.armor || obj == rogue.armor) {
         if (obj == null) {
           obj = rogue.pack.nextObject;
@@ -115,9 +115,9 @@ void stealItem(Monster monster) {
         }
       }
     }
-    message("she stole ${getDescription(obj)}", 0);
+    message("she stole ${getDescription(obj!)}", 0);
     if (obj.whatIs == AMULET) {
-      g.hasAmulet = 0;
+      g.hasAmulet = false;
     }
     vanish(obj, 0);
   }
@@ -138,13 +138,14 @@ void disappear(Monster monster) {
 void coughUp(Monster monster) {
   if (g.currentLevel < g.maxLevel) return;
 
+  Object? obj;
   if (monster.ichar == 'L') {
-    Object obj = getAnObject();
+    obj = getAnObject();
     obj.whatIs = GOLD;
     obj.quantity = getRand(9, 599);
   } else {
     if (randPercent(monster.whichKind)) {
-      Object obj = getRandObject();
+      obj = getRandObject();
     } else {
       return;
     }
@@ -184,7 +185,7 @@ bool tryToCough(int row, int col, Object obj) {
 }
 
 bool orcGold(Monster monster) {
-  if (monster.identified) {
+  if (monster.identified != 0) {
     return false;
   }
   int rn = getRoomNumber(monster.row, monster.col);
@@ -226,7 +227,7 @@ void checkOrc(Monster monster) {
 }
 
 bool checkXeroc(Monster monster) {
-  if (monster.ichar == 'X' && monster.identified) {
+  if (monster.ichar == 'X' && monster.identified != 0) {
     wakeUp(monster);
     monster.identified = 0;
     mvaddch(
@@ -245,8 +246,8 @@ bool hidingXeroc(int row, int col) {
     return false;
   }
 
-  Monster monster = objectAt(g.levelMonsters, row, col);
-  return monster.ichar == 'X' && monster.identified;
+  Monster monster = objectAt(g.levelMonsters, row, col)!;
+  return monster.ichar == 'X' && monster.identified != 0;
 }
 
 void sting(Monster monster) {
@@ -298,7 +299,7 @@ void drainLife() {
 }
 
 bool mConfuse(Monster monster) {
-  if (monster.identified) {
+  if (monster.identified != 0) {
     return false;
   }
   if (!canSee(monster.row, monster.col)) {
@@ -333,15 +334,15 @@ bool flameBroil(Monster monster) {
     while (true) {
       mvaddch(row, col, '*');
       refresh();
-      row = getCloser(row, col, rogue.row, rogue.col);
+      (row, col) = getCloser(row, col, rogue.row, rogue.col);
       if (row == rogue.row && col == rogue.col) break;
     }
     standend();
-    row = getCloser(monster.row, monster.col, rogue.row, rogue.col);
+    (row, col) = getCloser(monster.row, monster.col, rogue.row, rogue.col);
     while (true) {
       mvaddch(row, col, getRoomChar(screen[row][col], row, col));
       refresh();
-      row = getCloser(row, col, rogue.row, rogue.col);
+      (row, col) = getCloser(row, col, rogue.row, rogue.col);
       if (row == rogue.row && col == rogue.col) break;
     }
   }
@@ -349,7 +350,7 @@ bool flameBroil(Monster monster) {
   return true;
 }
 
-Tuple<int, int> getCloser(int row, int col, int trow, int tcol) {
+(int, int) getCloser(int row, int col, int trow, int tcol) {
   if (row < trow) {
     row += 1;
   } else if (row > trow) {
@@ -360,5 +361,5 @@ Tuple<int, int> getCloser(int row, int col, int trow, int tcol) {
   } else if (col > tcol) {
     col -= 1;
   }
-  return Tuple(row, col);
+  return (row, col);
 }

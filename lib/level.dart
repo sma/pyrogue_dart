@@ -2,7 +2,7 @@
 
 import 'globals.dart';
 
-var level_points = [
+var levelPoints = [
   10,
   20,
   40,
@@ -553,10 +553,10 @@ bool checkUp() {
 void addExp(int e) {
   rogue.expPoints += e;
 
-  if (rogue.expPoints >= level_points[rogue.exp - 1]) {
+  if (rogue.expPoints >= levelPoints[rogue.exp - 1]) {
     int new_exp = getExpLevel(rogue.expPoints);
     for (int i = rogue.exp + 1; i <= new_exp; i++) {
-      message("welcome to level " + i.toString(), 0);
+      message("welcome to level $i", 0);
       int hp = getRand(3, 10);
       rogue.hpCurrent += hp;
       rogue.hpMax += hp;
@@ -569,7 +569,7 @@ void addExp(int e) {
 
 int getExpLevel(int e) {
   for (int i = 0; i < 50; i++) {
-    if (level_points[i] > e) {
+    if (levelPoints[i] > e) {
       return i + 1;
     }
   }

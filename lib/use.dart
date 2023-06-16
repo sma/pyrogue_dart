@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'globals.dart';
 
 void quaff() {
@@ -53,10 +55,10 @@ void quaff() {
     } else {
       message("you have a strange feeling for a moment, then it passes", 0);
     }
-    g.detectMonster = 1;
+    g.detectMonster = true;
   } else if (k == DETECT_OBJECTS) {
     if (g.levelObjects.nextObject != null) {
-      if (!g.blind) {
+      if (g.blind == 0) {
         showObjects();
       }
     } else {
@@ -97,22 +99,22 @@ void readScroll() {
   } else if (k == ENCHANT_WEAPON) {
     if (rogue.weapon != null) {
       message(
-          "your ${idWeapons[rogue.weapon.whichKind].title} glows ${getEnchColor()}for a moment",
+          "your ${idWeapons[rogue.weapon!.whichKind].title} glows ${getEnchColor()}for a moment",
           0);
       if (getRand(0, 1) != 0) {
-        rogue.weapon.toHitEnchantment += 1;
+        rogue.weapon!.toHitEnchantment += 1;
       } else {
-        rogue.weapon.damageEnchantment += 1;
+        rogue.weapon!.damageEnchantment += 1;
       }
-      rogue.weapon.isCursed = 0;
+      rogue.weapon!.isCursed = 0;
     } else {
       message("your hands tingle", 0);
     }
   } else if (k == ENCHANT_ARMOR) {
     if (rogue.armor != null) {
       message("your armor glows ${getEnchColor()}for a moment", 0);
-      rogue.armor.damageEnchantment += 1;
-      rogue.armor.isCursed = 0;
+      rogue.armor!.damageEnchantment += 1;
+      rogue.armor!.isCursed = 0;
       printStats();
     } else {
       message("your skin crawls", 0);
@@ -130,17 +132,17 @@ void readScroll() {
   } else if (k == PROTECT_ARMOR) {
     if (rogue.armor != null) {
       message("your armor is covered by a shimmering gold shield", 0);
-      rogue.armor.isProtected = 1;
+      rogue.armor!.isProtected = 1;
     } else {
       message("your acne seems to have disappeared", 0);
     }
   } else if (k == REMOVE_CURSE) {
     message("you feel as though someone is watching over you", 0);
     if (rogue.armor != null) {
-      rogue.armor.isCursed = 0;
+      rogue.armor!.isCursed = 0;
     }
     if (rogue.weapon != null) {
-      rogue.weapon.isCursed = 0;
+      rogue.weapon!.isCursed = 0;
     }
   } else if (k == CREATE_MONSTER) {
     createMonster();
@@ -158,7 +160,7 @@ void vanish(Object obj, int rm) {
     obj.quantity -= 1;
   } else {
     removeFromPack(obj, rogue.pack);
-    makeAvailableIchar(obj.ichar);
+    makeAvailIchar(obj.ichar);
   }
   if (rm != 0) {
     registerMove();
@@ -166,7 +168,7 @@ void vanish(Object obj, int rm) {
 }
 
 void potionHeal(int extra) {
-  final ratio = rogue.hpCurrent / rogue.hpMax.toDouble();
+  var ratio = rogue.hpCurrent / rogue.hpMax.toDouble();
   if (ratio >= 0.9) {
     rogue.hpMax += extra + 1;
     rogue.hpCurrent = rogue.hpMax;
@@ -180,9 +182,7 @@ void potionHeal(int extra) {
     final add = (ratio * (rogue.hpCurrent - rogue.hpMax)).toInt();
     rogue.hpCurrent = max(rogue.hpCurrent + add, rogue.hpMax);
   }
-  if (g
-
-.blind) {
+  if (g.blind > 0) {
     unblind();
   }
   if (g.confused != 0 && extra != 0) {
@@ -265,7 +265,7 @@ void holdMonster() {
         continue;
       }
       if ((screen[row][col] & MONSTER) != 0) {
-        final monster = objectAt(g.levelMonsters, row, col);
+        final monster = objectAt(g.levelMonsters, row, col)!;
         monster.mFlags |= IS_ASLEEP;
         monster.mFlags &= ~WAKENS;
         mcount += 1;
@@ -285,26 +285,23 @@ void teleport() {
   if (g.currentRoom >= 0) {
     darkenRoom(g.currentRoom);
   } else {
-    mvaddch(
-        rogue.row, rogue.col, getRoomChar(screen[rogue.row][rogue.col], rogue.row, rogue
-
-.col));
+    mvaddch(rogue.row, rogue.col, getRoomChar(screen[rogue.row][rogue.col], rogue.row, rogue.col));
   }
   putPlayer();
   lightUpRoom();
-  g.beingHold = 0;
+  g.beingHeld = false;
 }
 
 void hallucinate() {
-  if (g.blind) {
+  if (g.blind > 0) {
     return;
   }
   var obj = g.levelObjects.nextObject;
   while (obj != null) {
     final ch = mvinch(obj.row, obj.col);
-    if ((ch < 'A' || ch > 'Z') && (obj.row != rogue.row || obj.col != rogue.col)) {
+    if ((!isLetter(ch)) && (obj.row != rogue.row || obj.col != rogue.col)) {
       if (ch != ' ' && ch != '.' && ch != '#' && ch != '+') {
-        addch(getRandObjChar());
+        addch(getRandomObjChar());
       }
     }
     obj = obj.nextObject;
@@ -312,11 +309,15 @@ void hallucinate() {
   obj = g.levelMonsters.nextObject;
   while (obj != null) {
     final ch = mvinch(obj.row, obj.col);
-    if (ch >= 'A' && ch <= 'Z') {
+    if (isLetter(ch)) {
       addch(String.fromCharCode(getRand('A'.codeUnitAt(0), 'Z'.codeUnitAt(0))));
     }
     obj = obj.nextObject;
   }
+}
+
+bool isLetter(String ch) {
+  return ch.codeUnitAt(0) >= 65 && ch.codeUnitAt(0) < 91;
 }
 
 void unhallucinate() {
@@ -340,7 +341,7 @@ void unblind() {
   if (g.detectMonster) {
     showMonsters();
   }
-  if (g.halluc) {
+  if (g.halluc > 0) {
     hallucinate();
   }
 }

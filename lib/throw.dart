@@ -1,13 +1,13 @@
 import 'globals.dart';
 
 void throwObject() {
-  int firstMiss = 1;
-  int dir = getchar();
+  var firstMiss = true;
+  String dir = getchar();
   while (!isDirection(dir)) {
     beep();
     if (firstMiss) {
       message("direction? ", 0);
-      firstMiss = 0;
+      firstMiss = false;
     }
     dir = getchar();
   }
@@ -15,13 +15,13 @@ void throwObject() {
     checkMessage();
     return;
   }
-  int wch = getPackLetter("throw what?", WEAPON);
+  final wch = getPackLetter("throw what?", WEAPON);
   if (wch == CANCEL) {
     checkMessage();
     return;
   }
   checkMessage();
-  Object weapon = getLetterObject(wch);
+  Object? weapon = getLetterObject(wch);
   if (weapon == null) {
     message("no such item.", 0);
     return;
@@ -37,16 +37,12 @@ void throwObject() {
     }
     return;
   }
-  if (weapon == rogue.weapon && weapon.isCursed) {
+  if (weapon == rogue.weapon && weapon.isCursed != 0) {
     message("you can't, it appears to be cursed", 0);
     return;
   }
-  Monster monster;
-  int row, col;
-  Tuple3<Monster, int, int> result = getThrownAtMonster(dir, rogue.row, rogue.col);
-  monster = result.item1;
-  row = result.item2;
-  col = result.item3;
+  
+  final (monster, row, col) = getThrownAtMonster(dir, rogue.row, rogue.col);
   mvaddch(rogue.row, rogue.col, rogue.fchar);
   refresh();
   if (canSee(row, col) && (row != rogue.row || col != rogue.col)) {
@@ -76,7 +72,7 @@ bool throwAtMonster(Monster monster, Object weapon) {
   }
   g.hitMessage += " hits  ";
   int damage = getWeaponDamage(weapon);
-  if ((weapon.whichKind == ARROW && rogue.weapon != null && rogue.weapon.whichKind == BOW) ||
+  if ((weapon.whichKind == ARROW && rogue.weapon != null && rogue.weapon!.whichKind == BOW) ||
       (weapon.whichKind == SHURIKEN && rogue.weapon == weapon)) {
     damage += getWeaponDamage(rogue.weapon);
     damage = damage * 2 ~/ 3;
@@ -85,19 +81,14 @@ bool throwAtMonster(Monster monster, Object weapon) {
   return true;
 }
 
-Tuple3<Monster, int, int> getThrownAtMonster(int dir, int row, int col) {
+(Monster?, int, int) getThrownAtMonster(String dir, int row, int col) {
   int orow = row;
   int ocol = col;
   int i = 0;
   while (i < 24) {
-    Tuple<int, int> result = getDirRC(dir, row, col);
-    row = result.item1;
-    col = result.item2;
-    if (screen[row][col] == BLANK ||
-        (screen[row][col] & (HORWALL | VERTWALL))
-
- != 0) {
-      return Tuple3(null, orow, ocol);
+    (row, col) = getDirRc(dir, row, col);
+    if (screen[row][col] == BLANK || (screen[row][col] & (HORWALL | VERTWALL)) != 0) {
+      return (null, orow, ocol);
     }
     if (i != 0 && canSee(orow, ocol)) {
       mvaddch(orow, ocol, getRoomChar(screen[orow][ocol], orow, ocol));
@@ -112,7 +103,7 @@ Tuple3<Monster, int, int> getThrownAtMonster(int dir, int row, int col) {
     ocol = col;
     if ((screen[row][col] & MONSTER) != 0) {
       if (!hidingXeroc(row, col)) {
-        return Tuple3(objectAt(g.levelMonsters, row, col), row, col);
+        return (objectAt(g.levelMonsters, row, col), row, col);
       }
     }
     if ((screen[row][col] & TUNNEL) != 0) {
@@ -120,15 +111,15 @@ Tuple3<Monster, int, int> getThrownAtMonster(int dir, int row, int col) {
     }
     i += 1;
   }
-  return Tuple3(null, row, col);
+  return (null, row, col);
 }
 
 void flopWeapon(Object weapon, int row, int col) {
-  int inc1 = getRand(0, 1) ? 1 : -1;
-  int inc2 = getRand(0, 1) ? 1 : -1;
+  int inc1 = getRand(0, 1) != 0 ? 1 : -1;
+  int inc2 = getRand(0, 1) != 0 ? 1 : -1;
   int r = row;
   int c = col;
-  int found = 0;
+  bool found = false;
   if ((screen[r][c] & ~(FLOOR | TUNNEL | DOOR)) != 0 ||
       (row == rogue.row && col == rogue.col)) {
     for (int i = inc1; i < 2 * -inc1 + 1; -inc1) {
@@ -138,22 +129,22 @@ void flopWeapon(Object weapon, int row, int col) {
         if (r > LINES - 2 || r < MIN_ROW || c > COLS - 1 || c < 0) {
           continue;
         }
-        found = 1;
+        found = true;
         break;
       }
       if (found) break;
     }
   } else {
-    found = 1;
+    found = true;
   }
-  if (found != 0) {
+  if (found) {
     Object newWeapon = getAnObject();
     newWeapon = weapon.copy();
     newWeapon.quantity = 1;
     newWeapon.row = r;
     newWeapon.col = c;
     addMask(r, c, WEAPON);
-    addToPack(newWeapon, g.levelObjects, 0);
+    addToPack(newWeapon, g.levelObjects, false);
     if (canSee(r, c)) {
       mvaddch(r, c, getRoomChar(screen[r][c], r, c));
     }
