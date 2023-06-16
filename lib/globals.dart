@@ -67,8 +67,8 @@ const int COL2 = 52;
 const int MOVED = 0;
 const int MOVE_FAILED = -1;
 const int STOPPED_ON_SOMETHING = -2;
-const char CANCEL = '\033';
-const char LIST = '*';
+const String CANCEL = '\033';
+const String LIST = '*';
 
 const int HUNGRY = 300;
 const int WEAK = 120;
@@ -162,7 +162,7 @@ const int SROWS = 24;
 const int SCOLS = 80;
 
 const int MAX_TITLE_LENGTH = 30;
-const char MORE[] = "-more-";
+const String MORE = "-more-";
 const int MAXSYLLABLES = 40;
 const int MAXMETALS = 15;
 
