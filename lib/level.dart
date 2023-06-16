@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'globals.dart';
 
 var levelPoints = [
@@ -32,18 +30,18 @@ void makeLevel() {
     g.maxLevel = g.currentLevel;
   }
 
-  int must_exists1;
-  int must_exists2;
+  int mustExists1;
+  int mustExists2;
   if (randPercent(50)) {
-    must_exists1 = 1;
-    must_exists2 = 7;
+    mustExists1 = 1;
+    mustExists2 = 7;
   } else {
-    must_exists1 = 3;
-    must_exists2 = 5;
+    mustExists1 = 3;
+    mustExists2 = 5;
   }
 
   for (int i = 0; i < MAXROOMS; i++) {
-    makeRoom(i, must_exists1, must_exists2, 4);
+    makeRoom(i, mustExists1, mustExists2, 4);
   }
 
   tryRooms(0, 1, 2);
@@ -52,9 +50,9 @@ void makeLevel() {
   tryRooms(6, 7, 8);
 
   for (int i = 0; i < MAXROOMS - 1; i++) {
-    connectRooms(i, i + 1, must_exists1, must_exists2, 4);
+    connectRooms(i, i + 1, mustExists1, mustExists2, 4);
     if (i < MAXROOMS - 3) {
-      connectRooms(i, i + 3, must_exists1, must_exists2, 4);
+      connectRooms(i, i + 3, mustExists1, mustExists2, 4);
     }
   }
   addDeadEnds();
@@ -132,12 +130,12 @@ void makeRoom(int n, int r1, int r2, int r3) {
   if (!(n != r1 && n != r2 && n != r3 && randPercent(45))) {
     int height = getRand(4, bottomRow - topRow + 1);
     int width = getRand(7, rightCol - leftCol - 2);
-    int row_offset = getRand(0, bottomRow - topRow - height + 1);
-    int col_offset = getRand(0, rightCol - leftCol - width + 1);
+    int rowOffset = getRand(0, bottomRow - topRow - height + 1);
+    int colOffset = getRand(0, rightCol - leftCol - width + 1);
 
-    topRow += row_offset;
+    topRow += rowOffset;
     bottomRow = topRow + height - 1;
-    leftCol += col_offset;
+    leftCol += colOffset;
     rightCol = leftCol + width - 1;
 
     rooms[n].isRoom = true;
@@ -224,9 +222,7 @@ void clearLevel() {
 }
 
 void printStats() {
-  var m = "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hpCurrent}(${rogue.hpMax})" +
-      "  Str: ${rogue.strengthCurrent}(${rogue.strengthMax})  Arm: ${getArmorClass(rogue.armor)}" +
-      "  Exp: ${rogue.exp}/${rogue.expPoints} ${g.hungerStr}";
+  var m = "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hpCurrent}(${rogue.hpMax})  Str: ${rogue.strengthCurrent}(${rogue.strengthMax})  Arm: ${getArmorClass(rogue.armor)}  Exp: ${rogue.exp}/${rogue.expPoints} ${g.hungerStr}";
 
   mvaddstr(LINES - 1, 0, m);
   clrtoeol();
@@ -334,7 +330,7 @@ void addDeadEnds() {
   }
 
   int start = getRand(0, MAXROOMS - 1);
-  int dead_end_percent = 12 + g.currentLevel * 2;
+  int deadEndPercent = 12 + g.currentLevel * 2;
 
   for (int i = 0; i < MAXROOMS; i++) {
     int j = (start + i) % MAXROOMS;
@@ -343,7 +339,7 @@ void addDeadEnds() {
       continue;
     }
 
-    if (!randPercent(dead_end_percent)) {
+    if (!randPercent(deadEndPercent)) {
       continue;
     }
 
@@ -554,15 +550,15 @@ void addExp(int e) {
   rogue.expPoints += e;
 
   if (rogue.expPoints >= levelPoints[rogue.exp - 1]) {
-    int new_exp = getExpLevel(rogue.expPoints);
-    for (int i = rogue.exp + 1; i <= new_exp; i++) {
+    int newExp = getExpLevel(rogue.expPoints);
+    for (int i = rogue.exp + 1; i <= newExp; i++) {
       message("welcome to level $i", 0);
       int hp = getRand(3, 10);
       rogue.hpCurrent += hp;
       rogue.hpMax += hp;
       printStats();
     }
-    rogue.exp = new_exp;
+    rogue.exp = newExp;
   }
   printStats();
 }

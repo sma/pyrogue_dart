@@ -1,6 +1,6 @@
 import 'globals.dart';
 
-String CURSE_MESSAGE = "you can't, it appears to be cursed";
+const CURSE_MESSAGE = "you can't, it appears to be cursed";
 
 Object addToPack(Object obj, ObjHolder pack, bool condense) {
   if (condense) {
@@ -112,7 +112,7 @@ void drop() {
     obj = newObj;
     addToPack(obj, g.levelObjects, false);
     addMask(rogue.row, rogue.col, obj.whatIs);
-    message("dropped " + getDescription(obj), 0);
+    message("dropped ${getDescription(obj)}", 0);
     registerMove();
     return;
   }
@@ -125,7 +125,7 @@ void drop() {
   removeFromPack(obj, rogue.pack);
   addToPack(obj, g.levelObjects, false);
   addMask(rogue.row, rogue.col, obj.whatIs);
-  message("dropped " + getDescription(obj), 0);
+  message("dropped ${getDescription(obj)}", 0);
   registerMove();
 }
 
@@ -204,7 +204,7 @@ void takeOff() {
       mvAquatars();
       Object obj = rogue.armor!;
       rogue.armor = null;
-      message("was wearing " + getDescription(obj), 0);
+      message("was wearing ${getDescription(obj)}", 0);
       printStats();
       registerMove();
     }

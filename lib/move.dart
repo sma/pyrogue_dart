@@ -1,9 +1,9 @@
 import 'globals.dart';
 
 int moves = 0;
-int h_exp = -1;
-int h_n = 0;
-int h_c = 0;
+int hExp = -1;
+int hN = 0;
+int hC = 0;
 
 int singleMoveRogue(String dirch, bool pickup) {
   int row = rogue.row;
@@ -125,7 +125,7 @@ int singleMoveRogue(String dirch, bool pickup) {
 }
 
 void multipleMoveRogue(String dirch) {
-  if (dirch.contains("\b\012\013\014\031\025\016\002")) {
+  if (dirch.contains("\x08\x0A\x0B\x0C\x1F\x19\x10\x02")) {
     while (true) {
       int row = rogue.row;
       int col = rogue.col;
@@ -333,43 +333,43 @@ String getRandDir() {
 }
 
 void heal() {
-  if (rogue.exp != h_exp) {
-    h_exp = rogue.exp;
+  if (rogue.exp != hExp) {
+    hExp = rogue.exp;
 
-    if (h_exp == 1) {
-      h_n = 20;
-    } else if (h_exp == 2) {
-      h_n = 18;
-    } else if (h_exp == 3) {
-      h_n = 17;
-    } else if (h_exp == 4) {
-      h_n = 14;
-    } else if (h_exp == 5) {
-      h_n = 13;
-    } else if (h_exp == 6) {
-      h_n = 11;
-    } else if (h_exp == 7) {
-      h_n = 9;
-    } else if (h_exp == 8) {
-      h_n = 8;
-    } else if (h_exp == 9) {
-      h_n = 6;
-    } else if (h_exp == 10) {
-      h_n = 4;
-    } else if (h_exp == 11) {
-      h_n = 3;
+    if (hExp == 1) {
+      hN = 20;
+    } else if (hExp == 2) {
+      hN = 18;
+    } else if (hExp == 3) {
+      hN = 17;
+    } else if (hExp == 4) {
+      hN = 14;
+    } else if (hExp == 5) {
+      hN = 13;
+    } else if (hExp == 6) {
+      hN = 11;
+    } else if (hExp == 7) {
+      hN = 9;
+    } else if (hExp == 8) {
+      hN = 8;
+    } else if (hExp == 9) {
+      hN = 6;
+    } else if (hExp == 10) {
+      hN = 4;
+    } else if (hExp == 11) {
+      hN = 3;
     } else {
-      h_n = 2;
+      hN = 2;
     }
   }
 
   if (rogue.hpCurrent == rogue.hpMax) {
-    h_c = 0;
+    hC = 0;
     return;
   }
-  h_c += 1;
-  if (h_c >= h_n) {
-    h_c = 0;
+  hC += 1;
+  if (hC >= hN) {
+    hC = 0;
     rogue.hpCurrent += 1;
     if (rogue.hpCurrent < rogue.hpMax) {
       if (randPercent(50)) {

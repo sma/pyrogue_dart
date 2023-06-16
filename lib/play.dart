@@ -27,7 +27,7 @@ void playLevel() {
       } else if (ch == 'h' || ch == 'j' || ch == 'k' || ch == 'l' || ch == 'y' || ch == 'u' || ch == 'n' || ch == 'b') {
         singleMoveRogue(ch, true);
       } else if (ch == 'H' || ch == 'J' || ch == 'K' || ch == 'L' || ch == 'Y' || ch == 'U' || ch == 'N' || ch == 'B' ||
-                 ch == '\010' || ch == '\012' || ch == '\013' || ch == '\014' || ch == '\031' || ch == '\025' || ch == '\016' || ch == '\002') {
+                 ch == '\x08' || ch == '\x0A' || ch == '\x0B' || ch == '\x0C' || ch == '\x1F' || ch == '\x19' || ch == '\x10' || ch == '\x02') {
         multipleMoveRogue(ch);
       } else if (ch == 'e') {
         eat();
@@ -39,7 +39,7 @@ void playLevel() {
         moveOnto();
       } else if (ch == 'd') {
         drop();
-      } else if (ch == '\020') {
+      } else if (ch == '\x10') {
         remessage();
       } else if (ch == '>') {
         if (checkDown()) {
@@ -51,7 +51,7 @@ void playLevel() {
         }
       } else if (ch == 'I') {
         singleInventory();
-      } else if (ch == '\022') {
+      } else if (ch == '\x12') {
         refresh();
       } else if (ch == 'T') {
         takeOff();
@@ -65,7 +65,7 @@ void playLevel() {
         zapp();
       } else if (ch == 't') {
         throwObject();
-      } else if (ch == '\032') {
+      } else if (ch == '\x1A') {
         // TODO(sma): is this supposed to raise a SIGTSTP ?
         // tstp();
       } else if (ch == '!') {

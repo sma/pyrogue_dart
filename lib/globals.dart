@@ -67,7 +67,7 @@ const int COL2 = 52;
 const int MOVED = 0;
 const int MOVE_FAILED = -1;
 const int STOPPED_ON_SOMETHING = -2;
-const String CANCEL = '\033';
+const String CANCEL = '\x1b';
 const String LIST = '*';
 
 const int HUNGRY = 300;
