@@ -2,19 +2,26 @@ import 'globals.dart';
 
 void main() {
   init();
-  while (true) {
-    clearLevel();
-    makeLevel();
-    putObjects();
-    putStairs();
-    putMonsters();
-    putPlayer();
-    lightUpRoom();
-    printStats();
-    playLevel();
-    g.levelObjects.nextObject = null;
-    g.levelMonsters.nextObject = null;
-    clear();
+  try {
+    while (true) {
+      clearLevel();
+      makeLevel();
+      putObjects();
+      putStairs();
+      putMonsters();
+      putPlayer();
+      lightUpRoom();
+      printStats();
+      playLevel();
+      g.levelObjects.nextObject = null;
+      g.levelMonsters.nextObject = null;
+      clear();
+    }
+  } catch (error, st) {
+    print(error);
+    print(st);
+  } finally {
+    byebye();
   }
 }
 

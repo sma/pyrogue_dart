@@ -3,16 +3,24 @@ import 'dart:io';
 const COLS = 80;
 const LINES = 24;
 
+var _oldLineMode = false;
+var _oldEchoMode = false;
+
 void initscr() {
-  // No implementation needed in Dart using dart:io.
+  if (stdin.hasTerminal) {
+    _oldLineMode = stdin.lineMode;
+    _oldEchoMode = stdin.echoMode;
+  }
 }
 
 void crmode() {
+  if (!stdin.hasTerminal) return;
   stdin.lineMode = false;
   stdin.echoMode = false;
 }
 
 void noecho() {
+  if (!stdin.hasTerminal) return;
   stdin.echoMode = false;
 }
 
@@ -21,7 +29,10 @@ void nonl() {
 }
 
 void endwin() {
-  // No implementation needed in Dart using dart:io.
+  if (stdin.hasTerminal) {
+    stdin.lineMode = _oldLineMode;
+    stdin.echoMode = _oldEchoMode;
+  }
 }
 
 void beep() {

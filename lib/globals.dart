@@ -24,15 +24,15 @@ export 'zap.dart';
 // monster.h
 const int MONSTERS = 26;
 
-const int HASTED = 001;
-const int SLOWED = 002;
-const int IS_INVIS = 004;
-const int IS_ASLEEP = 010;
-const int WAKENS = 020;
-const int WANDERS = 040;
-const int FLIES = 0100;
-const int FLITS = 0200;
-const int CAN_GO = 0400;
+const int HASTED = 0x1;
+const int SLOWED = 0x2;
+const int IS_INVIS = 0x4;
+const int IS_ASLEEP = 0x8;
+const int WAKENS = 0x10;
+const int WANDERS = 0x20;
+const int FLIES = 0x40;
+const int FLITS = 0x80;
+const int CAN_GO = 0x100;
 
 const int MAXMONSTER = 26;
 
@@ -78,26 +78,26 @@ const int STARVE = 0;
 const int MIN_ROW = 1;
 
 // object.h
-const int BLANK = 00;
-const int ARMOR = 01;
-const int WEAPON = 02;
-const int SCROLL = 04;
-const int POTION = 010;
-const int GOLD = 020;
-const int FOOD = 040;
-const int WAND = 0100;
-const int STAIRS = 0200;
-const int AMULET = 0400;
-const int MONSTER = 01000;
-const int HORWALL = 02000;
-const int VERTWALL = 04000;
-const int DOOR = 010000;
-const int FLOOR = 020000;
-const int TUNNEL = 040000;
-const int UNUSED = 0100000;
+const int BLANK = 0x0;
+const int ARMOR = 0x1;
+const int WEAPON = 0x2;
+const int SCROLL = 0x4;
+const int POTION = 0x8;
+const int GOLD = 0x10;
+const int FOOD = 0x20;
+const int WAND = 0x40;
+const int STAIRS = 0x80;
+const int AMULET = 0x100;
+const int MONSTER = 0x200;
+const int HORWALL = 0x400;
+const int VERTWALL = 0x800;
+const int DOOR = 0x1000;
+const int FLOOR = 0x2000;
+const int TUNNEL = 0x4000;
+const int UNUSED = 0x8000;
 
-const int IS_OBJECT = 0777;
-const int CAN_PICK_UP = 0577;
+const int IS_OBJECT = 0x1FF;
+const int CAN_PICK_UP = 0x17F;
 
 const int LEATHER = 0;
 const int RING = 1;
@@ -302,7 +302,7 @@ class Room {
         topRow = 0,
         width = 0,
         height = 0,
-        doors = <Door>[],
+        doors = List.generate(4, (_) => Door(0, 0, 0)),
         isRoom = false;
 }
 

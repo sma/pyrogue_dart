@@ -77,7 +77,7 @@ void fillRoomWithMonsters(int rn, int n) {
 
 String getMonsterCharRowCol(int row, int col) {
   var monster = objectAt(g.levelMonsters, row, col)!;
-  if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind > 0) {
+  if ((!g.detectMonster && (monster.mFlags & IS_INVIS) != 0) || g.blind > 0) {
     return getRoomChar(screen[row][col] & ~MONSTER, row, col);
   }
   if (monster.ichar == 'X' && monster.identified != 0) {

@@ -114,9 +114,7 @@ void stopWindow() {
   edchars(1);
 }
 
-void
-
- byebye() {
+void byebye() {
   cleanUp("Okay, bye bye!");
 }
 

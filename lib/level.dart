@@ -163,9 +163,11 @@ void makeRoom(int n, int r1, int r2, int r3) {
 }
 
 void connectRooms(int room1, int room2, int m1, int m2, int m3) {
-  if (!(room1 != m1 && room1 != m2 && room1 != m3 && room2 != m1 && room2 != m2 && room2 != m3) ||
-      adjascent(room1, room2)) {
-    doConnect(room1, room2);
+  if (room1 != m1 && room1 != m2 && room1 != m3 && room2 != m1 && room2 != m2 && room2 != m3) {
+    if (randPercent(80)) return;
+    if (adjascent(room1, room2)) {
+      doConnect(room1, room2);
+    }
   }
 }
 
