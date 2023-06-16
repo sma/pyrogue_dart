@@ -16,3 +16,4 @@ There is no `Monster` type, so I create a typealias for `Object`.
 The `Object` didn't correctly initialize variables. `globals.dart` is done. (539 errors)
 
 `hit.dart` is done. (468 errors)
+`init.dart` is done. (434 errors)

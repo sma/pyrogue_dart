@@ -2,7 +2,7 @@ import 'globals.dart';
 
 String CURSE_MESSAGE = "you can't, it appears to be cursed";
 
-Object addToPack(Object obj, Object pack, bool condense) {
+Object addToPack(Object obj, ObjHolder pack, bool condense) {
   if (condense) {
     Object op = checkDuplicate(obj, pack);
     if (op != null) {
@@ -131,11 +131,11 @@ pped " + getDescription(obj), 0);
   registerMove();
 }
 
-Object checkDuplicate(Object obj, Object pack) {
+Object? checkDuplicate(Object obj, ObjHolder pack) {
   if (!((obj.whatIs & (WEAPON | FOOD | SCROLL | POTION)) != 0)) {
     return null;
   }
-  Object op = pack.nextObject;
+  Object? op = pack.nextObject;
   while (op != null) {
     if (op.whatIs == obj.whatIs && op.whichKind == obj.whichKind) {
       if (obj.whatIs != WEAPON ||

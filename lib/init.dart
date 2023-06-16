@@ -3,19 +3,20 @@ import 'dart:io';
 import 'globals.dart';
 
 void init() {
-  g.playerName = Platform.environment['USER'] ?? Platform.environment['USERNAME'];
-  if (g.playerName == null) {
+  final name = Platform.environment['USER'] ?? Platform.environment['USERNAME'];
+  if (name == null) {
     stderr.write("Hey! Who are you?");
     exit(1);
   }
+  g.playerName = name;
   print("Hello ${g.playerName}, just a moment while I dig the dungeon...");
 
   // register byebye() function to be called on exit
-  exitHandler.register(byebye);
+  // TODO(sma): exitHandler.register(byebye);
 
   initscr();
   for (var i = 0; i < 26; i++) {
-    g.ichars[i] = 0;
+    g.ichars[i] = false;
   }
   startWindow();
   //signal(SIGTSTP, tstp);
@@ -26,7 +27,7 @@ void init() {
   //}
   //LINES = SROWS;
 
-  srandom(ProcessInfo().pid);
+  srandom(pid);
   initItems();
 
   g.levelObjects.nextObject = null;
@@ -38,7 +39,7 @@ void playerInit() {
   rogue.pack.nextObject = null;
   var obj = getAnObject();
   getFood(obj);
-  addToPack(obj, rogue.pack, 1);
+  addToPack(obj, rogue.pack, true);
 
   // initial armor
   obj = getAnObject();
@@ -49,7 +50,7 @@ void playerInit() {
   obj.isProtected = 0;
   obj.damageEnchantment = 1;
   obj.identified = 1;
-  addToPack(obj, rogue.pack, 1);
+  addToPack(obj, rogue.pack, true);
   rogue.armor = obj;
 
   // initial weapons
@@ -61,7 +62,7 @@ void playerInit() {
   obj.toHitEnchantment = 1;
   obj.damageEnchantment = 1;
   obj.identified = 1;
-  addToPack(obj, rogue.pack, 1);
+  addToPack(obj, rogue.pack, true);
   rogue.weapon = obj;
 
   obj = getAnObject();
@@ -72,7 +73,7 @@ void playerInit() {
   obj.toHitEnchantment = 1;
   obj.damageEnchantment = 0;
   obj.identified = 1;
-  addToPack(obj, rogue.pack, 1);
+  addToPack(obj, rogue.pack, true);
 
   obj = getAnObject();
   obj.whatIs = WEAPON;
@@ -83,7 +84,7 @@ void playerInit() {
   obj.toHitEnchantment = 0;
   obj.damageEnchantment = 0;
   obj.identified = 1;
-  addToPack(obj, rogue.pack, 1);
+  addToPack(obj, rogue.pack, true);
 }
 
 void cleanUp(String estr) {
@@ -91,12 +92,13 @@ void cleanUp(String estr) {
   refresh();
   stopWindow();
   print(estr);
-  if (g.exc != null && g.exc?.first is! SystemExit) {
-    stderr.write("---------");
-    //traceback.print_exception(*g.exc)
-    traceback.print_exception(g.exc!);
-    stderr.write("---------");
-  }
+  // TODO(sma): print exception in g.exc
+  // if (g.exc != null && g.exc?.first is! SystemExit) {
+  //   stderr.write("---------");
+  //   //traceback.print_exception(*g.exc)
+  //   traceback.print_exception(g.exc!);
+  //   stderr.write("---------");
+  // }
   exit(0);
 }
 
@@ -119,8 +121,8 @@ void
 }
 
 void onintr() {
-  if (g.cantInt != 0) {
-    g.didInt = 1;
+  if (g.cantInt) {
+    g.didInt = true;
   } else {
     //signal(SIGINT, SIG_IGN);
     checkMessage();

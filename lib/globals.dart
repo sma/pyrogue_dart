@@ -473,7 +473,7 @@ class G {
   int foods = 0;
 
   // pack.py
-  List<int> ichars = List<int>.filled(26, 0);
+  List<bool> ichars = List.filled(26, false);
 
   // play.py
   bool interrupted = false;
