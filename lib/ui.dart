@@ -37,7 +37,7 @@ void clrtoeol() {
 }
 
 String getchar() {
-  return stdin.readByteSync().toString();
+  return String.fromCharCode(stdin.readByteSync());
 }
 
 void move(int row, int col) {

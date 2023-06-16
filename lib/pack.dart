@@ -4,7 +4,7 @@ String CURSE_MESSAGE = "you can't, it appears to be cursed";
 
 Object addToPack(Object obj, ObjHolder pack, bool condense) {
   if (condense) {
-    Object op = checkDuplicate(obj, pack);
+    Object? op = checkDuplicate(obj, pack);
     if (op != null) {
       return op;
     } else {
@@ -14,9 +14,9 @@ Object addToPack(Object obj, ObjHolder pack, bool condense) {
   if (pack.nextObject == null) {
     pack.nextObject = obj;
   } else {
-    Object op = pack.nextObject;
+    Object op = pack.nextObject!;
     while (op.nextObject != null) {
-      op = op.nextObject;
+      op = op.nextObject!;
     }
     op.nextObject = obj;
   }
@@ -26,22 +26,22 @@ Object addToPack(Object obj, ObjHolder pack, bool condense) {
 
 void removeFromPack(Object obj, ObjHolder pack) {
   while (pack.nextObject != obj) {
-    pack = pack.nextObject;
+    pack = pack.nextObject!;
   }
   pack.nextObject = pack.nextObject!.nextObject;
 }
 
-Object pickUp(int row, int col) {
-  Object obj = objectAt(g.levelObjects, row, col);
-  int status = 1;
+(Object?, bool) pickUp(int row, int col) {
+  var obj = objectAt(g.levelObjects, row, col)!;
+  var status = true;
 
   if (obj.whatIs == SCROLL && obj.whichKind == SCARE_MONSTER && obj.pickedUp > 0) {
     message("the scroll turns to dust as you pick it up", 1);
     removeFromPack(obj, g.levelObjects);
     removeMask(row, col, SCROLL);
-    status = 0;
+    status = false;
     idScrolls[SCARE_MONSTER].idStatus = IDENTIFIED;
-    return null;
+    return (null, status);
   }
 
   if (obj.whatIs == GOLD) {
@@ -49,27 +49,27 @@ Object pickUp(int row, int col) {
     removeMask(row, col, GOLD);
     removeFromPack(obj, g.levelObjects);
     printStats();
-    return obj;
+    return (obj, status);
   }
 
   if (getPackCount(obj) >= MAX_PACK_COUNT) {
     message("Pack too full", 1);
-    return null;
+    return (null, status);
   }
 
   if (obj.whatIs == AMULET) {
-    g.hasAmulet = 1;
+    g.hasAmulet = true;
   }
 
   removeMask(row, col, obj.whatIs);
   removeFromPack(obj, g.levelObjects);
   obj = addToPack(obj, rogue.pack, true);
   obj.pickedUp += 1;
-  return obj;
+  return (obj, status);
 }
 
 void drop() {
-  if (screen[rogue.row][rogue.col] & IS_OBJECT) {
+  if ((screen[rogue.row][rogue.col] & IS_OBJECT) != 0) {
     message("There's already something there", 0);
     return;
   }
@@ -81,19 +81,19 @@ void drop() {
   if (ch == CANCEL) {
     return;
   }
-  Object obj = getLetterObject(ch);
+  Object? obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
   }
   if (obj == rogue.weapon) {
-    if (obj.isCursed) {
+    if (obj.isCursed != 0) {
       message(CURSE_MESSAGE, 0);
       return;
     }
     rogue.weapon = null;
   } else if (obj == rogue.armor) {
-    if (obj.isCursed) {
+    if (obj.isCursed != 0) {
       message(CURSE_MESSAGE, 0);
       return;
     }
@@ -112,15 +112,13 @@ void drop() {
     obj = newObj;
     addToPack(obj, g.levelObjects, false);
     addMask(rogue.row, rogue.col, obj.whatIs);
-    message("dro
-
-pped " + getDescription(obj), 0);
+    message("dropped " + getDescription(obj), 0);
     registerMove();
     return;
   }
 
   if (obj.whatIs == AMULET) {
-    g.hasAmulet = 0;
+    g.hasAmulet = false;
   }
 
   makeAvailIchar(obj.ichar);
@@ -200,11 +198,11 @@ String getPackLetter(String prompt, int mask) {
 
 void takeOff() {
   if (rogue.armor != null) {
-    if (rogue.armor.isCursed) {
+    if (rogue.armor!.isCursed != 0) {
       message(CURSE_MESSAGE, 0);
     } else {
       mvAquatars();
-      Object obj = rogue.armor;
+      Object obj = rogue.armor!;
       rogue.armor = null;
       message("was wearing " + getDescription(obj), 0);
       printStats();
@@ -224,7 +222,7 @@ void wear() {
   if (ch == CANCEL) {
     return;
   }
-  Object obj = getLetterObject(ch);
+  Object? obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -243,7 +241,7 @@ void wear() {
 }
 
 void wield() {
-  if (rogue.weapon != null && rogue.weapon.isCursed) {
+  if (rogue.weapon != null && rogue.weapon!.isCursed != 0) {
     message(CURSE_MESSAGE, 0);
     return;
   }
@@ -251,7 +249,7 @@ void wield() {
   if (ch == CANCEL) {
     return;
   }
-  Object obj = getLetterObject(ch);
+  Object? obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -274,7 +272,7 @@ void callIt() {
   if (ch == CANCEL) {
     return;
   }
-  Object obj = getLetterObject(ch);
+  Object? obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -283,9 +281,9 @@ void callIt() {
     message("surely you already know what that's called", 0);
     return;
   }
-  List<IdTable> idTable = getIdTable(obj);
+  final idTable = getIdTable(obj);
 
-  String buf = getInputLine(idTable[obj.whichKind].title, false);
+  String buf = getInputLine(idTable[obj.whichKind].title, 0);
   if (buf != '') {
     idTable[obj.whichKind].idStatus = CALLED;
     idTable[obj.whichKind].title = buf;
@@ -295,7 +293,7 @@ void callIt() {
 int getPackCount(Object newObj) {
   int count = 0;
 
-  Object obj = rogue.pack.nextObject;
+  Object? obj = rogue.pack.nextObject;
   while (obj != null) {
     if (obj.whatIs != WEAPON) {
       count += obj.quantity;

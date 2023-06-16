@@ -171,7 +171,7 @@ bool monsterDamage(Monster monster, int damage) {
     removeFromPack(monster, g.levelMonsters);
 
     if (monster.ichar == 'F') {
-      g.beingHeld = 0;
+      g.beingHeld = false;
     }
 
     return false;
@@ -197,7 +197,7 @@ void fight(bool toTheDeath) {
 
   var (row, col) = getDirRc(ch, rogue.row, rogue.col);
 
-  if ((screen[row][col] & MONSTER == 0) || g.blind || hidingXeroc(row, col)) {
+  if ((screen[row][col] & MONSTER == 0) || g.blind > 0 || hidingXeroc(row, col)) {
     //MN:
     message("I see no monster there", 0);
     return;

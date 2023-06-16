@@ -44,7 +44,7 @@ void checkMessage() {
   g.messageCleared = true;
 }
 
-void getInputLine(StringBuffer buf, int ifCancelled) {
+String getInputLine(String buf, int ifCancelled) {
   throw UnimplementedError();
 }
 

@@ -10,9 +10,7 @@ int singleMoveRogue(String dirch, bool pickup) {
   int col = rogue.col;
 
   if (g.beingHeld) {
-    List<int> rc = getDirRc(dirch, row, col);
-    row = rc[0];
-    col = rc[1];
+    (row, col) = getDirRc(dirch, row, col);
 
     if ((screen[row][col] & MONSTER) == 0) {
       message("you are being held", 1);
@@ -23,21 +21,19 @@ int singleMoveRogue(String dirch, bool pickup) {
   row = rogue.row;
   col = rogue.col;
 
-  if (g.confused) {
+  if (g.confused > 0) {
     dirch = String.fromCharCode(dirch.codeUnitAt(0) + 32);
   }
 
-  List<int> rc = getDirRc(dirch, row, col);
-  row = rc[0];
-  col = rc[1];
+  (row, col) = getDirRc(dirch, row, col);
 
   if ((screen[row][col] & MONSTER) != 0) {
-    rogueHit(objectAt(g.levelMonsters, row, col));
+    rogueHit(objectAt(g.levelMonsters, row, col)!);
     registerMove();
     return MOVE_FAILED;
   }
 
-  if (canMove(rogue.row, rogue.col, row, col) == 0) {
+  if (!canMove(rogue.row, rogue.col, row, col)) {
     return MOVE_FAILED;
   }
 
@@ -45,31 +41,30 @@ int singleMoveRogue(String dirch, bool pickup) {
     if (g.currentRoom == PASSAGE) {
       g.currentRoom = getRoomNumber(row, col);
       lightUpRoom();
-      wakeRoom(g.currentRoom, 1, row, col);
+      wakeRoom(g.currentRoom, true, row, col);
     } else {
       lightPassage(row, col);
     }
   } else if ((screen[rogue.row][rogue.col] & DOOR) != 0 &&
       (screen[row][col] & TUNNEL) != 0) {
     lightPassage(row, col);
-    wakeRoom(g.currentRoom, 0, row, col);
+    wakeRoom(g.currentRoom, false, row, col);
     darkenRoom(g.currentRoom);
     g.currentRoom = PASSAGE;
   } else if ((screen[row][col] & TUNNEL) != 0) {
     lightPassage(row, col);
   }
 
-  mvaddch(rogue.row, rogue.col,
-      getRoomChar(screen[rogue.row][rogue.col], rogue.row, rogue.col));
+  mvaddch(rogue.row, rogue.col, getRoomChar(screen[rogue.row][rogue.col], rogue.row, rogue.col));
   mvaddch(row, col, rogue.fchar);
   rogue.row = row;
   rogue.col = col;
 
   if ((screen[row][col] & CAN_PICK_UP) != 0) {
+    Object? obj;
     if (pickup) {
-      List<dynamic> objStatus = pickUp(row, col);
-      dynamic obj = objStatus[0];
-      bool status = objStatus[1];
+      bool status;
+      (obj, status) = pickUp(row, col);
       if (obj != null) {
         String description = getDescription(obj);
         if (obj.whatIs == GOLD) {
@@ -84,11 +79,11 @@ int singleMoveRogue(String dirch, bool pickup) {
           // fainted from hunger
           return STOPPED_ON_SOMETHING;
         }
-        return g.confused ? STOPPED_ON_SOMETHING : MOVED;
+        return g.confused > 0 ? STOPPED_ON_SOMETHING : MOVED;
       } else {
         // MOVE_ON:
-        obj = objectAt(g.levelObjects, row, col);
-        String description = "moved onto " + getDescription(obj);
+        obj = objectAt(g.levelObjects, row, col)!;
+        String description = "moved onto ${getDescription(obj)}";
         // NOT_IN_PACK:
         message(description, 1);
         registerMove();
@@ -96,10 +91,8 @@ int singleMoveRogue(String dirch, bool pickup) {
       }
     } else {
       // MOVE_ON:
-      dynamic obj = objectAt(g.levelObjects, row, col);
-      String description = "moved
-
- onto " + getDescription(obj);
+      obj = objectAt(g.levelObjects, row, col)!;
+      String description = "moved onto ${getDescription(obj)}";
       // NOT_IN_PACK:
       message(description, 1);
       registerMove();
@@ -128,7 +121,7 @@ int singleMoveRogue(String dirch, bool pickup) {
     return STOPPED_ON_SOMETHING;
   }
 
-  return g.confused ? STOPPED_ON_SOMETHING : MOVED;
+  return g.confused > 0 ? STOPPED_ON_SOMETHING : MOVED;
 }
 
 void multipleMoveRogue(String dirch) {
@@ -136,7 +129,7 @@ void multipleMoveRogue(String dirch) {
     while (true) {
       int row = rogue.row;
       int col = rogue.col;
-      int m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), 1);
+      int m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), true);
       if (m == MOVE_FAILED ||
           m == STOPPED_ON_SOMETHING ||
           g.interrupted) {
@@ -147,9 +140,7 @@ void multipleMoveRogue(String dirch) {
       }
     }
   } else if (dirch.contains("HJKLBYUN")) {
-    while (!g.interrupted &&
-        singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 32), 1) ==
-            MOVED) {
+    while (!g.interrupted && singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 32), true) == MOVED) {
       // pass
     }
   }
@@ -162,14 +153,14 @@ bool isPassable(int row, int col) {
   return (screen[row][col] & (FLOOR | TUNNEL | DOOR | STAIRS)) != 0;
 }
 
-int nextToSomething(int drow, int dcol) {
+bool nextToSomething(int drow, int dcol) {
   int passCount = 0;
 
-  if (g.confused) {
-    return 1;
+  if (g.confused > 0) {
+    return true;
   }
-  if (g.blind) {
-    return 0;
+  if (g.blind > 0) {
+    return false;
   }
 
   int iEnd = rogue.row < LINES - 2 ? 1 : 0;
@@ -182,61 +173,59 @@ int nextToSomething(int drow, int dcol) {
       int c = rogue.col + j;
       if (r == drow && c == dcol) continue;
       if ((screen[r][c] & (MONSTER | IS_OBJECT)) != 0) {
-        return 1;
+        return true;
       }
       if ((i - j == 1 || i - j == -1) && (screen[r][c] & TUNNEL) != 0) {
         passCount += 1;
         if (passCount > 1) {
-          return 1;
+          return true;
         }
       }
-      if ((screen[r][c] & DOOR) != 0 || isObject(r, c) != 0) {
-        if (i == 0 || j == 
-
-0) {
-          return 1;
+      if ((screen[r][c] & DOOR) != 0 || isObject(r, c)) {
+        if (i == 0 || j == 0) {
+          return true;
         }
       }
     }
   }
-  return 0;
+  return false;
 }
 
-int canMove(int row1, int col1, int row2, int col2) {
-  if (isPassable(row2, col2) == 0) {
-    return 0;
+bool canMove(int row1, int col1, int row2, int col2) {
+  if (!isPassable(row2, col2)) {
+    return false;
   }
   if (row1 != row2 && col1 != col2) {
     if ((screen[row1][col1] & DOOR) != 0 ||
         (screen[row2][col2] & DOOR) != 0) {
-      return 0;
+      return false;
     }
     if ((screen[row1][col2] == 0) || (screen[row2][col1] == 0)) {
-      return 0;
+      return false;
     }
   }
-  return 1;
+  return true;
 }
 
-int isObject(int row, int col) {
-  return screen[row][col] & IS_OBJECT;
+bool isObject(int row, int col) {
+  return (screen[row][col] & IS_OBJECT) != 0;
 }
 
 void moveOnto() {
   bool firstMiss = true;
 
-  String ch = String.fromCharCode(getchar());
-  while (isDirection(ch) == 0) {
+  String ch = getchar();
+  while (!isDirection(ch)) {
     beep();
     if (firstMiss) {
       message("direction? ", 0);
       firstMiss = false;
     }
-    ch = String.fromCharCode(getchar());
+    ch = getchar();
   }
   checkMessage();
   if (ch != CANCEL) {
-    singleMoveRogue(ch, 0);
+    singleMoveRogue(ch, false);
   }
 }
 
@@ -248,7 +237,7 @@ bool isPackLetter(String c) {
   return "abcdefghijklmnopqrstuvwxyz".contains(c) || c == CANCEL || c == LIST;
 }
 
-void checkHunger() {
+bool checkHunger() {
   bool fainted = false;
   if (rogue.movesLeft == HUNGRY) {
     g.hungerStr = "hungry";
@@ -280,66 +269,54 @@ void checkHunger() {
     }
   }
   if (rogue.movesLeft <= STARVE) {
-    killedBy(0, STARVATION);
+    killedBy(null, STARVATION);
   }
   rogue.movesLeft -= 1;
   return fainted;
 }
 
-void registerMove() {
+bool registerMove() {
+  bool fainted;
+  if (rogue.movesLeft <= HUNGRY && !g.hasAmulet) {
+    fainted = checkHunger();
+  } else {
+    fainted = false;
+  }
+
+  moveMonsters();
+
   moves += 1;
   if (moves >= 80) {
     moves = 0;
     startWanderer();
   }
 
-  if (rogue.exp != h_exp) {
-    h_exp = rogue.exp;
-
-    if (h_exp == 1) {
-      h_n = 20;
-    } else if (h_exp == 2) {
-      h_n = 18;
-    } else if (h_exp == 3) {
-      h_n = 17;
-    } else if (h_exp == 4) {
-      h_n = 14;
-    } else if (h_exp == 5) {
-      h_n = 13;
-   
-
- } else if (h_exp == 6) {
-      h_n = 11;
-    } else if (h_exp == 7) {
-      h_n = 9;
-    } else if (h_exp == 8) {
-      h_n = 8;
-    } else if (h_exp == 9) {
-      h_n = 6;
-    } else if (h_exp == 10) {
-      h_n = 4;
-    } else if (h_exp == 11) {
-      h_n = 3;
+  if (g.halluc > 0) {
+    g.halluc -= 1;
+    if (g.halluc == 0) {
+      unhallucinate();
     } else {
-      h_n = 2;
+      hallucinate();
     }
   }
 
-  if (rogue.hpCurrent == rogue.hpMax) {
-    h_c = 0;
-    return;
-  }
-  h_c += 1;
-  if (h_c >= h_n) {
-    h_c = 0;
-    rogue.hpCurrent += 1;
-    if (rogue.hpCurrent < rogue.hpMax) {
-      if (randPercent(50)) {
-        rogue.hpCurrent += 1;
-      }
+  if (g.blind > 0) {
+    g.blind -= 1;
+    if (g.blind == 0) {
+      unblind();
     }
-    printStats();
   }
+
+  if (g.confused > 0) {
+    g.confused -= 1;
+    if (g.confused == 0) {
+      unconfuse();
+    }
+  }
+
+  heal();
+
+  return fainted;
 }
 
 void rest(int count) {

@@ -77,7 +77,7 @@ void fillRoomWithMonsters(int rn, int n) {
 
 String getMonsterCharRowCol(int row, int col) {
   var monster = objectAt(g.levelMonsters, row, col)!;
-  if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind) {
+  if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind > 0) {
     return getRoomChar(screen[row][col] & ~MONSTER, row, col);
   }
   if (monster.ichar == 'X' && monster.identified != 0) {
@@ -87,7 +87,7 @@ String getMonsterCharRowCol(int row, int col) {
 }
 
 String getMonsterChar(Monster monster) {
-  if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind) {
+  if ((!g.detectMonster && monster.mFlags & IS_INVIS != 0) || g.blind > 0) {
     return getRoomChar(screen[monster.row][monster.col] & ~MONSTER, monster.row, monster.col);
   }
   if (monster.ichar == 'X' && monster.identified != 0) {
@@ -218,7 +218,7 @@ void moveMonsterTo(Monster monster, int row, int col) {
     mvaddch(monster.row, monster.col,
         getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
   }
-  if (!g.blind && (g.detectMonster || canSee(row, col))) {
+  if (g.blind == 0 && (g.detectMonster || canSee(row, col))) {
     if (!(monster.mFlags & IS_INVIS != 0) || g.detectMonster) {
       mvaddch(row, col, getMonsterChar(monster));
     }
@@ -226,7 +226,7 @@ void moveMonsterTo(Monster monster, int row, int col) {
   if (screen[row][col] & DOOR != 0 &&
       getRoomNumber(row, col) != g.currentRoom &&
       screen[monster.row][monster.col] == FLOOR) {
-    if (!g.blind) {
+    if (g.blind == 0) {
       mvaddch(monster.row, monster.col, ' ');
     }
   }
@@ -307,10 +307,10 @@ void wakeRoom(int rn, bool entering, int row, int col) {
 }
 
 String monsterName(Monster monster) {
-  if (g.blind || (monster.mFlags & IS_INVIS != 0 && !g.detectMonster)) {
+  if (g.blind > 0 || (monster.mFlags & IS_INVIS != 0 && !g.detectMonster)) {
     return "something";
   }
-  if (g.halluc) {
+  if (g.halluc > 0) {
     return monsterNames[getRand(0, 25)];
   }
   return monsterNames[monster.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
@@ -339,7 +339,7 @@ void startWanderer() {
 }
 
 void showMonsters() {
-  if (g.blind) return;
+  if (g.blind > 0) return;
 
   var monster = g.levelMonsters.nextObject;
   while (monster != null) {
@@ -396,8 +396,7 @@ void putMonsterAt(int row, int col, Monster monster) {
 }
 
 bool canSee(int row, int col) {
-  return !g.blind &&
-      (getRoomNumber(row, col) == g.currentRoom || rogueIsAround(row, col));
+  return g.blind == 0 && (getRoomNumber(row, col) == g.currentRoom || rogueIsAround(row, col));
 }
 
 bool flit(Monster monster) {

@@ -220,7 +220,7 @@ void clearLevel() {
     }
   }
   g.detectMonster = false;
-  g.beingHeld = 0;
+  g.beingHeld = false;
 }
 
 void printStats() {

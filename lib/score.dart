@@ -4,7 +4,7 @@ import 'globals.dart';
 
 const String SCOREFILE = "scores";
 
-void killedBy(Monster monster, int other) {
+void killedBy(Monster? monster, int other) {
   //signal(SIGINT, SIG_IGN)
 
   if (other != QUIT) {
@@ -20,7 +20,7 @@ void killedBy(Monster monster, int other) {
     buf = "quit";
   } else {
     buf = "killed by ";
-    String name = monsterNames[monster.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+    String name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
     if (isVowel(name)) {
       buf += "an ";
     } else {
@@ -65,12 +65,12 @@ void quit() {
   killedBy(null, QUIT);
 }
 
-void score(Monster monster, int other) {
+void score(Monster? monster, int other) {
   // todo loop in case the scores file cannot be accessed/created
   putScores(monster, other);
 }
 
-void putScores(Monster monster, int other) {
+void putScores(Monster? monster, int other) {
   List<String> scores = List<String>.filled(10, "");
 
   File file = File(SCOREFILE);

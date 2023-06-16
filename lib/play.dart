@@ -3,7 +3,7 @@ import 'globals.dart';
 void playLevel() {
   int count = 0;
   while (true) {
-    g.interrupted = 0;
+    g.interrupted = false;
     if (g.hitMessage.isNotEmpty) {
       message(g.hitMessage, 0);
       g.hitMessage = '';
@@ -21,11 +21,11 @@ void playLevel() {
       } else if (ch == 'i') {
         inventory(rogue.pack, IS_OBJECT);
       } else if (ch == 'f') {
-        fight(0);
+        fight(false);
       } else if (ch == 'F') {
-        fight(1);
+        fight(true);
       } else if (ch == 'h' || ch == 'j' || ch == 'k' || ch == 'l' || ch == 'y' || ch == 'u' || ch == 'n' || ch == 'b') {
-        singleMoveRogue(ch, 1);
+        singleMoveRogue(ch, true);
       } else if (ch == 'H' || ch == 'J' || ch == 'K' || ch == 'L' || ch == 'Y' || ch == 'U' || ch == 'N' || ch == 'B' ||
                  ch == '\010' || ch == '\012' || ch == '\013' || ch == '\014' || ch == '\031' || ch == '\025' || ch == '\016' || ch == '\002') {
         multipleMoveRogue(ch);
@@ -64,21 +64,22 @@ void playLevel() {
       } else if (ch == 'z') {
         zapp();
       } else if (ch == 't') {
-        throwObj();
+        throwObject();
       } else if (ch == '\032') {
-        tstp();
+        // TODO(sma): is this supposed to raise a SIGTSTP ?
+        // tstp();
       } else if (ch == '!') {
         shell();
       } else if (ch == 'v') {
         message("pyrogue: Version 1.0 (sma was here)", 0);
       } else if (ch == 'Q') {
         quit();
-      } else if (ch >= '0' && ch <= '9') {
+      } else if (isDigit(ch)) {
         count = 0;
         while (true) {
           count = 10 * count + ch.codeUnitAt(0) - '0'.codeUnitAt(0);
           ch = getchar();
-          if (ch < '0' || ch > '9') break;
+          if (!isDigit(ch)) break;
         }
         continue;
       } else if (ch == ' ') {
@@ -89,4 +90,8 @@ void playLevel() {
       break;
     }
   }
+}
+
+bool isDigit(String ch) {
+  return ch.codeUnitAt(0) >= 48 && ch.codeUnitAt(0) < 58;
 }

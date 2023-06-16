@@ -15,7 +15,7 @@ void putObjects() {
   for (int i = 0; i < n; i++) {
     Object obj = getRandObject();
     putObjectRandLocation(obj);
-    addToPack(obj, g.levelObjects, 0);
+    addToPack(obj, g.levelObjects, false);
   }
   putGold();
 }
@@ -43,14 +43,14 @@ void putGoldAt(int row, int col) {
   obj.whatIs = GOLD;
   obj.quantity = getRand(2 * g.currentLevel, 16 * g.currentLevel);
   addMask(row, col, GOLD);
-  addToPack(obj, g.levelObjects, 0);
+  addToPack(obj, g.levelObjects, false);
 }
 
 void putObjectAt(Object obj, int row, int col) {
   obj.row = row;
   obj.col = col;
   addMask(row, col, obj.whatIs);
-  addToPack(obj, g.levelObjects, 0);
+  addToPack(obj, g.levelObjects, false);
 }
 
 Object? objectAt(ObjHolder pack, int row, int col) {
@@ -206,9 +206,7 @@ void getRandPotion(Object obj) {
   } else if (percent <= 95) {
     obj.whichKind = CONFUSION;
   } else {
-    obj.which
-
-Kind = POISON;
+    obj.whichKind = POISON;
   }
 }
 
@@ -225,14 +223,15 @@ void getRandWeapon(Object obj) {
   obj.toHitEnchantment = 0;
   obj.damageEnchantment = 0;
 
-  int percent = getRand(1, 32 if obj.whichKind == LONG_SWORD else 96);
+  int percent = getRand(1, obj.whichKind == LONG_SWORD ? 32 : 96);
   int blessing = getRand(1, 3);
   obj.isCursed = 0;
 
+  int increment = 0;
   if (percent <= 16) {
-    int increment = 1;
+    increment = 1;
   } else if (percent <= 32) {
-    int increment = -1;
+    increment = -1;
     obj.isCursed = 1;
   }
   if (percent <= 32) {
@@ -292,7 +291,7 @@ void getFood(Object obj) {
 }
 
 void putStairs() {
-  int row, col = getRandRowCol(FLOOR | TUNNEL);
+  var (row, col) = getRandRowCol(FLOOR | TUNNEL);
   screen[row][col] = STAIRS;
 }
 
@@ -316,7 +315,7 @@ void makeParty() {
 }
 
 void showObjects() {
-  Object obj = g.levelObjects.nextObject;
+  Object? obj = g.levelObjects.nextObject;
   while (obj != null) {
     mvaddch(obj.row, obj.col, getRoomChar(obj.whatIs, obj.row, obj.col));
     obj = obj.nextObject;
@@ -327,11 +326,11 @@ void putAmulet() {
   Object obj = getAnObject();
   obj.whatIs = AMULET;
   putObjectRandLocation(obj);
-  addToPack(obj, g.levelObjects, 0);
+  addToPack(obj, g.levelObjects, false);
 }
 
 void putObjectRandLocation(Object obj) {
-  int row, col = getRandRowCol(FLOOR | TUNNEL);
+  var (row, col) = getRandRowCol(FLOOR | TUNNEL);
   addMask(row, col, obj.whatIs);
   obj.row = row;
   obj.col = col;

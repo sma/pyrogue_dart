@@ -172,7 +172,7 @@ class Identity {
   final int value;
   String title;
   final String real;
-  final int idStatus;
+  int idStatus;
 
   Identity(this.value, this.title, this.real, this.idStatus);
 }
@@ -482,12 +482,12 @@ class G {
   int currentRoom = 0;
 
   // special_hit.py
-  int beingHeld = 0;
+  bool beingHeld = false;
 
   // use.py
-  bool halluc = false;
-  bool blind = false;
-  bool confused = false;
+  int halluc = 0;
+  int blind = 0;
+  int confused = 0;
   //int detectMonster = 0;
 }
 
