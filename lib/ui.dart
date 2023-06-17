@@ -3,14 +3,22 @@ import 'dart:io';
 const COLS = 80;
 const LINES = 24;
 
+final _screen = List.generate(LINES, (_) => List.generate(COLS, (_) => (false, ' ')));
+var _cx = 0;
+var _cy = 0;
+var _standout = false;
+
 var _oldLineMode = false;
 var _oldEchoMode = false;
+var _oldEchoNewlineMode = false;
 
 void initscr() {
   if (stdin.hasTerminal) {
     _oldLineMode = stdin.lineMode;
     _oldEchoMode = stdin.echoMode;
+    _oldEchoNewlineMode = stdin.echoNewlineMode;
   }
+  clear();
 }
 
 void crmode() {
@@ -25,13 +33,15 @@ void noecho() {
 }
 
 void nonl() {
-  // No implementation needed in Dart using dart:io.
+  if (!stdin.hasTerminal) return;
+  stdin.echoNewlineMode = false;
 }
 
 void endwin() {
   if (stdin.hasTerminal) {
     stdin.lineMode = _oldLineMode;
     stdin.echoMode = _oldEchoMode;
+    stdin.echoNewlineMode = _oldEchoNewlineMode;
   }
 }
 
@@ -40,11 +50,19 @@ void beep() {
 }
 
 void clear() {
-  stdout.write('\x1B[2J');
+  _standout = false;
+  for (var row = 0; row < LINES; row++) {
+    for (var col = 0; col < COLS; col++) {
+      _screen[row][col] = (_standout, ' ');
+    }
+  }
 }
 
 void clrtoeol() {
-  stdout.write('\x1B[K');
+  if (_cy < 0 || _cy >= LINES) return;
+  for (var col = _cx; col < COLS; col++) {
+    _screen[_cy][col] = (_standout, ' ');
+  }
 }
 
 String getchar() {
@@ -52,40 +70,78 @@ String getchar() {
 }
 
 void move(int row, int col) {
-  stdout.write('\x1B[${row + 1};${col + 1}H');
+  _cy = row;
+  _cx = col;
 }
 
 void mvaddch(int row, int col, String ch) {
   move(row, col);
-  stdout.write(ch);
+  addch(ch);
 }
 
 void mvaddstr(int row, int col, String s) {
   move(row, col);
-  stdout.write(s);
+  addstr(s);
 }
 
 String mvinch(int row, int col) {
-  move(row, col);
-  return String.fromCharCode(stdin.readByteSync());
+  return _screen[row][col].$2;
 }
 
 void refresh() {
-  // No implementation needed in Dart using dart:io.
+  var standout = false;
+  if (stdout.supportsAnsiEscapes) {
+    stdout.write('\x1b[H\x1b[2J');
+  } else {
+    stdout.write('\n' * LINES);
+  }
+  for (final line in _screen) {
+    for (final (st, ch) in line) {
+      if (stdout.supportsAnsiEscapes && st != standout) {
+        if (st) {
+          stdout.write('\x1B[7m');
+        } else {
+          stdout.write('\x1B[27m');
+        }
+        standout = st;
+      }
+      stdout.write(ch);
+    }
+    if (COLS < stdout.terminalColumns) {
+      stdout.write('\n');
+    }
+  }
+  if (stdout.supportsAnsiEscapes) {
+    stdout.write('\x1b[${_cy + 1};${_cx + 1}H');
+  }
 }
 
 void standout() {
-  stdout.write('\x1B[7m');
+  _standout = true;
 }
 
 void standend() {
-  stdout.write('\x1B[27m');
+  _standout = false;
 }
 
 void addch(String ch) {
-  stdout.write(ch);
+  assert(ch.length == 1);
+  if (ch == '\n') {
+    _cx = 0;
+    _cy++;
+  } else {
+    if (_cy >= 0 && _cy < LINES && _cx >= 0 && _cx < COLS) {
+      _screen[_cy][_cx] = (_standout, ch);
+    }
+    if (++_cx == COLS) {
+      _cx = 0;
+      _cy++;
+    }
+  }
 }
 
 void addstr(String s) {
-  stdout.write(s);
+  for (var i = 0; i < s.length; i++) {
+    addch(s[i]);
+  }
 }
