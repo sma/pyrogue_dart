@@ -12,7 +12,7 @@ void init() {
   print("Hello ${g.playerName}, just a moment while I dig the dungeon...");
 
   // register byebye() function to be called on exit
-  // TODO(sma): exitHandler.register(byebye);
+  // ProcessSignal.sigint.watch().listen((_) => byebye());
 
   initscr();
   for (var i = 0; i < 26; i++) {
@@ -27,7 +27,7 @@ void init() {
   //}
   //LINES = SROWS;
 
-  // srandom(pid);
+  srandom(pid);
   initItems();
 
   g.levelObjects.nextObject = null;

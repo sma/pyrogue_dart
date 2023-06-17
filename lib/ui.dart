@@ -89,7 +89,8 @@ void mvaddstr(int row, int col, String s) {
 }
 
 String mvinch(int row, int col) {
-  return _screen[row][col].$2;
+  move(row, col);
+  return _screen[_cy][_cx].$2;
 }
 
 void refresh() {

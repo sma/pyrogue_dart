@@ -143,7 +143,7 @@ void putScores(Monster? monster, int other) {
 
   refresh();
 
-  file.writeAsStringSync(scores.take(10).join());
+  file.writeAsStringSync(scores.where((line) => line.isNotEmpty).join('\n'));
 
   waitForAck(false);
 
@@ -180,12 +180,11 @@ void insertScore(List<String> scores, int rank, int n, Monster? monster, int oth
   if (other != WIN && g.hasAmulet) {
     buf += "with amulet";
   }
-  buf += "\n";
   scores[rank] = buf;
 }
 
 bool isVowel(String ch) {
-  return ch.contains(RegExp(r'[aeiou]'));
+  return "aeiou".contains(ch);
 }
 
 void sellPack() {

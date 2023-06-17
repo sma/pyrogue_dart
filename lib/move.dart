@@ -124,7 +124,7 @@ int singleMoveRogue(String dirch, bool pickup) {
 }
 
 void multipleMoveRogue(String dirch) {
-  if (dirch.contains("\x08\x0A\x0B\x0C\x1F\x19\x10\x02")) {
+  if ("\x08\x0A\x0B\x0C\x1F\x19\x10\x02".contains(dirch)) {
     while (true) {
       var row = rogue.row;
       var col = rogue.col;
@@ -136,7 +136,7 @@ void multipleMoveRogue(String dirch) {
         break;
       }
     }
-  } else if (dirch.contains("HJKLBYUN")) {
+  } else if ("HJKLBYUN".contains(dirch)) {
     while (!g.interrupted && singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 32), true) == MOVED) {
       // pass
     }
