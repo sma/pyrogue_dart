@@ -13,8 +13,8 @@ void main() {
       lightUpRoom();
       printStats();
       playLevel();
-      g.levelObjects.nextObject = null;
-      g.levelMonsters.nextObject = null;
+      g.levelObjects.clear();
+      g.levelMonsters.clear();
       clear();
     }
   } catch (error, st) {

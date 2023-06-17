@@ -53,20 +53,18 @@ void putObjectAt(Object obj, int row, int col) {
   addToPack(obj, g.levelObjects, false);
 }
 
-Object? objectAt(ObjHolder pack, int row, int col) {
-  var obj = pack.nextObject;
-  while (obj != null && (obj.row != row || obj.col != col)) {
-    obj = obj.nextObject;
+Object? objectAt(List<Object> pack, int row, int col) {
+  for (var obj in pack) {
+    if (obj.row == row && obj.col == col) return obj;
   }
-  return obj;
+  return null;
 }
 
 Object? getLetterObject(String ch) {
-  var obj = rogue.pack.nextObject;
-  while (obj != null && obj.ichar != ch) {
-    obj = obj.nextObject;
+  for (var obj in rogue.pack) {
+    if (obj.ichar == ch) return obj;
   }
-  return obj;
+  return null;
 }
 
 String nameOf(Object obj) {
@@ -310,10 +308,8 @@ void makeParty() {
 }
 
 void showObjects() {
-  var obj = g.levelObjects.nextObject;
-  while (obj != null) {
+  for (var obj in g.levelObjects) {
     mvaddch(obj.row, obj.col, getRoomChar(obj.whatIs, obj.row, obj.col));
-    obj = obj.nextObject;
   }
 }
 

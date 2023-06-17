@@ -90,26 +90,19 @@ void stealItem(Monster monster) {
   if (randPercent(15)) return;
 
   var hasSomething = false;
-  var obj = rogue.pack.nextObject;
-  while (obj != null) {
+  for (var obj in rogue.pack) {
     if (obj != rogue.armor && obj != rogue.weapon) {
       hasSomething = true;
       break;
     }
-    obj = obj.nextObject;
   }
   if (hasSomething) {
     var n = getRand(0, MAX_PACK_COUNT);
-    obj = rogue.pack.nextObject;
-    for (var i = 0; i < n + 1; i++) {
-      obj = obj!.nextObject;
-      while (obj == null || obj == rogue.armor || obj == rogue.armor) {
-        if (obj == null) {
-          obj = rogue.pack.nextObject;
-        } else {
-          obj = obj.nextObject;
-        }
-      }
+    Object? obj;
+    for (obj in rogue.pack) {
+      if (obj == rogue.armor || obj == rogue.weapon) continue;
+      if (n == 0) break;
+      --n;
     }
     message("she stole ${getDescription(obj!)}", 0);
     if (obj.whatIs == AMULET) {

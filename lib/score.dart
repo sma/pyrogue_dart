@@ -192,8 +192,7 @@ void sellPack() {
 
   clear();
 
-  var obj = rogue.pack.nextObject;
-  while (obj != null) {
+  for (var obj in rogue.pack) {
     mvaddstr(1, 0, "Value      Item");
     if (obj.whatIs != FOOD) {
       obj.identified = 1;
@@ -205,7 +204,6 @@ void sellPack() {
         rows += 1;
       }
     }
-    obj = obj.nextObject;
   }
   refresh();
   message("", 0);

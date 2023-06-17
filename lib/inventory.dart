@@ -69,19 +69,17 @@ void initItems() {
   makeScrollTitles();
 }
 
-void inventory(ObjHolder pack, int mask) {
+void inventory(List<Object> pack, int mask) {
   var i = 0;
   var maxlen = 27;
   var descriptions = List<String>.filled(MAX_PACK_COUNT + 1, "");
 
-  var obj = pack.nextObject;
-  while (obj != null) {
+  for (var obj in pack) {
     if ((obj.whatIs & mask) != 0) {
       descriptions[i] = " ${obj.ichar}) ${getDescription(obj)}";
       maxlen = max(maxlen, descriptions[i].length);
       i += 1;
     }
-    obj = obj.nextObject;
   }
   descriptions[i] = " --press space to continue--";
   var col = COLS - maxlen - 2;

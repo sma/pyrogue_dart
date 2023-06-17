@@ -2,7 +2,7 @@ import 'globals.dart';
 
 const CURSE_MESSAGE = "you can't, it appears to be cursed";
 
-Object addToPack(Object obj, ObjHolder pack, bool condense) {
+Object addToPack(Object obj, List<Object> pack, bool condense) {
   if (condense) {
     var op = checkDuplicate(obj, pack);
     if (op != null) {
@@ -11,24 +11,12 @@ Object addToPack(Object obj, ObjHolder pack, bool condense) {
       obj.ichar = nextAvailIchar();
     }
   }
-  if (pack.nextObject == null) {
-    pack.nextObject = obj;
-  } else {
-    var op = pack.nextObject!;
-    while (op.nextObject != null) {
-      op = op.nextObject!;
-    }
-    op.nextObject = obj;
-  }
-  obj.nextObject = null;
+  pack.add(obj);
   return obj;
 }
 
-void removeFromPack(Object obj, ObjHolder pack) {
-  while (pack.nextObject != obj) {
-    pack = pack.nextObject!;
-  }
-  pack.nextObject = pack.nextObject!.nextObject;
+void removeFromPack(Object obj, List<Object> pack) {
+  pack.remove(obj);
 }
 
 (Object?, bool) pickUp(int row, int col) {
@@ -73,7 +61,7 @@ void drop() {
     message("There's already something there", 0);
     return;
   }
-  if (rogue.pack.nextObject == null) {
+  if (rogue.pack.isEmpty) {
     message("You have nothing to drop", 0);
     return;
   }
@@ -129,12 +117,11 @@ void drop() {
   registerMove();
 }
 
-Object? checkDuplicate(Object obj, ObjHolder pack) {
+Object? checkDuplicate(Object obj, List<Object> pack) {
   if (!((obj.whatIs & (WEAPON | FOOD | SCROLL | POTION)) != 0)) {
     return null;
   }
-  var op = pack.nextObject;
-  while (op != null) {
+  for (var op in pack) {
     if (op.whatIs == obj.whatIs && op.whichKind == obj.whichKind) {
       if (obj.whatIs != WEAPON ||
           (obj.whatIs == WEAPON && (obj.whichKind == ARROW || obj.whichKind == SHURIKEN) && obj.quiver == op.quiver)) {
@@ -142,7 +129,6 @@ Object? checkDuplicate(Object obj, ObjHolder pack) {
         return op;
       }
     }
-    op = op.nextObject;
   }
   return null;
 }
@@ -291,8 +277,7 @@ void callIt() {
 int getPackCount(Object newObj) {
   var count = 0;
 
-  var obj = rogue.pack.nextObject;
-  while (obj != null) {
+  for (var obj in rogue.pack) {
     if (obj.whatIs != WEAPON) {
       count += obj.quantity;
     } else {
@@ -303,7 +288,6 @@ int getPackCount(Object newObj) {
         count += 1;
       }
     }
-    obj = obj.nextObject;
   }
 
   return count;

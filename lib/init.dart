@@ -30,13 +30,13 @@ void init() {
   srandom(pid);
   initItems();
 
-  g.levelObjects.nextObject = null;
-  g.levelMonsters.nextObject = null;
+  g.levelObjects.clear();
+  g.levelMonsters.clear();
   playerInit();
 }
 
 void playerInit() {
-  rogue.pack.nextObject = null;
+  rogue.pack.clear();
   var obj = getAnObject();
   getFood(obj);
   addToPack(obj, rogue.pack, true);

@@ -35,15 +35,12 @@ Monster getRandomMonster() {
 }
 
 void moveMonsters() {
-  var monster = g.levelMonsters.nextObject;
-
-  while (monster != null) {
+  for (var monster in g.levelMonsters) {
     if (monster.mFlags & HASTED != 0) {
       mvMonster(monster, rogue.row, rogue.col);
     } else if (monster.mFlags & SLOWED != 0) {
       monster.quiver = 1 - monster.quiver;
       if (monster.quiver != 0) {
-        monster = monster.nextObject;
         continue;
       }
     }
@@ -55,7 +52,6 @@ void moveMonsters() {
     if (!flew || !monsterCanGo(monster, rogue.row, rogue.col)) {
       mvMonster(monster, rogue.row, rogue.col);
     }
-    monster = monster.nextObject;
   }
 }
 
@@ -273,8 +269,7 @@ void wakeUp(Monster monster) {
 void wakeRoom(int rn, bool entering, int row, int col) {
   var wakePercent = rn == g.partyRoom ? PARTY_WAKE_PERCENT : WAKE_PERCENT;
 
-  var monster = g.levelMonsters.nextObject;
-  while (monster != null) {
+  for (var monster in g.levelMonsters) {
     if ((monster.mFlags & WAKENS != 0 || rn == g.partyRoom) && rn == getRoomNumber(monster.row, monster.col)) {
       if (monster.ichar == 'X' && rn == g.partyRoom) {
         monster.mFlags |= WAKENS;
@@ -291,7 +286,6 @@ void wakeRoom(int rn, bool entering, int row, int col) {
         }
       }
     }
-    monster = monster.nextObject;
   }
 }
 
@@ -330,13 +324,11 @@ void startWanderer() {
 void showMonsters() {
   if (g.blind > 0) return;
 
-  var monster = g.levelMonsters.nextObject;
-  while (monster != null) {
+  for (var monster in g.levelMonsters) {
     mvaddch(monster.row, monster.col, monster.ichar);
     if (monster.ichar == 'X') {
       monster.identified = 0;
     }
-    monster = monster.nextObject;
   }
 }
 
@@ -435,13 +427,11 @@ bool noRoomForMonster(int rn) {
 
 void aggravate() {
   message("you hear a high pitched humming noise");
-  var monster = g.levelMonsters.nextObject;
-  while (monster != null) {
+  for (var monster in g.levelMonsters) {
     wakeUp(monster);
     if (monster.ichar == 'X') {
       monster.identified = 0;
     }
-    monster = monster.nextObject;
   }
 }
 
@@ -456,12 +446,10 @@ bool monsterCanSee(Monster monster, int row, int col) {
 }
 
 void mvAquatars() {
-  var monster = g.levelMonsters.nextObject;
-  while (monster != null) {
+  for (var monster in g.levelMonsters) {
     if (monster.ichar == 'A') {
       mvMonster(monster, rogue.row, rogue.col);
     }
-    monster = monster.nextObject;
   }
 }
 

@@ -50,14 +50,14 @@ void quaff() {
     message("oh wow, everything seems so cosmic", 0);
     g.halluc += getRand(500, 800);
   } else if (k == DETECT_MONSTER) {
-    if (g.levelMonsters.nextObject != null) {
+    if (g.levelMonsters.isNotEmpty) {
       showMonsters();
     } else {
       message("you have a strange feeling for a moment, then it passes", 0);
     }
     g.detectMonster = true;
   } else if (k == DETECT_OBJECTS) {
-    if (g.levelObjects.nextObject != null) {
+    if (g.levelObjects.isNotEmpty) {
       if (g.blind == 0) {
         showObjects();
       }
@@ -287,23 +287,19 @@ void hallucinate() {
   if (g.blind > 0) {
     return;
   }
-  var obj = g.levelObjects.nextObject;
-  while (obj != null) {
+  for (var obj in g.levelObjects) {
     final ch = mvinch(obj.row, obj.col);
     if ((!isLetter(ch)) && (obj.row != rogue.row || obj.col != rogue.col)) {
       if (ch != ' ' && ch != '.' && ch != '#' && ch != '+') {
         addch(getRandomObjChar());
       }
     }
-    obj = obj.nextObject;
   }
-  obj = g.levelMonsters.nextObject;
-  while (obj != null) {
+  for (var obj in g.levelMonsters) {
     final ch = mvinch(obj.row, obj.col);
     if (isLetter(ch)) {
       addch(String.fromCharCode(getRand('A'.codeUnitAt(0), 'Z'.codeUnitAt(0))));
     }
-    obj = obj.nextObject;
   }
 }
 

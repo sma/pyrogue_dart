@@ -177,7 +177,7 @@ class Identity {
   Identity(this.value, this.title, this.real, this.idStatus);
 }
 
-class Object extends ObjHolder {
+class Object {
   int mFlags;
   String damage;
   int quantity;
@@ -197,7 +197,6 @@ class Object extends ObjHolder {
   int toHitEnchantment;
   int whatIs;
   int pickedUp;
-  // Object? nextObject;
 
   Object(
     this.mFlags,
@@ -237,12 +236,6 @@ class Object extends ObjHolder {
   }
 }
 
-class ObjHolder {
-  Object? nextObject;
-
-  ObjHolder();
-}
-
 class Fighter {
   Object? armor;
   Object? weapon;
@@ -250,7 +243,7 @@ class Fighter {
   int hpMax;
   int strengthCurrent;
   int strengthMax;
-  final ObjHolder pack;
+  final List<Object> pack;
   int gold;
   int exp;
   int expPoints;
@@ -266,7 +259,7 @@ class Fighter {
         hpMax = 12,
         strengthCurrent = 16,
         strengthMax = 16,
-        pack = ObjHolder(),
+        pack = [],
         gold = 0,
         exp = 1,
         expPoints = 0,
@@ -464,10 +457,10 @@ class G {
   int messageCol = 0;
 
   // monster.py
-  ObjHolder levelMonsters = ObjHolder();
+  final levelMonsters = <Object>[];
 
   // object.py
-  ObjHolder levelObjects = ObjHolder();
+  final levelObjects = <Object>[];
   bool hasAmulet = false;
   int foods = 0;
 

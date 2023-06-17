@@ -64,8 +64,6 @@ void zapMonster(Monster monster, final int kind) {
   final row = monster.row;
   final col = monster.col;
 
-  final nm = monster.nextObject;
-
   if (kind == SLOW_MONSTER) {
     if ((monster.mFlags & HASTED) != 0) {
       monster.mFlags &= ~HASTED;
@@ -91,22 +89,20 @@ void zapMonster(Monster monster, final int kind) {
     if (monster.ichar == 'F') {
       g.beingHeld = false;
     }
-    // need to find prev to link to new one
-    var pm = g.levelMonsters;
-    while (pm.nextObject != monster) {
-      pm = pm.nextObject!;
-    }
+    Monster newMonster;
     while (true) {
-      monster = monsterTab[getRand(0, MONSTERS - 1)].copy();
-      if (!(monster.ichar == 'X' && (g.currentLevel < XEROC1 || g.currentLevel > XEROC2))) {
+      newMonster = monsterTab[getRand(0, MONSTERS - 1)].copy();
+      if (!(newMonster.ichar == 'X' && (g.currentLevel < XEROC1 || g.currentLevel > XEROC2))) {
         break;
       }
     }
-    monster.whatIs = MONSTER;
-    monster.row = row;
-    monster.col = col;
-    monster.nextObject = nm;
-    pm.nextObject = monster;
+    newMonster.whatIs = MONSTER;
+    newMonster.row = row;
+    newMonster.col = col;
+
+    final index = g.levelMonsters.indexOf(monster);
+    g.levelMonsters[index] = newMonster;
+
     wakeUp(monster);
     if (canSee(row, col)) {
       mvaddch(row, col, getMonsterChar(monster));
