@@ -94,31 +94,33 @@ String mvinch(int row, int col) {
 
 void refresh() {
   var standout = false;
+  final buf = StringBuffer();
   if (stdout.supportsAnsiEscapes) {
-    stdout.write('\x1b[H\x1b[2J');
+    buf.write('\x1b[H\x1b[2J');
   } else {
-    stdout.write('\n' * LINES);
+    buf.write('\n' * LINES);
   }
   for (final line in _screen) {
     for (final (st, ch) in line) {
       if (stdout.supportsAnsiEscapes && st != standout) {
         if (st) {
-          stdout.write('\x1B[7m');
+          buf.write('\x1B[7m');
         } else {
-          stdout.write('\x1B[m');
+          buf.write('\x1B[m');
         }
         standout = st;
       }
-      stdout.write(ch);
+      buf.write(ch);
     }
     if (COLS < stdout.terminalColumns) {
-      stdout.write('\n');
+      buf.write('\n');
     }
   }
-  stdout.write('\x1b[${LINES + 1};1H\x1b[2m> ${_log.join('\n> ')}\x1b[m');
+  if (_log.isNotEmpty) buf.write('\x1b[${LINES + 1};1H\x1b[2m> ${_log.join('\n> ')}\x1b[m');
   if (stdout.supportsAnsiEscapes) {
-    stdout.write('\x1b[${_cy + 1};${_cx + 1}H');
+    buf.write('\x1b[${_cy + 1};${_cx + 1}H');
   }
+  stdout.write(buf);
 }
 
 void standout() {
