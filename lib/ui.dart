@@ -12,6 +12,10 @@ var _oldLineMode = false;
 var _oldEchoMode = false;
 var _oldEchoNewlineMode = false;
 
+final _log = <String>[];
+
+void log(String message) => _log.add(message);
+
 void initscr() {
   if (stdin.hasTerminal) {
     _oldLineMode = stdin.lineMode;
@@ -101,7 +105,7 @@ void refresh() {
         if (st) {
           stdout.write('\x1B[7m');
         } else {
-          stdout.write('\x1B[27m');
+          stdout.write('\x1B[m');
         }
         standout = st;
       }
@@ -111,6 +115,7 @@ void refresh() {
       stdout.write('\n');
     }
   }
+  stdout.write('\x1b[${LINES + 1};1H\x1b[2m> ${_log.join('\n> ')}\x1b[m');
   if (stdout.supportsAnsiEscapes) {
     stdout.write('\x1b[${_cy + 1};${_cx + 1}H');
   }
