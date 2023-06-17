@@ -1,9 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'globals.dart';
 
-const String SCOREFILE = "scores";
+const SCOREFILE = "scores";
 
 void killedBy(Monster? monster, int other) {
   //signal(SIGINT, SIG_IGN)
@@ -72,44 +71,38 @@ void score(Monster? monster, int other) {
 }
 
 void putScores(Monster? monster, int other) {
-  List<String> scores = List<String>.filled(10, "");
+  final file = File(SCOREFILE);
+  final scores = file.existsSync() ? file.readAsLinesSync() : <String>[];
+  while (scores.length < 10) {
+    scores.add("");
+  }
 
-  File file = File(SCOREFILE);
-  RandomAccessFile f = file.openSync(mode: FileMode.writeOnlyAppend);
-  f.setPositionSync(0);
-
-  int rank = 10;
-  int dontInsert = 0;
-  int i = 0;
+  var rank = 10;
+  var dontInsert = false;
+  var i = 0;
   while (i < 10) {
-    //L:
-    scores[i] = ascii.decode(f.readSync(18));
     if (scores[i] == "") {
       break;
     }
     if (scores[i].length < 18) {
       message("error in score file format", 1);
-      // TODO(sma): this function doesn't exist
-      // cleanup("sorry, score file is out of order");
-   
-
- }
+      cleanUp("sorry, score file is out of order");
+    }
     if (ncmp(scores[i].substring(16), g.playerName)) {
-      int s = int.parse(scores[i].substring(8, 16));
+      final s = int.parse(scores[i].substring(8, 16));
       if (s <= rogue.gold) {
-        //goto L
+        i += 1;
         continue;
       }
-      dontInsert = 1;
+      dontInsert = true;
     }
     i += 1;
   }
 
-  //if dont_insert: goto DI
-  if (dontInsert == 0) {
-    for (int j = 0; j < i; j++) {
+  if (!dontInsert) {
+    for (var j = 0; j < i; j++) {
       if (rank > 9) {
-        int s = int.parse(scores[j].substring(8, 16));
+        var s = int.parse(scores[j].substring(8, 16));
         if (s <= rogue.gold) {
           rank = j;
         }
@@ -127,11 +120,8 @@ void putScores(Monster? monster, int other) {
         i += 1;
       }
     }
-
-    f.truncateSync(0);
   }
 
-  //DI:
   clear();
   mvaddstr(3, 30, "Top  Ten  Rogueists");
   mvaddstr(8, 0, "Rank    Score   Name");
@@ -140,22 +130,20 @@ void putScores(Monster? monster, int other) {
   //signal(SIGINT, SIG_IGN)
   //signal(SIGHUP, SIG_IGN)
 
-  for (int j = 0; j < i; j++) {
+  for (var j = 0; j < i; j++) {
     if (j == rank) {
       standout();
     }
     scores[j] = "${(j + 1).toString().padLeft(2)}${scores[j].substring(2)}";
     mvaddstr(j + 10, 0, scores[j]);
-    if (rank < 10) {
-      f.writeStringSync(scores[j]);
-    }
     if (j == rank) {
       standend();
     }
   }
 
   refresh();
-  f.closeSync();
+
+  file.writeAsStringSync(scores.take(10).join());
 
   waitForAck(false);
 
@@ -201,9 +189,7 @@ bool isVowel(String ch) {
 }
 
 void sellPack() {
-  int rows
-
- = 2;
+  int rows = 2;
 
   clear();
 
