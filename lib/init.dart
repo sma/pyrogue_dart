@@ -27,7 +27,7 @@ void init() {
   //}
   //LINES = SROWS;
 
-  srandom(pid);
+  // srandom(pid);
   initItems();
 
   g.levelObjects.nextObject = null;
@@ -87,18 +87,16 @@ void playerInit() {
   addToPack(obj, rogue.pack, true);
 }
 
-void cleanUp(String estr) {
+Never cleanUp(String estr) {
   move(LINES - 1, 0);
   refresh();
   stopWindow();
   print(estr);
-  // TODO(sma): print exception in g.exc
-  // if (g.exc != null && g.exc?.first is! SystemExit) {
-  //   stderr.write("---------");
-  //   //traceback.print_exception(*g.exc)
-  //   traceback.print_exception(g.exc!);
-  //   stderr.write("---------");
-  // }
+  if (g.exc != null) {
+    stderr.writeln('\n----------');
+    stderr.writeln(g.exc);
+    exit(1);
+  }
   exit(0);
 }
 
@@ -114,7 +112,7 @@ void stopWindow() {
   edchars(1);
 }
 
-void byebye() {
+Never byebye() {
   cleanUp("Okay, bye bye!");
 }
 

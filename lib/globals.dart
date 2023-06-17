@@ -450,7 +450,7 @@ class G {
   String playerName = "";
   bool cantInt = false;
   bool didInt = false;
-  Exception? exc;
+  String? exc;
 
   // level.py
   int currentLevel = 0;
@@ -493,7 +493,7 @@ class G {
 final g = G();
 
 // random.c
-Random _random = Random();
+var _random = Random(42);
 
 void srandom(int x) {
   _random = Random(x);
