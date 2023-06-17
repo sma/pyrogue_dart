@@ -1,7 +1,7 @@
 import 'globals.dart';
 
 void playLevel() {
-  int count = 0;
+  var count = 0;
   while (true) {
     g.interrupted = false;
     if (g.hitMessage.isNotEmpty) {
@@ -12,7 +12,7 @@ void playLevel() {
     move(rogue.row, rogue.col);
     refresh();
 
-    String ch = getchar();
+    var ch = getchar();
     checkMessage();
 
     while (true) {

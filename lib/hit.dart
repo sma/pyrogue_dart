@@ -5,7 +5,7 @@ void monsterHit(Monster monster, String? other) {
     g.fightMonster = null;
   }
   monster.trow = -1;
-  int hitChance = monster.clasz;
+  var hitChance = monster.clasz;
   hitChance -= rogue.exp + rogue.exp;
   if (hitChance < 0) hitChance = 0;
 

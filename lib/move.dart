@@ -6,8 +6,8 @@ int hN = 0;
 int hC = 0;
 
 int singleMoveRogue(String dirch, bool pickup) {
-  int row = rogue.row;
-  int col = rogue.col;
+  var row = rogue.row;
+  var col = rogue.col;
 
   if (g.beingHeld) {
     (row, col) = getDirRc(dirch, row, col);
@@ -65,7 +65,7 @@ int singleMoveRogue(String dirch, bool pickup) {
       bool status;
       (obj, status) = pickUp(row, col);
       if (obj != null) {
-        String description = getDescription(obj);
+        var description = getDescription(obj);
         if (obj.whatIs == GOLD) {
           // NOT_IN_PACK:
           message(description, 1);
@@ -82,7 +82,7 @@ int singleMoveRogue(String dirch, bool pickup) {
       } else {
         // MOVE_ON:
         obj = objectAt(g.levelObjects, row, col)!;
-        String description = "moved onto ${getDescription(obj)}";
+        var description = "moved onto ${getDescription(obj)}";
         // NOT_IN_PACK:
         message(description, 1);
         registerMove();
@@ -91,14 +91,14 @@ int singleMoveRogue(String dirch, bool pickup) {
     } else {
       // MOVE_ON:
       obj = objectAt(g.levelObjects, row, col)!;
-      String description = "moved onto ${getDescription(obj)}";
+      var description = "moved onto ${getDescription(obj)}";
       // NOT_IN_PACK:
       message(description, 1);
       registerMove();
       return STOPPED_ON_SOMETHING;
     }
 
-    String description = getDescription(obj);
+    var description = getDescription(obj);
     description += "(";
     description += obj.ichar;
     description += ")";
@@ -126,9 +126,9 @@ int singleMoveRogue(String dirch, bool pickup) {
 void multipleMoveRogue(String dirch) {
   if (dirch.contains("\x08\x0A\x0B\x0C\x1F\x19\x10\x02")) {
     while (true) {
-      int row = rogue.row;
-      int col = rogue.col;
-      int m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), true);
+      var row = rogue.row;
+      var col = rogue.col;
+      var m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), true);
       if (m == MOVE_FAILED || m == STOPPED_ON_SOMETHING || g.interrupted) {
         break;
       }
@@ -151,7 +151,7 @@ bool isPassable(int row, int col) {
 }
 
 bool nextToSomething(int drow, int dcol) {
-  int passCount = 0;
+  var passCount = 0;
 
   if (g.confused > 0) {
     return true;
@@ -160,14 +160,14 @@ bool nextToSomething(int drow, int dcol) {
     return false;
   }
 
-  int iEnd = rogue.row < LINES - 2 ? 1 : 0;
-  int jEnd = rogue.col < COLS - 1 ? 1 : 0;
+  var iEnd = rogue.row < LINES - 2 ? 1 : 0;
+  var jEnd = rogue.col < COLS - 1 ? 1 : 0;
 
-  for (int i = rogue.row > MIN_ROW ? -1 : 0; i < iEnd + 1; i++) {
-    for (int j = rogue.col > 0 ? -1 : 0; j < jEnd + 1; j++) {
+  for (var i = rogue.row > MIN_ROW ? -1 : 0; i < iEnd + 1; i++) {
+    for (var j = rogue.col > 0 ? -1 : 0; j < jEnd + 1; j++) {
       if (i == 0 && j == 0) continue;
-      int r = rogue.row + i;
-      int c = rogue.col + j;
+      var r = rogue.row + i;
+      var c = rogue.col + j;
       if (r == drow && c == dcol) continue;
       if ((screen[r][c] & (MONSTER | IS_OBJECT)) != 0) {
         return true;
@@ -208,9 +208,9 @@ bool isObject(int row, int col) {
 }
 
 void moveOnto() {
-  bool firstMiss = true;
+  var firstMiss = true;
 
-  String ch = getchar();
+  var ch = getchar();
   while (!isDirection(ch)) {
     beep();
     if (firstMiss) {
@@ -234,7 +234,7 @@ bool isPackLetter(String c) {
 }
 
 bool checkHunger() {
-  bool fainted = false;
+  var fainted = false;
   if (rogue.movesLeft == HUNGRY) {
     g.hungerStr = "hungry";
     message(g.hungerStr, 0);
@@ -251,12 +251,12 @@ bool checkHunger() {
       message(g.hungerStr, 1);
       printStats();
     }
-    int n = getRand(0, FAINT - rogue.movesLeft);
+    var n = getRand(0, FAINT - rogue.movesLeft);
     if (n > 0) {
       fainted = true;
       if (randPercent(40)) rogue.movesLeft += 1;
       message("you faint", 1);
-      for (int i = 0; i < n; i++) {
+      for (var i = 0; i < n; i++) {
         if (randPercent(50)) {
           moveMonsters();
         }
@@ -316,7 +316,7 @@ bool registerMove() {
 }
 
 void rest(int count) {
-  for (int i = 0; i < count; i++) {
+  for (var i = 0; i < count; i++) {
     if (g.interrupted) {
       break;
     }

@@ -2,7 +2,7 @@ import 'globals.dart';
 
 void throwObject() {
   var firstMiss = true;
-  String dir = getchar();
+  var dir = getchar();
   while (!isDirection(dir)) {
     beep();
     if (firstMiss) {
@@ -21,13 +21,13 @@ void throwObject() {
     return;
   }
   checkMessage();
-  Object? weapon = getLetterObject(wch);
+  var weapon = getLetterObject(wch);
   if (weapon == null) {
     message("no such item.", 0);
     return;
   }
   if (weapon.whatIs != WEAPON) {
-    int k = getRand(0, 2);
+    var k = getRand(0, 2);
     if (k == 0) {
       message("if you don't want it, drop it!", 0);
     } else if (k == 1) {
@@ -61,8 +61,8 @@ void throwObject() {
 }
 
 bool throwAtMonster(Monster monster, Object weapon) {
-  int hitChance = getHitChance(weapon);
-  int t = weapon.quantity;
+  var hitChance = getHitChance(weapon);
+  var t = weapon.quantity;
   weapon.quantity = 1;
   g.hitMessage = "the ${nameOf(weapon)}";
   weapon.quantity = t;
@@ -71,7 +71,7 @@ bool throwAtMonster(Monster monster, Object weapon) {
     return false;
   }
   g.hitMessage += " hits  ";
-  int damage = getWeaponDamage(weapon);
+  var damage = getWeaponDamage(weapon);
   if ((weapon.whichKind == ARROW && rogue.weapon != null && rogue.weapon!.whichKind == BOW) ||
       (weapon.whichKind == SHURIKEN && rogue.weapon == weapon)) {
     damage += getWeaponDamage(rogue.weapon);
@@ -82,9 +82,9 @@ bool throwAtMonster(Monster monster, Object weapon) {
 }
 
 (Monster?, int, int) getThrownAtMonster(String dir, int row, int col) {
-  int orow = row;
-  int ocol = col;
-  int i = 0;
+  var orow = row;
+  var ocol = col;
+  var i = 0;
   while (i < 24) {
     (row, col) = getDirRc(dir, row, col);
     if (screen[row][col] == BLANK || (screen[row][col] & (HORWALL | VERTWALL)) != 0) {
@@ -115,14 +115,14 @@ bool throwAtMonster(Monster monster, Object weapon) {
 }
 
 void flopWeapon(Object weapon, int row, int col) {
-  int inc1 = getRand(0, 1) != 0 ? 1 : -1;
-  int inc2 = getRand(0, 1) != 0 ? 1 : -1;
-  int r = row;
-  int c = col;
-  bool found = false;
+  var inc1 = getRand(0, 1) != 0 ? 1 : -1;
+  var inc2 = getRand(0, 1) != 0 ? 1 : -1;
+  var r = row;
+  var c = col;
+  var found = false;
   if ((screen[r][c] & ~(FLOOR | TUNNEL | DOOR)) != 0 || (row == rogue.row && col == rogue.col)) {
-    for (int i = inc1; i < 2 * -inc1 + 1; -inc1) {
-      for (int j = inc2; j < 2 * -inc2 + 1; -inc2) {
+    for (var i = inc1; i < 2 * -inc1 + 1; -inc1) {
+      for (var j = inc2; j < 2 * -inc2 + 1; -inc2) {
         r = row + i;
         c = col + j;
         if (r > LINES - 2 || r < MIN_ROW || c > COLS - 1 || c < 0) {
@@ -137,7 +137,7 @@ void flopWeapon(Object weapon, int row, int col) {
     found = true;
   }
   if (found) {
-    Object newWeapon = getAnObject();
+    var newWeapon = getAnObject();
     newWeapon = weapon.copy();
     newWeapon.quantity = 1;
     newWeapon.row = r;
@@ -148,9 +148,9 @@ void flopWeapon(Object weapon, int row, int col) {
       mvaddch(r, c, getRoomChar(screen[r][c], r, c));
     }
   } else {
-    int t = weapon.quantity;
+    var t = weapon.quantity;
     weapon.quantity = 1;
-    String msg = "the ${nameOf(weapon)} vanishes as it hits the ground";
+    var msg = "the ${nameOf(weapon)} vanishes as it hits the ground";
     weapon.quantity = t;
     message(msg, 0);
   }

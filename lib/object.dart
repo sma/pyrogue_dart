@@ -3,7 +3,7 @@ import 'globals.dart';
 void putObjects() {
   if (g.currentLevel < g.maxLevel) return;
 
-  int n = getRand(2, 4);
+  var n = getRand(2, 4);
   if (randPercent(35)) n += 1;
 
   if (randPercent(50)) {
@@ -12,8 +12,8 @@ void putObjects() {
   if (randPercent(5)) {
     makeParty();
   }
-  for (int i = 0; i < n; i++) {
-    Object obj = getRandObject();
+  for (var i = 0; i < n; i++) {
+    var obj = getRandObject();
     putObjectRandLocation(obj);
     addToPack(obj, g.levelObjects, false);
   }
@@ -21,12 +21,12 @@ void putObjects() {
 }
 
 void putGold() {
-  for (int i = 0; i < MAXROOMS; i++) {
-    Room r = rooms[i];
+  for (var i = 0; i < MAXROOMS; i++) {
+    var r = rooms[i];
     if (r.isRoom && randPercent(GOLD_PERCENT)) {
-      for (int j = 0; j < 25; j++) {
-        int row = getRand(r.topRow + 1, r.bottomRow - 1);
-        int col = getRand(r.leftCol + 1, r.rightCol - 1);
+      for (var j = 0; j < 25; j++) {
+        var row = getRand(r.topRow + 1, r.bottomRow - 1);
+        var col = getRand(r.leftCol + 1, r.rightCol - 1);
         if (screen[row][col] == FLOOR || screen[row][col] == PASSAGE) {
           putGoldAt(row, col);
           break;
@@ -37,7 +37,7 @@ void putGold() {
 }
 
 void putGoldAt(int row, int col) {
-  Object obj = getAnObject();
+  var obj = getAnObject();
   obj.row = row;
   obj.col = col;
   obj.whatIs = GOLD;
@@ -54,7 +54,7 @@ void putObjectAt(Object obj, int row, int col) {
 }
 
 Object? objectAt(ObjHolder pack, int row, int col) {
-  Object? obj = pack.nextObject;
+  var obj = pack.nextObject;
   while (obj != null && (obj.row != row || obj.col != col)) {
     obj = obj.nextObject;
   }
@@ -62,7 +62,7 @@ Object? objectAt(ObjHolder pack, int row, int col) {
 }
 
 Object? getLetterObject(String ch) {
-  Object? obj = rogue.pack.nextObject;
+  var obj = rogue.pack.nextObject;
   while (obj != null && obj.ichar != ch) {
     obj = obj.nextObject;
   }
@@ -70,7 +70,7 @@ Object? getLetterObject(String ch) {
 }
 
 String nameOf(Object obj) {
-  int w = obj.whatIs;
+  var w = obj.whatIs;
   if (w == SCROLL) {
     return obj.quantity > 1 ? "scrolls " : "scroll ";
   }
@@ -84,7 +84,7 @@ String nameOf(Object obj) {
     return "wand ";
   }
   if (w == WEAPON) {
-    int k = obj.whichKind;
+    var k = obj.whichKind;
     if (k == ARROW) {
       return obj.quantity > 1 ? "arrows " : "arrow ";
     }
@@ -104,7 +104,7 @@ String nameOf(Object obj) {
 }
 
 Object getRandObject() {
-  Object obj = getAnObject();
+  var obj = getAnObject();
   if (g.foods < g.currentLevel / 2) {
     obj.whatIs = FOOD;
   } else {
@@ -112,7 +112,7 @@ Object getRandObject() {
   }
   obj.identified = 0;
 
-  int w = obj.whatIs;
+  var w = obj.whatIs;
   if (w == SCROLL) {
     getRandScroll(obj);
   } else if (w == POTION) {
@@ -132,7 +132,7 @@ Object getRandObject() {
 }
 
 int getRandWhatIs() {
-  int percent = getRand(1, 92);
+  var percent = getRand(1, 92);
 
   if (percent <= 30) {
     return SCROLL;
@@ -153,7 +153,7 @@ int getRandWhatIs() {
 }
 
 void getRandScroll(Object obj) {
-  int percent = getRand(0, 82);
+  var percent = getRand(0, 82);
 
   if (percent <= 5) {
     obj.whichKind = PROTECT_ARMOR;
@@ -181,7 +181,7 @@ void getRandScroll(Object obj) {
 }
 
 void getRandPotion(Object obj) {
-  int percent = getRand(1, 105);
+  var percent = getRand(1, 105);
 
   if (percent <= 5) {
     obj.whichKind = RAISE_LEVEL;
@@ -221,11 +221,11 @@ void getRandWeapon(Object obj) {
   obj.toHitEnchantment = 0;
   obj.damageEnchantment = 0;
 
-  int percent = getRand(1, obj.whichKind == LONG_SWORD ? 32 : 96);
-  int blessing = getRand(1, 3);
+  var percent = getRand(1, obj.whichKind == LONG_SWORD ? 32 : 96);
+  var blessing = getRand(1, 3);
   obj.isCursed = 0;
 
-  int increment = 0;
+  var increment = 0;
   if (percent <= 16) {
     increment = 1;
   } else if (percent <= 32) {
@@ -233,7 +233,7 @@ void getRandWeapon(Object obj) {
     obj.isCursed = 1;
   }
   if (percent <= 32) {
-    for (int i = 0; i < blessing; i++) {
+    for (var i = 0; i < blessing; i++) {
       if (randPercent(50)) {
         obj.toHitEnchantment += increment;
       } else {
@@ -241,7 +241,7 @@ void getRandWeapon(Object obj) {
       }
     }
   }
-  int k = obj.whichKind;
+  var k = obj.whichKind;
   if (k == BOW) {
     obj.damage = "1d2";
   } else if (k == ARROW) {
@@ -267,8 +267,8 @@ void getRandArmor(Object obj) {
   obj.isProtected = 0;
   obj.damageEnchantment = 0;
 
-  int percent = getRand(1, 100);
-  int blessing = getRand(1, 3);
+  var percent = getRand(1, 100);
+  var blessing = getRand(1, 3);
 
   if (percent <= 16) {
     obj.isCursed = 1;
@@ -310,7 +310,7 @@ void makeParty() {
 }
 
 void showObjects() {
-  Object? obj = g.levelObjects.nextObject;
+  var obj = g.levelObjects.nextObject;
   while (obj != null) {
     mvaddch(obj.row, obj.col, getRoomChar(obj.whatIs, obj.row, obj.col));
     obj = obj.nextObject;
@@ -318,7 +318,7 @@ void showObjects() {
 }
 
 void putAmulet() {
-  Object obj = getAnObject();
+  var obj = getAnObject();
   obj.whatIs = AMULET;
   putObjectRandLocation(obj);
   addToPack(obj, g.levelObjects, false);

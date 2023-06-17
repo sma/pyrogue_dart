@@ -3,7 +3,7 @@ import 'dart:math';
 import 'globals.dart';
 
 void specialHit(Monster monster) {
-  String k = monster.ichar;
+  var k = monster.ichar;
   if (k == 'A') {
     rust(monster);
   } else if (k == 'F') {
@@ -42,7 +42,7 @@ void rust(Monster monster) {
 void freeze(Monster monster) {
   if (randPercent(12)) return;
 
-  double freezePercent = 99;
+  var freezePercent = 99.0;
   freezePercent -= rogue.strengthCurrent + rogue.strengthCurrent / 2;
   freezePercent -= rogue.exp * 4;
   freezePercent -= getArmorClass(rogue.armor) * 5;
@@ -52,12 +52,12 @@ void freeze(Monster monster) {
     monster.identified = 1;
     message("you are frozen", 1);
 
-    int n = getRand(5, 9);
-    for (int i = 0; i < n; i++) {
+    var n = getRand(5, 9);
+    for (var i = 0; i < n; i++) {
       moveMonsters();
     }
     if (randPercent(freezePercent.toInt())) {
-      for (int i = 0; i < 50; i++) {
+      for (var i = 0; i < 50; i++) {
         moveMonsters();
       }
       killedBy(null, HYPOTHERMIA);
@@ -71,7 +71,7 @@ void stealGold(Monster monster) {
   if (randPercent(15)) return;
 
   if (rogue.gold > 50) {
-    int amount = rogue.gold > 1000 ? getRand(8, 15) : getRand(2, 5);
+    var amount = rogue.gold > 1000 ? getRand(8, 15) : getRand(2, 5);
     amount = rogue.gold ~/ amount;
     amount += (getRand(0, 2) - 1) * (rogue.exp + g.currentLevel);
     if (amount <= 0 && rogue.gold > 0) {
@@ -89,8 +89,8 @@ void stealGold(Monster monster) {
 void stealItem(Monster monster) {
   if (randPercent(15)) return;
 
-  bool hasSomething = false;
-  Object? obj = rogue.pack.nextObject;
+  var hasSomething = false;
+  var obj = rogue.pack.nextObject;
   while (obj != null) {
     if (obj != rogue.armor && obj != rogue.weapon) {
       hasSomething = true;
@@ -99,9 +99,9 @@ void stealItem(Monster monster) {
     obj = obj.nextObject;
   }
   if (hasSomething) {
-    int n = getRand(0, MAX_PACK_COUNT);
+    var n = getRand(0, MAX_PACK_COUNT);
     obj = rogue.pack.nextObject;
-    for (int i = 0; i < n + 1; i++) {
+    for (var i = 0; i < n + 1; i++) {
       obj = obj!.nextObject;
       while (obj == null || obj == rogue.armor || obj == rogue.armor) {
         if (obj == null) {
@@ -121,8 +121,8 @@ void stealItem(Monster monster) {
 }
 
 void disappear(Monster monster) {
-  int row = monster.row;
-  int col = monster.col;
+  var row = monster.row;
+  var col = monster.col;
 
   removeMask(row, col, MONSTER);
   if (canSee(row, col)) {
@@ -147,15 +147,15 @@ void coughUp(Monster monster) {
     }
   }
 
-  int row = monster.row;
-  int col = monster.col;
+  var row = monster.row;
+  var col = monster.col;
 
-  for (int n = 0; n < 6; n++) {
-    for (int i = -n; i < n + 1; i++) {
+  for (var n = 0; n < 6; n++) {
+    for (var i = -n; i < n + 1; i++) {
       if (tryToCough(row + n, col + i, obj)) return;
       if (tryToCough(row - n, col + i, obj)) return;
     }
-    for (int i = -n; i < n + 1; i++) {
+    for (var i = -n; i < n + 1; i++) {
       if (tryToCough(row + i, col - n, obj)) return;
       if (tryToCough(row + i, col + n, obj)) return;
     }
@@ -181,16 +181,16 @@ bool orcGold(Monster monster) {
   if (monster.identified != 0) {
     return false;
   }
-  int rn = getRoomNumber(monster.row, monster.col);
+  var rn = getRoomNumber(monster.row, monster.col);
   if (rn < 0) {
     return false;
   }
-  Room r = rooms[rn];
-  for (int i = r.topRow + 1; i < r.bottomRow; i++) {
-    for (int j = r.leftCol + 1; j < r.rightCol; j++) {
+  var r = rooms[rn];
+  for (var i = r.topRow + 1; i < r.bottomRow; i++) {
+    for (var j = r.leftCol + 1; j < r.rightCol; j++) {
       if ((screen[i][j] & GOLD) != 0 && (screen[i][j] & MONSTER) == 0) {
         monster.mFlags |= CAN_GO;
-        bool s = monsterCanGo(monster, i, j);
+        var s = monsterCanGo(monster, i, j);
         monster.mFlags &= ~CAN_GO;
         if (s) {
           moveMonsterTo(monster, i, j);
@@ -234,15 +234,15 @@ bool hidingXeroc(int row, int col) {
     return false;
   }
 
-  Monster monster = objectAt(g.levelMonsters, row, col)!;
+  var monster = objectAt(g.levelMonsters, row, col)!;
   return monster.ichar == 'X' && monster.identified != 0;
 }
 
 void sting(Monster monster) {
   if (rogue.strengthCurrent < 5) return;
 
-  int stingChance = 35;
-  int ac = getArmorClass(rogue.armor);
+  var stingChance = 35;
+  var ac = getArmorClass(rogue.armor);
   stingChance += 6 * (6 - ac);
 
   if (rogue.exp > 8) {
@@ -310,8 +310,8 @@ bool flameBroil(Monster monster) {
   if (randPercent(50)) {
     return false;
   }
-  int row = monster.row;
-  int col = monster.col;
+  var row = monster.row;
+  var col = monster.col;
   if (!canSee(row, col)) {
     return false;
   }

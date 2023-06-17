@@ -20,7 +20,7 @@ void killedBy(Monster? monster, int other) {
     buf = "quit";
   } else {
     buf = "killed by ";
-    String name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+    var name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
     if (isVowel(name)) {
       buf += "an ";
     } else {
@@ -151,12 +151,12 @@ void putScores(Monster? monster, int other) {
 }
 
 void insertScore(List<String> scores, int rank, int n, Monster? monster, int other) {
-  for (int i = n - 1; i >= rank; i--) {
+  for (var i = n - 1; i >= rank; i--) {
     if (i < 9) {
       scores[i + 1] = scores[i];
     }
   }
-  String buf = "${(rank + 1).toString().padLeft(2)}      ${rogue.gold.toString().padLeft(5)}   ${g.playerName}: ";
+  var buf = "${(rank + 1).toString().padLeft(2)}      ${rogue.gold.toString().padLeft(5)}   ${g.playerName}: ";
 
   if (other == HYPOTHERMIA) {
     buf += "died of hypothermia";
@@ -168,7 +168,7 @@ void insertScore(List<String> scores, int rank, int n, Monster? monster, int oth
     buf += "a total winner";
   } else {
     buf += "killed by ";
-    String name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+    var name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
     if (isVowel(name)) {
       buf += "an ";
     } else {
@@ -189,16 +189,16 @@ bool isVowel(String ch) {
 }
 
 void sellPack() {
-  int rows = 2;
+  var rows = 2;
 
   clear();
 
-  Object? obj = rogue.pack.nextObject;
+  var obj = rogue.pack.nextObject;
   while (obj != null) {
     mvaddstr(1, 0, "Value      Item");
     if (obj.whatIs != FOOD) {
       obj.identified = 1;
-      int val = getValue(obj);
+      var val = getValue(obj);
       rogue.gold += val;
 
       if (rows < SROWS) {
@@ -213,7 +213,7 @@ void sellPack() {
 }
 
 int getValue(Object obj) {
-  int k = obj.whichKind;
+  var k = obj.whichKind;
   int val;
   if (k == WEAPON) {
     val = idWeapons[k].value;
@@ -243,19 +243,19 @@ int getValue(Object obj) {
 }
 
 void idAll() {
-  for (int i = 0; i < SCROLLS; i++) {
+  for (var i = 0; i < SCROLLS; i++) {
     idScrolls[i].idStatus = IDENTIFIED;
   }
-  for (int i = 0; i < WEAPONS; i++) {
+  for (var i = 0; i < WEAPONS; i++) {
     idWeapons[i].idStatus = IDENTIFIED;
   }
-  for (int i = 0; i < ARMORS; i++) {
+  for (var i = 0; i < ARMORS; i++) {
     idArmors[i].idStatus = IDENTIFIED;
   }
-  for (int i = 0; i < WANDS; i++) {
+  for (var i = 0; i < WANDS; i++) {
     idWands[i].idStatus = IDENTIFIED;
   }
-  for (int i = 0; i < POTIONS; i++) {
+  for (var i = 0; i < POTIONS; i++) {
     idPotions[i].idStatus = IDENTIFIED;
   }
 }

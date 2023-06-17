@@ -4,7 +4,7 @@ const CURSE_MESSAGE = "you can't, it appears to be cursed";
 
 Object addToPack(Object obj, ObjHolder pack, bool condense) {
   if (condense) {
-    Object? op = checkDuplicate(obj, pack);
+    var op = checkDuplicate(obj, pack);
     if (op != null) {
       return op;
     } else {
@@ -14,7 +14,7 @@ Object addToPack(Object obj, ObjHolder pack, bool condense) {
   if (pack.nextObject == null) {
     pack.nextObject = obj;
   } else {
-    Object op = pack.nextObject!;
+    var op = pack.nextObject!;
     while (op.nextObject != null) {
       op = op.nextObject!;
     }
@@ -77,11 +77,11 @@ void drop() {
     message("You have nothing to drop", 0);
     return;
   }
-  String ch = getPackLetter("drop what? ", IS_OBJECT);
+  var ch = getPackLetter("drop what? ", IS_OBJECT);
   if (ch == CANCEL) {
     return;
   }
-  Object? obj = getLetterObject(ch);
+  var obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -106,7 +106,7 @@ void drop() {
 
   if (obj.quantity > 1 && obj.whatIs != WEAPON) {
     obj.quantity -= 1;
-    Object newObj = getAnObject();
+    var newObj = getAnObject();
     newObj = obj.copy();
     newObj.quantity = 1;
     obj = newObj;
@@ -133,7 +133,7 @@ Object? checkDuplicate(Object obj, ObjHolder pack) {
   if (!((obj.whatIs & (WEAPON | FOOD | SCROLL | POTION)) != 0)) {
     return null;
   }
-  Object? op = pack.nextObject;
+  var op = pack.nextObject;
   while (op != null) {
     if (op.whatIs == obj.whatIs && op.whichKind == obj.whichKind) {
       if (obj.whatIs != WEAPON ||
@@ -148,7 +148,7 @@ Object? checkDuplicate(Object obj, ObjHolder pack) {
 }
 
 String nextAvailIchar() {
-  for (int i = 0; i < 26; i++) {
+  for (var i = 0; i < 26; i++) {
     if (!g.ichars[i]) {
       g.ichars[i] = true;
       return String.fromCharCode(i + 97);
@@ -169,9 +169,9 @@ void waitForAck(bool prompt) {
 }
 
 String getPackLetter(String prompt, int mask) {
-  bool firstMiss = true;
+  var firstMiss = true;
   message(prompt, 0);
-  String ch = getchar();
+  var ch = getchar();
   while (true) {
     while (!isPackLetter(ch)) {
       if (ch != '') {
@@ -202,7 +202,7 @@ void takeOff() {
       message(CURSE_MESSAGE, 0);
     } else {
       mvAquatars();
-      Object obj = rogue.armor!;
+      var obj = rogue.armor!;
       rogue.armor = null;
       message("was wearing ${getDescription(obj)}", 0);
       printStats();
@@ -218,11 +218,11 @@ void wear() {
     message("your already wearing some", 0);
     return;
   }
-  String ch = getPackLetter("wear what? ", ARMOR);
+  var ch = getPackLetter("wear what? ", ARMOR);
   if (ch == CANCEL) {
     return;
   }
-  Object? obj = getLetterObject(ch);
+  var obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -243,11 +243,11 @@ void wield() {
     message(CURSE_MESSAGE, 0);
     return;
   }
-  String ch = getPackLetter("wield what? ", WEAPON);
+  var ch = getPackLetter("wield what? ", WEAPON);
   if (ch == CANCEL) {
     return;
   }
-  Object? obj = getLetterObject(ch);
+  var obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -266,11 +266,11 @@ void wield() {
 }
 
 void callIt() {
-  String ch = getPackLetter("call what? ", SCROLL | POTION | WAND);
+  var ch = getPackLetter("call what? ", SCROLL | POTION | WAND);
   if (ch == CANCEL) {
     return;
   }
-  Object? obj = getLetterObject(ch);
+  var obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -281,7 +281,7 @@ void callIt() {
   }
   final idTable = getIdTable(obj);
 
-  String buf = getInputLine(idTable[obj.whichKind].title, 0);
+  var buf = getInputLine(idTable[obj.whichKind].title, 0);
   if (buf != '') {
     idTable[obj.whichKind].idStatus = CALLED;
     idTable[obj.whichKind].title = buf;
@@ -289,9 +289,9 @@ void callIt() {
 }
 
 int getPackCount(Object newObj) {
-  int count = 0;
+  var count = 0;
 
-  Object? obj = rogue.pack.nextObject;
+  var obj = rogue.pack.nextObject;
   while (obj != null) {
     if (obj.whatIs != WEAPON) {
       count += obj.quantity;

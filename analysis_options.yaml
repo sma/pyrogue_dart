@@ -3,6 +3,7 @@ include: package:lints/recommended.yaml
 linter:
   rules:
     constant_identifier_names: false
+    omit_local_variable_types: true
 
 analyzer:
   errors:

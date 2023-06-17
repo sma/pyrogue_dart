@@ -92,7 +92,7 @@ void zapMonster(Monster monster, final int kind) {
       g.beingHeld = false;
     }
     // need to find prev to link to new one
-    ObjHolder pm = g.levelMonsters;
+    var pm = g.levelMonsters;
     while (pm.nextObject != monster) {
       pm = pm.nextObject!;
     }
