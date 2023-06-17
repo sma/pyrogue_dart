@@ -515,6 +515,8 @@ void putPlayer() {
     var (row, col) = getRandRowCol(FLOOR | IS_OBJECT);
     g.currentRoom = getRoomNumber(row, col);
     if (g.currentRoom != g.partyRoom) {
+      rogue.row = row;
+      rogue.col = col;
       break;
     }
   }
