@@ -98,9 +98,7 @@ String nameOf(Object obj) {
     return idWeapons[k].title;
   }
   if (w == ARMOR) {
-    return idArmors[obj.whichKind].
-
-title;
+    return idArmors[obj.whichKind].title;
   }
   return "unknown ";
 }
@@ -303,15 +301,12 @@ int getArmorClass(Object? obj) {
 }
 
 Object getAnObject() {
-  return Object(
-      0, "", 1, 'L', 0, 0, 0, 0, 0, 0);
+  return Object(0, "", 1, 'L', 0, 0, 0, 0, 0, 0);
 }
 
 void makeParty() {
   g.partyRoom = getRandRoom();
   fillRoomWithMonsters(g.partyRoom, fillRoomWithObjects(g.partyRoom));
-
-
 }
 
 void showObjects() {

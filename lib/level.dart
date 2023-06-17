@@ -224,7 +224,8 @@ void clearLevel() {
 }
 
 void printStats() {
-  var m = "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hpCurrent}(${rogue.hpMax})  Str: ${rogue.strengthCurrent}(${rogue.strengthMax})  Arm: ${getArmorClass(rogue.armor)}  Exp: ${rogue.exp}/${rogue.expPoints} ${g.hungerStr}";
+  var m =
+      "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hpCurrent}(${rogue.hpMax})  Str: ${rogue.strengthCurrent}(${rogue.strengthMax})  Arm: ${getArmorClass(rogue.armor)}  Exp: ${rogue.exp}/${rogue.expPoints} ${g.hungerStr}";
 
   mvaddstr(LINES - 1, 0, m);
   clrtoeol();
@@ -248,9 +249,7 @@ bool adjascent(int room1, int room2) {
     return false;
   }
   if (room1 > room2) {
-    room1 ^= room2;
-    room2 ^= room1;
-    room1 ^= room2;
+    (room1, room2) = (room2, room1);
   }
   return (onSameCol(room1, room2) || onSameRow(room1, room2)) && (room2 - room1 == 1 || room2 - room1 == 3);
 }
@@ -279,12 +278,8 @@ bool adjascent(int room1, int room2) {
 void drawSimplePassage(int row1, int col1, int row2, int col2, int dir) {
   if (dir == LEFT || dir == RIGHT) {
     if (col2 < col1) {
-      row1 ^= row2;
-      row2 ^= row1;
-      row1 ^= row2;
-      col1 ^= col2;
-      col2 ^= col1;
-      col1 ^= col2;
+      (row1, row2) = (row2, row1);
+      (col1, col2) = (col2, col1);
     }
     int middle = getRand(col1 + 1, col2 - 1);
     for (int i = col1 + 1; i < middle; i++) {
@@ -298,12 +293,8 @@ void drawSimplePassage(int row1, int col1, int row2, int col2, int dir) {
     }
   } else {
     if (row2 < row1) {
-      row1 ^= row2;
-      row2 ^= row1;
-      row1 ^= row2;
-      col1 ^= col2;
-      col2 ^= col1;
-      col1 ^= col2;
+      (row1, row2) = (row2, row1);
+      (col1, col2) = (col2, col1);
     }
     int middle = getRand(row1 + 1, row2 - 1);
     for (int i = row1 + 1; i < middle; i++) {
@@ -357,9 +348,7 @@ void addDeadEnds() {
         if (dir == UP) {
           if (row - 1 >= MIN_ROW) row -= 1;
         } else if (dir == RIGHT) {
-          if (col + 1 < COLS -
-
- 1) col += 1;
+          if (col + 1 < COLS - 1) col += 1;
         } else if (dir == DOWN) {
           if (row + 1 < LINES - 2) row += 1;
         } else if (dir == LEFT) {
@@ -436,9 +425,7 @@ void breakIn(int row, int col, int ch, int dir) {
         addMask(row + 1, col + 1, TUNNEL);
         breakIn(row + 1, col, VERTWALL, LEFT);
       } else if (row == LINES - 2) {
-        addMask(row - 1
-
-, col + 1, TUNNEL);
+        addMask(row - 1, col + 1, TUNNEL);
         breakIn(row - 1, col, VERTWALL, LEFT);
       } else {
         if (row == rooms[rn].topRow) {
@@ -526,9 +513,7 @@ bool checkDown() {
   if ((screen[rogue.row][rogue.col] & STAIRS) != 0) {
     return true;
   }
-  message("I see no way down",
-
- 0);
+  message("I see no way down", 0);
   return false;
 }
 

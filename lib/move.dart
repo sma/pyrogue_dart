@@ -45,8 +45,7 @@ int singleMoveRogue(String dirch, bool pickup) {
     } else {
       lightPassage(row, col);
     }
-  } else if ((screen[rogue.row][rogue.col] & DOOR) != 0 &&
-      (screen[row][col] & TUNNEL) != 0) {
+  } else if ((screen[rogue.row][rogue.col] & DOOR) != 0 && (screen[row][col] & TUNNEL) != 0) {
     lightPassage(row, col);
     wakeRoom(g.currentRoom, false, row, col);
     darkenRoom(g.currentRoom);
@@ -130,9 +129,7 @@ void multipleMoveRogue(String dirch) {
       int row = rogue.row;
       int col = rogue.col;
       int m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), true);
-      if (m == MOVE_FAILED ||
-          m == STOPPED_ON_SOMETHING ||
-          g.interrupted) {
+      if (m == MOVE_FAILED || m == STOPPED_ON_SOMETHING || g.interrupted) {
         break;
       }
       if (nextToSomething(row, col)) {
@@ -196,8 +193,7 @@ bool canMove(int row1, int col1, int row2, int col2) {
     return false;
   }
   if (row1 != row2 && col1 != col2) {
-    if ((screen[row1][col1] & DOOR) != 0 ||
-        (screen[row2][col2] & DOOR) != 0) {
+    if ((screen[row1][col1] & DOOR) != 0 || (screen[row2][col2] & DOOR) != 0) {
       return false;
     }
     if ((screen[row1][col2] == 0) || (screen[row2][col1] == 0)) {

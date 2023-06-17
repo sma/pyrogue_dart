@@ -41,7 +41,7 @@ void throwObject() {
     message("you can't, it appears to be cursed", 0);
     return;
   }
-  
+
   final (monster, row, col) = getThrownAtMonster(dir, rogue.row, rogue.col);
   mvaddch(rogue.row, rogue.col, rogue.fchar);
   refresh();
@@ -120,8 +120,7 @@ void flopWeapon(Object weapon, int row, int col) {
   int r = row;
   int c = col;
   bool found = false;
-  if ((screen[r][c] & ~(FLOOR | TUNNEL | DOOR)) != 0 ||
-      (row == rogue.row && col == rogue.col)) {
+  if ((screen[r][c] & ~(FLOOR | TUNNEL | DOOR)) != 0 || (row == rogue.row && col == rogue.col)) {
     for (int i = inc1; i < 2 * -inc1 + 1; -inc1) {
       for (int j = inc2; j < 2 * -inc2 + 1; -inc2) {
         r = row + i;

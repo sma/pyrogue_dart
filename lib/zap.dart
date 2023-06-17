@@ -49,9 +49,7 @@ void zapp() {
 Monster? getZappedMonster(final String dir, int row, int col) {
   while (true) {
     final (r, c) = getDirRc(dir, row, col);
-    if ((row == r && col == c) ||
-        (screen[r][c] & (HORWALL | VERTWALL)) != 0 ||
-        screen[r][c] == BLANK) {
+    if ((row == r && col == c) || (screen[r][c] & (HORWALL | VERTWALL)) != 0 || screen[r][c] == BLANK) {
       return null;
     }
     if ((screen[r][c] & MONSTER) != 0 && !hidingXeroc(r, c)) {
@@ -100,8 +98,7 @@ void zapMonster(Monster monster, final int kind) {
     }
     while (true) {
       monster = monsterTab[getRand(0, MONSTERS - 1)].copy();
-      if (!(monster.ichar == 'X' &&
-          (g.currentLevel < XEROC1 || g.currentLevel > XEROC2))) {
+      if (!(monster.ichar == 'X' && (g.currentLevel < XEROC1 || g.currentLevel > XEROC2))) {
         break;
       }
     }
@@ -132,8 +129,7 @@ void teleportAway(Monster monster) {
   }
   final (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
   removeMask(monster.row, monster.col, MONSTER);
-  mvaddch(monster.row, monster.col,
-      getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
+  mvaddch(monster.row, monster.col, getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
   monster.row = row;
   monster.col = col;
   addMask(row, col, MONSTER);

@@ -24,9 +24,7 @@ void specialHit(Monster monster) {
 }
 
 void rust(Monster monster) {
-  if (rogue.armor == null ||
-      getArmorClass(rogue.armor) <= 1 ||
-      rogue.armor!.whichKind == LEATHER) {
+  if (rogue.armor == null || getArmorClass(rogue.armor) <= 1 || rogue.armor!.whichKind == LEATHER) {
     return;
   }
   if (rogue.armor!.isProtected != 0) {
@@ -73,9 +71,7 @@ void stealGold(Monster monster) {
   if (randPercent(15)) return;
 
   if (rogue.gold > 50) {
-    int amount = rogue.gold > 1000
-        ? getRand(8, 15)
-        : getRand(2, 5);
+    int amount = rogue.gold > 1000 ? getRand(8, 15) : getRand(2, 5);
     amount = rogue.gold ~/ amount;
     amount += (getRand(0, 2) - 1) * (rogue.exp + g.currentLevel);
     if (amount <= 0 && rogue.gold > 0) {
@@ -167,10 +163,7 @@ void coughUp(Monster monster) {
 }
 
 bool tryToCough(int row, int col, Object obj) {
-  if (row < MIN_ROW ||
-      row > LINES - 2 ||
-      col < 0 ||
-      col > COLS - 1) {
+  if (row < MIN_ROW || row > LINES - 2 || col < 0 || col > COLS - 1) {
     return false;
   }
   if ((screen[row][col] & IS_OBJECT) == 0 &&
@@ -200,9 +193,7 @@ bool orcGold(Monster monster) {
         bool s = monsterCanGo(monster, i, j);
         monster.mFlags &= ~CAN_GO;
         if (s) {
-          moveMonsterTo(monster,
-
- i, j);
+          moveMonsterTo(monster, i, j);
           monster.mFlags |= IS_ASLEEP;
           monster.mFlags &= ~WAKENS;
           monster.identified = 1;
@@ -230,9 +221,7 @@ bool checkXeroc(Monster monster) {
   if (monster.ichar == 'X' && monster.identified != 0) {
     wakeUp(monster);
     monster.identified = 0;
-    mvaddch(
-        monster.row, monster.col, getRoomChar(screen[monster.row][monster.col],
-        monster.row, monster.col));
+    mvaddch(monster.row, monster.col, getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
     checkMessage();
     message("wait, that's a ${monsterName(monster)}!", 1);
     return true;
@@ -241,8 +230,7 @@ bool checkXeroc(Monster monster) {
 }
 
 bool hidingXeroc(int row, int col) {
-  if (g.currentLevel < XEROC1 || g.currentLevel > XEROC2 ||
-      (screen[row][col] & MONSTER) == 0) {
+  if (g.currentLevel < XEROC1 || g.currentLevel > XEROC2 || (screen[row][col] & MONSTER) == 0) {
     return false;
   }
 

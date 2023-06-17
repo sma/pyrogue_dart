@@ -162,8 +162,7 @@ String getDescription(Object obj) {
   var title = idTable[obj.whichKind].title;
 
   var k = idTable[obj.whichKind].idStatus;
-  if (k == UNIDENTIFIED &&
-      !(obj.whatIs & (WEAPON | ARMOR | WAND) != 0 && obj.identified != 0)) {
+  if (k == UNIDENTIFIED && !(obj.whatIs & (WEAPON | ARMOR | WAND) != 0 && obj.identified != 0)) {
     var kk = obj.whatIs;
     if (kk == SCROLL) {
       description += "$itemName entitled: $title";
@@ -190,8 +189,7 @@ String getDescription(Object obj) {
         description += "[${obj.clasz}]";
       }
     }
-  } else if (k == IDENTIFIED ||
-      (obj.whatIs & (WEAPON | ARMOR | WAND) != 0 && obj.identified != 0)) {
+  } else if (k == IDENTIFIED || (obj.whatIs & (WEAPON | ARMOR | WAND) != 0 && obj.identified != 0)) {
     var kk = obj.whatIs;
     if (kk == SCROLL || kk == POTION || kk == WAND) {
       description += "$itemName${idTable[obj.whichKind].real}";

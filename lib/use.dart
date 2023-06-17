@@ -89,18 +89,14 @@ void readScroll() {
     message("you can't read that", 0);
     return;
   }
-  final k = obj
-
-.whichKind;
+  final k = obj.whichKind;
   if (k == SCARE_MONSTER) {
     message("you hear a maniacal laughter in the distance", 0);
   } else if (k == HOLD_MONSTER) {
     holdMonster();
   } else if (k == ENCHANT_WEAPON) {
     if (rogue.weapon != null) {
-      message(
-          "your ${idWeapons[rogue.weapon!.whichKind].title} glows ${getEnchColor()}for a moment",
-          0);
+      message("your ${idWeapons[rogue.weapon!.whichKind].title} glows ${getEnchColor()}for a moment", 0);
       if (getRand(0, 1) != 0) {
         rogue.weapon!.toHitEnchantment += 1;
       } else {
@@ -213,9 +209,7 @@ void identify() {
       continue;
     }
     obj.identified = 1;
-    if (obj.whatIs &
-        (SCROLL | POTION | WEAPON | ARMOR | WAND) !=
-        0) {
+    if (obj.whatIs & (SCROLL | POTION | WEAPON | ARMOR | WAND) != 0) {
       final idTable = getIdTable(obj);
       idTable[obj.whichKind].idStatus = IDENTIFIED;
     }
@@ -258,10 +252,7 @@ void holdMonster() {
     for (var j = -2; j < 3; j++) {
       final row = rogue.row + i;
       final col = rogue.col + j;
-      if (row < MIN_ROW ||
-          row > LINES - 2 ||
-          col < 0 ||
-          col > COLS - 1) {
+      if (row < MIN_ROW || row > LINES - 2 || col < 0 || col > COLS - 1) {
         continue;
       }
       if ((screen[row][col] & MONSTER) != 0) {

@@ -18,8 +18,7 @@ Monster getRandomMonster() {
   int mn;
   while (true) {
     mn = getRand(0, MAXMONSTER - 1);
-    if (g.currentLevel >= monsterTab[mn].isProtected &&
-        g.currentLevel <= monsterTab[mn].isCursed) {
+    if (g.currentLevel >= monsterTab[mn].isProtected && g.currentLevel <= monsterTab[mn].isCursed) {
       break;
     }
   }
@@ -98,9 +97,7 @@ String getMonsterChar(Monster monster) {
 
 void mvMonster(Monster monster, int row, int col) {
   if (monster.mFlags & IS_ASLEEP != 0) {
-    if ((monster.mFlags & WAKENS != 0) &&
-        rogueIsAround(monster.row, monster.col) &&
-        randPercent(WAKE_PERCENT)) {
+    if ((monster.mFlags & WAKENS != 0) && rogueIsAround(monster.row, monster.col) && randPercent(WAKE_PERCENT)) {
       wakeUp(monster);
     }
     return;
@@ -192,9 +189,7 @@ void mvMonster(Monster monster, int row, int col) {
     } else if (n == 5) {
       if (tried[n] == 0 && mTry(monster, monster.row + 1, col)) {
         return;
-     
-
- }
+      }
     }
     tried[n] = 1;
   }
@@ -215,8 +210,7 @@ void moveMonsterTo(Monster monster, int row, int col) {
   var c = mvinch(monster.row, monster.col);
 
   if ('A'.codeUnitAt(0) <= c.codeUnitAt(0) && c.codeUnitAt(0) <= 'Z'.codeUnitAt(0)) {
-    mvaddch(monster.row, monster.col,
-        getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
+    mvaddch(monster.row, monster.col, getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
   }
   if (g.blind == 0 && (g.detectMonster || canSee(row, col))) {
     if (!(monster.mFlags & IS_INVIS != 0) || g.detectMonster) {
@@ -255,9 +249,7 @@ bool monsterCanGo(Monster monster, int row, int col) {
       (screen[row][col] & DOOR != 0 || screen[monster.row][monster.col] & DOOR != 0)) {
     return false;
   }
-  if (!(monster.mFlags & FLITS != 0) &&
-      !(monster.mFlags & CAN_GO != 0) &&
-      monster.trow == -1) {
+  if (!(monster.mFlags & FLITS != 0) && !(monster.mFlags & CAN_GO != 0) && monster.trow == -1) {
     if (monster.row < rogue.row && row < monster.row) return false;
     if (monster.row > rogue.row && row > monster.row) return false;
     if (monster.col < rogue.col && col < monster.col) return false;
@@ -281,12 +273,9 @@ void wakeUp(Monster monster) {
 void wakeRoom(int rn, bool entering, int row, int col) {
   var wakePercent = rn == g.partyRoom ? PARTY_WAKE_PERCENT : WAKE_PERCENT;
 
-  var monster = g
-
-.levelMonsters.nextObject;
+  var monster = g.levelMonsters.nextObject;
   while (monster != null) {
-    if ((monster.mFlags & WAKENS != 0 || rn == g.partyRoom) &&
-        rn == getRoomNumber(monster.row, monster.col)) {
+    if ((monster.mFlags & WAKENS != 0 || rn == g.partyRoom) && rn == getRoomNumber(monster.row, monster.col)) {
       if (monster.ichar == 'X' && rn == g.partyRoom) {
         monster.mFlags |= WAKENS;
       }
@@ -363,14 +352,10 @@ void createMonster() {
       if (i == 0 && j == 0) continue;
       row = rogue.row + i;
       col = rogue.col + j;
-      if (row < MIN_ROW ||
-          row > LINES - 2 ||
-          col < 0 ||
-          col > COLS - 1) {
+      if (row < MIN_ROW || row > LINES - 2 || col < 0 || col > COLS - 1) {
         continue;
       }
-      if ((screen[row][col] & MONSTER) == 0 &&
-          (screen[row][col] & (FLOOR | TUNNEL | STAIRS)) != 0) {
+      if ((screen[row][col] & MONSTER) == 0 && (screen[row][col] & (FLOOR | TUNNEL | STAIRS)) != 0) {
         found = true;
         break;
       }
@@ -519,8 +504,7 @@ void doorCourse(Monster monster, bool entering, int row, int col) {
 
 (bool, int, int) getOtherRoom(int rn, int row, int col) {
   var d = -1;
-  if (screen[row][col - 1] & HORWALL != 0 &&
-      screen[row][col + 1] & HORWALL != 0) {
+  if (screen[row][col - 1] & HORWALL != 0 && screen[row][col + 1] & HORWALL != 0) {
     if (screen[row + 1][col] & FLOOR != 0) {
       d = UP ~/ 2;
     } else {

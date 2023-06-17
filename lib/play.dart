@@ -26,8 +26,22 @@ void playLevel() {
         fight(true);
       } else if (ch == 'h' || ch == 'j' || ch == 'k' || ch == 'l' || ch == 'y' || ch == 'u' || ch == 'n' || ch == 'b') {
         singleMoveRogue(ch, true);
-      } else if (ch == 'H' || ch == 'J' || ch == 'K' || ch == 'L' || ch == 'Y' || ch == 'U' || ch == 'N' || ch == 'B' ||
-                 ch == '\x08' || ch == '\x0A' || ch == '\x0B' || ch == '\x0C' || ch == '\x1F' || ch == '\x19' || ch == '\x10' || ch == '\x02') {
+      } else if (ch == 'H' ||
+          ch == 'J' ||
+          ch == 'K' ||
+          ch == 'L' ||
+          ch == 'Y' ||
+          ch == 'U' ||
+          ch == 'N' ||
+          ch == 'B' ||
+          ch == '\x08' ||
+          ch == '\x0A' ||
+          ch == '\x0B' ||
+          ch == '\x0C' ||
+          ch == '\x1F' ||
+          ch == '\x19' ||
+          ch == '\x10' ||
+          ch == '\x02') {
         multipleMoveRogue(ch);
       } else if (ch == 'e') {
         eat();

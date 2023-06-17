@@ -235,9 +235,7 @@ void wear() {
   obj.identified = 1;
   message(getDescription(obj), 0);
   printStats();
-  registerMove
-
-();
+  registerMove();
 }
 
 void wield() {

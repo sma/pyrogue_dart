@@ -7,7 +7,7 @@ void message(String msg, [int intrpt = 0]) {
   g.cantInt = true;
   slurp();
 
-  if (g.messageCleared == false) {
+  if (!g.messageCleared) {
     mvaddstr(MIN_ROW - 1, g.messageCol, MORE);
     refresh();
     waitForAck(false);

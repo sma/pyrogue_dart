@@ -40,7 +40,7 @@ const int WAKE_PERCENT = 45;
 const int FLIT_PERCENT = 33;
 const int PARTY_WAKE_PERCENT = 75;
 
-const int XEROC1 = 16;  // levels xeroc appears at
+const int XEROC1 = 16; // levels xeroc appears at
 const int XEROC2 = 25;
 
 const int HYPOTHERMIA = 1;
@@ -210,17 +210,16 @@ class Object extends ObjHolder {
     this.clasz,
     this.identified,
     this.whichKind,
-  ) :
-    row = 0,
-    col = 0,
-    damageEnchantment = 0,
-    quiver = 0,
-    trow = 0,
-    tcol = 0,
-    toHitEnchantment = 0,
-    whatIs = 0,
-    pickedUp = 0;
-    // nextObject = null;
+  )   : row = 0,
+        col = 0,
+        damageEnchantment = 0,
+        quiver = 0,
+        trow = 0,
+        tcol = 0,
+        toHitEnchantment = 0,
+        whatIs = 0,
+        pickedUp = 0;
+  // nextObject = null;
 
   Object copy() {
     return Object(
