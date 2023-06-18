@@ -74,64 +74,55 @@ void makeRoom(int n, int r1, int r2, int r3) {
       rightCol = COL1 - 1;
       topRow = MIN_ROW;
       bottomRow = ROW1 - 1;
-      break;
     case 1:
       leftCol = COL1 + 1;
       rightCol = COL2 - 1;
       topRow = MIN_ROW;
       bottomRow = ROW1 - 1;
-      break;
     case 2:
       leftCol = COL2 + 1;
       rightCol = COLS - 1;
       topRow = MIN_ROW;
       bottomRow = ROW1 - 1;
-      break;
     case 3:
       leftCol = 0;
       rightCol = COL1 - 1;
       topRow = ROW1 + 1;
       bottomRow = ROW2 - 1;
-      break;
     case 4:
       leftCol = COL1 + 1;
       rightCol = COL2 - 1;
       topRow = ROW1 + 1;
       bottomRow = ROW2 - 1;
-      break;
     case 5:
       leftCol = COL2 + 1;
       rightCol = COLS - 1;
       topRow = ROW1 + 1;
       bottomRow = ROW2 - 1;
-      break;
     case 6:
       leftCol = 0;
       rightCol = COL1 - 1;
       topRow = ROW2 + 1;
       bottomRow = LINES - 2;
-      break;
     case 7:
       leftCol = COL1 + 1;
       rightCol = COL2 - 1;
       topRow = ROW2 + 1;
       bottomRow = LINES - 2;
-      break;
     case 8:
       leftCol = COL2 + 1;
       rightCol = COLS - 1;
       topRow = ROW2 + 1;
       bottomRow = LINES - 2;
-      break;
     default:
       throw Error();
   }
 
   if (!(n != r1 && n != r2 && n != r3 && randPercent(45))) {
-    var height = getRand(4, bottomRow - topRow + 1);
-    var width = getRand(7, rightCol - leftCol - 2);
-    var rowOffset = getRand(0, bottomRow - topRow - height + 1);
-    var colOffset = getRand(0, rightCol - leftCol - width + 1);
+    final height = getRand(4, bottomRow - topRow + 1);
+    final width = getRand(7, rightCol - leftCol - 2);
+    final rowOffset = getRand(0, bottomRow - topRow - height + 1);
+    final colOffset = getRand(0, rightCol - leftCol - width + 1);
 
     topRow += rowOffset;
     bottomRow = topRow + height - 1;
@@ -224,7 +215,7 @@ void clearLevel() {
 }
 
 void printStats() {
-  var m =
+  final m =
       "Level: ${g.currentLevel}  Gold: ${rogue.gold}  Hp: ${rogue.hpCurrent}(${rogue.hpMax})  Str: ${rogue.strengthCurrent}(${rogue.strengthMax})  Arm: ${getArmorClass(rogue.armor)}  Exp: ${rogue.exp}/${rogue.expPoints} ${g.hungerStr}";
 
   mvaddstr(LINES - 1, 0, m);
@@ -262,12 +253,10 @@ bool adjascent(int room1, int room2) {
     case DOWN:
       row = (dir == UP) ? rooms[rn].topRow : rooms[rn].bottomRow;
       col = getRand(rooms[rn].leftCol + 1, rooms[rn].rightCol - 1);
-      break;
     case LEFT:
     case RIGHT:
       row = getRand(rooms[rn].topRow + 1, rooms[rn].bottomRow - 1);
       col = (dir == LEFT) ? rooms[rn].leftCol : rooms[rn].rightCol;
-      break;
     default:
       throw Error();
   }
@@ -281,7 +270,7 @@ void drawSimplePassage(int row1, int col1, int row2, int col2, int dir) {
       (row1, row2) = (row2, row1);
       (col1, col2) = (col2, col1);
     }
-    var middle = getRand(col1 + 1, col2 - 1);
+    final middle = getRand(col1 + 1, col2 - 1);
     for (var i = col1 + 1; i < middle; i++) {
       addMask(row1, i, TUNNEL);
     }
@@ -296,7 +285,7 @@ void drawSimplePassage(int row1, int col1, int row2, int col2, int dir) {
       (row1, row2) = (row2, row1);
       (col1, col2) = (col2, col1);
     }
-    var middle = getRand(row1 + 1, row2 - 1);
+    final middle = getRand(row1 + 1, row2 - 1);
     for (var i = row1 + 1; i < middle; i++) {
       addMask(i, col1, TUNNEL);
     }
@@ -322,11 +311,11 @@ void addDeadEnds() {
     return;
   }
 
-  var start = getRand(0, MAXROOMS - 1);
-  var deadEndPercent = 12 + g.currentLevel * 2;
+  final start = getRand(0, MAXROOMS - 1);
+  final deadEndPercent = 12 + g.currentLevel * 2;
 
   for (var i = 0; i < MAXROOMS; i++) {
-    var j = (start + i) % MAXROOMS;
+    final j = (start + i) % MAXROOMS;
 
     if (rooms[j].isRoom) {
       continue;
@@ -341,8 +330,8 @@ void addDeadEnds() {
 
     var found = false;
     while (!found) {
-      var distance = getRand(8, 20);
-      var dir = getRand(0, 3) * 2;
+      final distance = getRand(8, 20);
+      final dir = getRand(0, 3) * 2;
       var j = 0;
       while (j < distance && !found) {
         if (dir == UP) {
@@ -370,12 +359,12 @@ void breakIn(int row, int col, int ch, int dir) {
   if (ch == DOOR) {
     return;
   }
-  var rn = getRoomNumber(row, col);
+  final rn = getRoomNumber(row, col);
 
   if (ch == VERTWALL) {
     if (col == rooms[rn].leftCol) {
       if (rooms[rn].doors[LEFT ~/ 2].otherRoom != NO_ROOM) {
-        var drow = doorRow(rn, LEFT);
+        final drow = doorRow(rn, LEFT);
         for (var i = row; i < drow; i++) {
           addMask(i, col - 1, TUNNEL);
         }
@@ -385,7 +374,7 @@ void breakIn(int row, int col, int ch, int dir) {
       }
     } else {
       if (rooms[rn].doors[RIGHT ~/ 2].otherRoom != NO_ROOM) {
-        var drow = doorRow(rn, RIGHT);
+        final drow = doorRow(rn, RIGHT);
         for (var i = row; i < drow; i++) {
           addMask(i, col + 1, TUNNEL);
         }
@@ -448,7 +437,7 @@ void breakIn(int row, int col, int ch, int dir) {
     }
     if (row == rooms[rn].topRow) {
       if (rooms[rn].doors[UP ~/ 2].otherRoom != NO_ROOM) {
-        var dcol = doorCol(rn, UP);
+        final dcol = doorCol(rn, UP);
         for (var i = col; i < dcol; i++) {
           addMask(row - 1, i, TUNNEL);
         }
@@ -458,7 +447,7 @@ void breakIn(int row, int col, int ch, int dir) {
       }
     } else {
       if (rooms[rn].doors[DOWN ~/ 2].otherRoom != NO_ROOM) {
-        var dcol = doorCol(rn, DOWN);
+        final dcol = doorCol(rn, DOWN);
         for (var i = col; i < dcol; i++) {
           addMask(row + 1, i, TUNNEL);
         }
@@ -475,7 +464,7 @@ int doorRow(int rn, int dir) {
     return -1;
   }
 
-  var col = (dir == LEFT) ? rooms[rn].leftCol : rooms[rn].rightCol;
+  final col = (dir == LEFT) ? rooms[rn].leftCol : rooms[rn].rightCol;
   for (var row = rooms[rn].topRow; row < rooms[rn].bottomRow; row++) {
     if ((screen[row][col] & DOOR) != 0) {
       return row;
@@ -488,7 +477,7 @@ int doorCol(int rn, int dir) {
   if (rooms[rn].doors[dir ~/ 2].otherRoom == NO_ROOM) {
     return -1;
   }
-  var row = (dir == UP) ? rooms[rn].topRow : rooms[rn].bottomRow;
+  final row = (dir == UP) ? rooms[rn].topRow : rooms[rn].bottomRow;
   for (var col = rooms[rn].leftCol; col < rooms[rn].rightCol; col++) {
     if ((screen[row][col] & DOOR) != 0) {
       return col;
@@ -499,7 +488,7 @@ int doorCol(int rn, int dir) {
 
 void putPlayer() {
   while (true) {
-    var (row, col) = getRandRowCol(FLOOR | IS_OBJECT);
+    final (row, col) = getRandRowCol(FLOOR | IS_OBJECT);
     g.currentRoom = getRoomNumber(row, col);
     if (g.currentRoom != g.partyRoom) {
       rogue.row = row;
@@ -539,10 +528,10 @@ void addExp(int e) {
   rogue.expPoints += e;
 
   if (rogue.expPoints >= levelPoints[rogue.exp - 1]) {
-    var newExp = getExpLevel(rogue.expPoints);
+    final newExp = getExpLevel(rogue.expPoints);
     for (var i = rogue.exp + 1; i <= newExp; i++) {
       message("welcome to level $i", 0);
-      var hp = getRand(3, 10);
+      final hp = getRand(3, 10);
       rogue.hpCurrent += hp;
       rogue.hpMax += hp;
       printStats();

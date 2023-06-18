@@ -46,7 +46,7 @@ void zapp() {
   registerMove();
 }
 
-Monster? getZappedMonster(final String dir, int row, int col) {
+Monster? getZappedMonster(String dir, int row, int col) {
   while (true) {
     final (r, c) = getDirRc(dir, row, col);
     if ((row == r && col == c) || (screen[r][c] & (HORWALL | VERTWALL)) != 0 || screen[r][c] == BLANK) {
@@ -60,7 +60,7 @@ Monster? getZappedMonster(final String dir, int row, int col) {
   }
 }
 
-void zapMonster(Monster monster, final int kind) {
+void zapMonster(Monster monster, int kind) {
   final row = monster.row;
   final col = monster.col;
 

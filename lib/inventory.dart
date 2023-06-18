@@ -72,9 +72,9 @@ void initItems() {
 void inventory(List<Object> pack, int mask) {
   var i = 0;
   var maxlen = 27;
-  var descriptions = List<String>.filled(MAX_PACK_COUNT + 1, "");
+  final descriptions = List<String>.filled(MAX_PACK_COUNT + 1, "");
 
-  for (var obj in pack) {
+  for (final obj in pack) {
     if ((obj.whatIs & mask) != 0) {
       descriptions[i] = " ${obj.ichar}) ${getDescription(obj)}";
       maxlen = max(maxlen, descriptions[i].length);
@@ -82,7 +82,7 @@ void inventory(List<Object> pack, int mask) {
     }
   }
   descriptions[i] = " --press space to continue--";
-  var col = COLS - maxlen - 2;
+  final col = COLS - maxlen - 2;
 
   var row = 0;
   while (row <= i && row < SROWS) {
@@ -110,9 +110,9 @@ void inventory(List<Object> pack, int mask) {
 
 void shuffleColors() {
   for (var i = 0; i < POTIONS; i++) {
-    var j = getRand(0, POTIONS - 1);
-    var k = getRand(0, POTIONS - 1);
-    var temp = idPotions[j].title;
+    final j = getRand(0, POTIONS - 1);
+    final k = getRand(0, POTIONS - 1);
+    final temp = idPotions[j].title;
     idPotions[j].title = idPotions[k].title;
     idPotions[k].title = temp;
   }
@@ -120,7 +120,7 @@ void shuffleColors() {
 
 void makeScrollTitles() {
   for (var i = 0; i < SCROLLS; i++) {
-    var sylls = getRand(2, 5);
+    final sylls = getRand(2, 5);
     var title = "'";
     for (var j = 0; j < sylls; j++) {
       title += syllables[getRand(0, MAXSYLLABLES - 1)];
@@ -149,19 +149,19 @@ String getDescription(Object obj) {
     }
   }
 
-  var itemName = nameOf(obj);
+  final itemName = nameOf(obj);
 
   if (obj.whatIs == FOOD) {
     description += "$itemName of food ";
     return description;
   }
 
-  var idTable = getIdTable(obj);
-  var title = idTable[obj.whichKind].title;
+  final idTable = getIdTable(obj);
+  final title = idTable[obj.whichKind].title;
 
-  var k = idTable[obj.whichKind].idStatus;
+  final k = idTable[obj.whichKind].idStatus;
   if (k == UNIDENTIFIED && !(obj.whatIs & (WEAPON | ARMOR | WAND) != 0 && obj.identified != 0)) {
-    var kk = obj.whatIs;
+    final kk = obj.whatIs;
     if (kk == SCROLL) {
       description += "$itemName entitled: $title";
     } else if (kk == POTION) {
@@ -180,7 +180,7 @@ String getDescription(Object obj) {
       }
     }
   } else if (k == CALLED) {
-    var kk = obj.whatIs;
+    final kk = obj.whatIs;
     if (kk == SCROLL || kk == POTION || kk == WAND) {
       description += "$itemName called $title";
       if (obj.identified != 0) {
@@ -188,7 +188,7 @@ String getDescription(Object obj) {
       }
     }
   } else if (k == IDENTIFIED || (obj.whatIs & (WEAPON | ARMOR | WAND) != 0 && obj.identified != 0)) {
-    var kk = obj.whatIs;
+    final kk = obj.whatIs;
     if (kk == SCROLL || kk == POTION || kk == WAND) {
       description += "$itemName${idTable[obj.whichKind].real}";
       if (kk == WAND && obj.identified != 0) {
@@ -213,9 +213,9 @@ String getDescription(Object obj) {
 
 void mixMetals() {
   for (var i = 0; i < MAXMETALS; i++) {
-    var j = getRand(0, MAXMETALS - 1);
-    var k = getRand(0, MAXMETALS - 1);
-    var temp = metals[j];
+    final j = getRand(0, MAXMETALS - 1);
+    final k = getRand(0, MAXMETALS - 1);
+    final temp = metals[j];
     metals[j] = metals[k];
     metals[k] = temp;
   }
@@ -225,13 +225,13 @@ void mixMetals() {
 }
 
 void singleInventory() {
-  var ch = getPackLetter("inventory what? ", IS_OBJECT);
+  final ch = getPackLetter("inventory what? ", IS_OBJECT);
 
   if (ch == CANCEL) {
     return;
   }
 
-  var obj = getLetterObject(ch);
+  final obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -241,7 +241,7 @@ void singleInventory() {
 }
 
 List<Identity> getIdTable(Object obj) {
-  var k = obj.whatIs;
+  final k = obj.whatIs;
   if (k == SCROLL) {
     return idScrolls;
   }

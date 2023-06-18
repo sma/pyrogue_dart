@@ -48,7 +48,7 @@ String getInputLine(String prompt, bool echo) {
   message(prompt, 0);
   var buf = "";
   while (true) {
-    var ch = getchar();
+    final ch = getchar();
     if (ch == CANCEL) {
       buf = "";
       break;

@@ -20,7 +20,7 @@ void killedBy(Monster? monster, int other) {
     buf = "quit";
   } else {
     buf = "killed by ";
-    var name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+    final name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
     if (isVowel(name)) {
       buf += "an ";
     } else {
@@ -102,7 +102,7 @@ void putScores(Monster? monster, int other) {
   if (!dontInsert) {
     for (var j = 0; j < i; j++) {
       if (rank > 9) {
-        var s = int.parse(scores[j].substring(8, 16));
+        final s = int.parse(scores[j].substring(8, 16));
         if (s <= rogue.gold) {
           rank = j;
         }
@@ -168,7 +168,7 @@ void insertScore(List<String> scores, int rank, int n, Monster? monster, int oth
     buf += "a total winner";
   } else {
     buf += "killed by ";
-    var name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
+    final name = monsterNames[monster!.ichar.codeUnitAt(0) - 'A'.codeUnitAt(0)];
     if (isVowel(name)) {
       buf += "an ";
     } else {
@@ -192,11 +192,11 @@ void sellPack() {
 
   clear();
 
-  for (var obj in rogue.pack) {
+  for (final obj in rogue.pack) {
     mvaddstr(1, 0, "Value      Item");
     if (obj.whatIs != FOOD) {
       obj.identified = 1;
-      var val = getValue(obj);
+      final val = getValue(obj);
       rogue.gold += val;
 
       if (rows < SROWS) {
@@ -210,7 +210,7 @@ void sellPack() {
 }
 
 int getValue(Object obj) {
-  var k = obj.whichKind;
+  final k = obj.whichKind;
   int val;
   if (k == WEAPON) {
     val = idWeapons[k].value;

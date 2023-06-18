@@ -4,7 +4,14 @@ linter:
   rules:
     constant_identifier_names: false
     omit_local_variable_types: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
 
 analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  
   errors:
     todo: ignore

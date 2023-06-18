@@ -4,7 +4,7 @@ const CURSE_MESSAGE = "you can't, it appears to be cursed";
 
 Object addToPack(Object obj, List<Object> pack, bool condense) {
   if (condense) {
-    var op = checkDuplicate(obj, pack);
+    final op = checkDuplicate(obj, pack);
     if (op != null) {
       return op;
     } else {
@@ -65,7 +65,7 @@ void drop() {
     message("You have nothing to drop", 0);
     return;
   }
-  var ch = getPackLetter("drop what? ", IS_OBJECT);
+  final ch = getPackLetter("drop what? ", IS_OBJECT);
   if (ch == CANCEL) {
     return;
   }
@@ -121,7 +121,7 @@ Object? checkDuplicate(Object obj, List<Object> pack) {
   if (!((obj.whatIs & (WEAPON | FOOD | SCROLL | POTION)) != 0)) {
     return null;
   }
-  for (var op in pack) {
+  for (final op in pack) {
     if (op.whatIs == obj.whatIs && op.whichKind == obj.whichKind) {
       if (obj.whatIs != WEAPON ||
           (obj.whatIs == WEAPON && (obj.whichKind == ARROW || obj.whichKind == SHURIKEN) && obj.quiver == op.quiver)) {
@@ -188,7 +188,7 @@ void takeOff() {
       message(CURSE_MESSAGE, 0);
     } else {
       mvAquatars();
-      var obj = rogue.armor!;
+      final obj = rogue.armor!;
       rogue.armor = null;
       message("was wearing ${getDescription(obj)}", 0);
       printStats();
@@ -204,11 +204,11 @@ void wear() {
     message("your already wearing some", 0);
     return;
   }
-  var ch = getPackLetter("wear what? ", ARMOR);
+  final ch = getPackLetter("wear what? ", ARMOR);
   if (ch == CANCEL) {
     return;
   }
-  var obj = getLetterObject(ch);
+  final obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -229,11 +229,11 @@ void wield() {
     message(CURSE_MESSAGE, 0);
     return;
   }
-  var ch = getPackLetter("wield what? ", WEAPON);
+  final ch = getPackLetter("wield what? ", WEAPON);
   if (ch == CANCEL) {
     return;
   }
-  var obj = getLetterObject(ch);
+  final obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -252,11 +252,11 @@ void wield() {
 }
 
 void callIt() {
-  var ch = getPackLetter("call what? ", SCROLL | POTION | WAND);
+  final ch = getPackLetter("call what? ", SCROLL | POTION | WAND);
   if (ch == CANCEL) {
     return;
   }
-  var obj = getLetterObject(ch);
+  final obj = getLetterObject(ch);
   if (obj == null) {
     message("No such item.", 0);
     return;
@@ -267,7 +267,7 @@ void callIt() {
   }
   final idTable = getIdTable(obj);
 
-  var buf = getInputLine("call it:", true);
+  final buf = getInputLine("call it:", true);
   if (buf != '') {
     idTable[obj.whichKind].idStatus = CALLED;
     idTable[obj.whichKind].title = buf;
@@ -277,7 +277,7 @@ void callIt() {
 int getPackCount(Object newObj) {
   var count = 0;
 
-  for (var obj in rogue.pack) {
+  for (final obj in rogue.pack) {
     if (obj.whatIs != WEAPON) {
       count += obj.quantity;
     } else {

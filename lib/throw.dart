@@ -21,13 +21,13 @@ void throwObject() {
     return;
   }
   checkMessage();
-  var weapon = getLetterObject(wch);
+  final weapon = getLetterObject(wch);
   if (weapon == null) {
     message("no such item.", 0);
     return;
   }
   if (weapon.whatIs != WEAPON) {
-    var k = getRand(0, 2);
+    final k = getRand(0, 2);
     if (k == 0) {
       message("if you don't want it, drop it!", 0);
     } else if (k == 1) {
@@ -61,8 +61,8 @@ void throwObject() {
 }
 
 bool throwAtMonster(Monster monster, Object weapon) {
-  var hitChance = getHitChance(weapon);
-  var t = weapon.quantity;
+  final hitChance = getHitChance(weapon);
+  final t = weapon.quantity;
   weapon.quantity = 1;
   g.hitMessage = "the ${nameOf(weapon)}";
   weapon.quantity = t;
@@ -115,14 +115,14 @@ bool throwAtMonster(Monster monster, Object weapon) {
 }
 
 void flopWeapon(Object weapon, int row, int col) {
-  var inc1 = getRand(0, 1) != 0 ? 1 : -1;
-  var inc2 = getRand(0, 1) != 0 ? 1 : -1;
+  final inc1 = getRand(0, 1) != 0 ? 1 : -1;
+  final inc2 = getRand(0, 1) != 0 ? 1 : -1;
   var r = row;
   var c = col;
   var found = false;
   if ((screen[r][c] & ~(FLOOR | TUNNEL | DOOR)) != 0 || (row == rogue.row && col == rogue.col)) {
-    for (var i = inc1; i < 2 * -inc1 + 1; -inc1) {
-      for (var j = inc2; j < 2 * -inc2 + 1; -inc2) {
+    for (final i = inc1; i < 2 * -inc1 + 1; -inc1) {
+      for (final j = inc2; j < 2 * -inc2 + 1; -inc2) {
         r = row + i;
         c = col + j;
         if (r > LINES - 2 || r < MIN_ROW || c > COLS - 1 || c < 0) {
@@ -148,9 +148,9 @@ void flopWeapon(Object weapon, int row, int col) {
       mvaddch(r, c, getRoomChar(screen[r][c], r, c));
     }
   } else {
-    var t = weapon.quantity;
+    final t = weapon.quantity;
     weapon.quantity = 1;
-    var msg = "the ${nameOf(weapon)} vanishes as it hits the ground";
+    final msg = "the ${nameOf(weapon)} vanishes as it hits the ground";
     weapon.quantity = t;
     message(msg, 0);
   }

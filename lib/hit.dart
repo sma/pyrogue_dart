@@ -13,7 +13,7 @@ void monsterHit(Monster monster, String? other) {
     g.interrupted = true;
   }
 
-  var mn = monsterName(monster);
+  final mn = monsterName(monster);
 
   if (!randPercent(hitChance)) {
     if (g.fightMonster == null) {
@@ -33,7 +33,7 @@ void monsterHit(Monster monster, String? other) {
   int damage;
   if (monster.ichar != 'F') {
     damage = getDamage(monster.damage, 1);
-    var minus = (getArmorClass(rogue.armor) * 3.0) / 100.0 * damage;
+    final minus = (getArmorClass(rogue.armor) * 3.0) / 100.0 * damage;
     damage -= minus.toInt();
   } else {
     damage = monster.identified;
@@ -51,7 +51,7 @@ void rogueHit(Monster monster) {
   if (checkXeroc(monster)) {
     return;
   }
-  var hitChance = getHitChance(rogue.weapon);
+  final hitChance = getHitChance(rogue.weapon);
   if (!randPercent(hitChance)) {
     if (g.fightMonster == null) {
       g.hitMessage = "you miss  ";
@@ -61,7 +61,7 @@ void rogueHit(Monster monster) {
     return;
   }
 
-  var damage = getWeaponDamage(rogue.weapon);
+  final damage = getWeaponDamage(rogue.weapon);
   if (monsterDamage(monster, damage)) {
     if (g.fightMonster == null) {
       g.hitMessage = "you hit  ";
@@ -86,12 +86,12 @@ int getDamage(String ds, int r) {
   var total = 0;
   var i = 0;
   while (i < ds.length) {
-    var n = getNumber(ds.substring(i));
+    final n = getNumber(ds.substring(i));
     while (i < ds.length && ds[i] != 'd') {
       i += 1;
     }
     i += 1;
-    var d = getNumber(ds.substring(i));
+    final d = getNumber(ds.substring(i));
     while (i < ds.length && ds[i] != '/') {
       i += 1;
     }
@@ -113,13 +113,13 @@ int getWDamage(Object? obj) {
   if (obj == null) {
     return -1;
   }
-  var toHit = getNumber(obj.damage) + obj.toHitEnchantment;
+  final toHit = getNumber(obj.damage) + obj.toHitEnchantment;
   var i = 0;
   while (i < obj.damage.length && obj.damage[i] != 'd') {
     i += 1;
   }
   i += 1;
-  var damage = getNumber(obj.damage.substring(i)) + obj.damageEnchantment;
+  final damage = getNumber(obj.damage.substring(i)) + obj.damageEnchantment;
 
   return getDamage("${toHit}d$damage", 1);
 }
@@ -155,8 +155,8 @@ int damageForStrength(int s) {
 bool monsterDamage(Monster monster, int damage) {
   monster.quantity -= damage;
   if (monster.quantity <= 0) {
-    var row = monster.row;
-    var col = monster.col;
+    final row = monster.row;
+    final col = monster.col;
     removeMask(row, col, MONSTER);
     mvaddch(row, col, getRoomChar(screen[row][col], row, col));
     refresh();
@@ -195,7 +195,7 @@ void fight(bool toTheDeath) {
     return;
   }
 
-  var (row, col) = getDirRc(ch, rogue.row, rogue.col);
+  final (row, col) = getDirRc(ch, rogue.row, rogue.col);
 
   if ((screen[row][col] & MONSTER == 0) || g.blind > 0 || hidingXeroc(row, col)) {
     //MN:
@@ -208,7 +208,7 @@ void fight(bool toTheDeath) {
     message("I see no monster there", 0);
     return;
   }
-  var possibleDamage = (getDamage(g.fightMonster!.damage, 0) * 2 / 3);
+  final possibleDamage = getDamage(g.fightMonster!.damage, 0) * 2 / 3;
 
   while (g.fightMonster != null) {
     singleMoveRogue(ch, false);
@@ -240,7 +240,7 @@ void fight(bool toTheDeath) {
 int getHitChance(Object? weapon) {
   var hitChance = 40;
   hitChance += 3 * toHit(weapon);
-  hitChance += (rogue.exp + rogue.exp);
+  hitChance += rogue.exp + rogue.exp;
   if (hitChance > 100) hitChance = 100;
   return hitChance;
 }

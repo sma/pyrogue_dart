@@ -2,7 +2,7 @@ import 'globals.dart';
 
 void lightUpRoom() {
   if (g.blind > 0) return;
-  var r = rooms[g.currentRoom];
+  final r = rooms[g.currentRoom];
   for (var i = r.topRow; i <= r.bottomRow; i++) {
     for (var j = r.leftCol; j <= r.rightCol; j++) {
       mvaddch(i, j, getRoomChar(screen[i][j], i, j));
@@ -13,14 +13,14 @@ void lightUpRoom() {
 
 void lightPassage(int row, int col) {
   if (g.blind > 0) return;
-  var iEnd = row < LINES - 2 ? 1 : 0;
-  var jEnd = col < COLS - 1 ? 1 : 0;
+  final iEnd = row < LINES - 2 ? 1 : 0;
+  final jEnd = col < COLS - 1 ? 1 : 0;
 
   for (var i = row > MIN_ROW ? -1 : 0; i <= iEnd; i++) {
     for (var j = col > 0 ? -1 : 0; j <= jEnd; j++) {
       if (isPassable(row + i, col + j)) {
-        var r = row + i;
-        var c = col + j;
+        final r = row + i;
+        final c = col + j;
         mvaddch(r, c, getRoomChar(screen[r][c], r, c));
       }
     }
@@ -29,7 +29,7 @@ void lightPassage(int row, int col) {
 
 void darkenRoom(int rn) {
   if (g.blind > 0) return;
-  var r = rooms[rn];
+  final r = rooms[rn];
   for (var i = r.topRow + 1; i < r.bottomRow; i++) {
     for (var j = r.leftCol + 1; j < r.rightCol; j++) {
       if (!isObject(i, j) && !(g.detectMonster && (screen[i][j] & MONSTER) != 0)) {
@@ -92,9 +92,9 @@ String getRoomChar(int mask, int row, int col) {
 
 (int, int) getRandRowCol(int mask) {
   while (true) {
-    var row = getRand(MIN_ROW, SROWS - 2);
-    var col = getRand(0, SCOLS - 1);
-    var rn = getRoomNumber(row, col);
+    final row = getRand(MIN_ROW, SROWS - 2);
+    final col = getRand(0, SCOLS - 1);
+    final rn = getRoomNumber(row, col);
     if ((screen[row][col] & mask) != 0 && (screen[row][col] & ~mask) == 0 && rn != NO_ROOM) {
       return (row, col);
     }
@@ -103,7 +103,7 @@ String getRoomChar(int mask, int row, int col) {
 
 int getRandRoom() {
   while (true) {
-    var i = getRand(0, MAXROOMS - 1);
+    final i = getRand(0, MAXROOMS - 1);
     if (rooms[i].isRoom) {
       return i;
     }
@@ -111,8 +111,8 @@ int getRandRoom() {
 }
 
 int fillRoomWithObjects(int rn) {
-  var r = rooms[rn];
-  var N = (r.bottomRow - r.topRow - 1) * (r.rightCol - r.leftCol - 1);
+  final r = rooms[rn];
+  final N = (r.bottomRow - r.topRow - 1) * (r.rightCol - r.leftCol - 1);
   var n = getRand(5, 10);
   if (n > N) n = N - 2;
 
@@ -124,7 +124,7 @@ int fillRoomWithObjects(int rn) {
       col = getRand(r.leftCol + 1, r.rightCol - 1);
       if (screen[row][col] == FLOOR) break;
     }
-    var obj = getRandObject();
+    final obj = getRandObject();
     putObjectAt(obj, row, col);
   }
 
@@ -133,7 +133,7 @@ int fillRoomWithObjects(int rn) {
 
 int getRoomNumber(int row, int col) {
   for (var i = 0; i < MAXROOMS; i++) {
-    var r = rooms[i];
+    final r = rooms[i];
     if (r.topRow <= row && row <= r.bottomRow && r.leftCol <= col && col <= r.rightCol) {
       return i;
     }

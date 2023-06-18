@@ -65,7 +65,7 @@ int singleMoveRogue(String dirch, bool pickup) {
       bool status;
       (obj, status) = pickUp(row, col);
       if (obj != null) {
-        var description = getDescription(obj);
+        final description = getDescription(obj);
         if (obj.whatIs == GOLD) {
           // NOT_IN_PACK:
           message(description, 1);
@@ -82,7 +82,7 @@ int singleMoveRogue(String dirch, bool pickup) {
       } else {
         // MOVE_ON:
         obj = objectAt(g.levelObjects, row, col)!;
-        var description = "moved onto ${getDescription(obj)}";
+        final description = "moved onto ${getDescription(obj)}";
         // NOT_IN_PACK:
         message(description, 1);
         registerMove();
@@ -91,7 +91,7 @@ int singleMoveRogue(String dirch, bool pickup) {
     } else {
       // MOVE_ON:
       obj = objectAt(g.levelObjects, row, col)!;
-      var description = "moved onto ${getDescription(obj)}";
+      final description = "moved onto ${getDescription(obj)}";
       // NOT_IN_PACK:
       message(description, 1);
       registerMove();
@@ -126,9 +126,9 @@ int singleMoveRogue(String dirch, bool pickup) {
 void multipleMoveRogue(String dirch) {
   if ("\x08\x0A\x0B\x0C\x19\x15\x0E\x02".contains(dirch)) {
     while (true) {
-      var row = rogue.row;
-      var col = rogue.col;
-      var m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), true);
+      final row = rogue.row;
+      final col = rogue.col;
+      final m = singleMoveRogue(String.fromCharCode(dirch.codeUnitAt(0) + 96), true);
       if (m == MOVE_FAILED || m == STOPPED_ON_SOMETHING || g.interrupted) {
         break;
       }
@@ -160,14 +160,14 @@ bool nextToSomething(int drow, int dcol) {
     return false;
   }
 
-  var iEnd = rogue.row < LINES - 2 ? 1 : 0;
-  var jEnd = rogue.col < COLS - 1 ? 1 : 0;
+  final iEnd = rogue.row < LINES - 2 ? 1 : 0;
+  final jEnd = rogue.col < COLS - 1 ? 1 : 0;
 
   for (var i = rogue.row > MIN_ROW ? -1 : 0; i < iEnd + 1; i++) {
     for (var j = rogue.col > 0 ? -1 : 0; j < jEnd + 1; j++) {
       if (i == 0 && j == 0) continue;
-      var r = rogue.row + i;
-      var c = rogue.col + j;
+      final r = rogue.row + i;
+      final c = rogue.col + j;
       if (r == drow && c == dcol) continue;
       if ((screen[r][c] & (MONSTER | IS_OBJECT)) != 0) {
         return true;
@@ -251,7 +251,7 @@ bool checkHunger() {
       message(g.hungerStr, 1);
       printStats();
     }
-    var n = getRand(0, FAINT - rogue.movesLeft);
+    final n = getRand(0, FAINT - rogue.movesLeft);
     if (n > 0) {
       fainted = true;
       if (randPercent(40)) rogue.movesLeft += 1;

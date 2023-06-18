@@ -13,7 +13,7 @@ void putObjects() {
     makeParty();
   }
   for (var i = 0; i < n; i++) {
-    var obj = getRandObject();
+    final obj = getRandObject();
     putObjectRandLocation(obj);
     addToPack(obj, g.levelObjects, false);
   }
@@ -22,11 +22,11 @@ void putObjects() {
 
 void putGold() {
   for (var i = 0; i < MAXROOMS; i++) {
-    var r = rooms[i];
+    final r = rooms[i];
     if (r.isRoom && randPercent(GOLD_PERCENT)) {
       for (var j = 0; j < 25; j++) {
-        var row = getRand(r.topRow + 1, r.bottomRow - 1);
-        var col = getRand(r.leftCol + 1, r.rightCol - 1);
+        final row = getRand(r.topRow + 1, r.bottomRow - 1);
+        final col = getRand(r.leftCol + 1, r.rightCol - 1);
         if (screen[row][col] == FLOOR || screen[row][col] == PASSAGE) {
           putGoldAt(row, col);
           break;
@@ -37,7 +37,7 @@ void putGold() {
 }
 
 void putGoldAt(int row, int col) {
-  var obj = getAnObject();
+  final obj = getAnObject();
   obj.row = row;
   obj.col = col;
   obj.whatIs = GOLD;
@@ -54,21 +54,21 @@ void putObjectAt(Object obj, int row, int col) {
 }
 
 Object? objectAt(List<Object> pack, int row, int col) {
-  for (var obj in pack) {
+  for (final obj in pack) {
     if (obj.row == row && obj.col == col) return obj;
   }
   return null;
 }
 
 Object? getLetterObject(String ch) {
-  for (var obj in rogue.pack) {
+  for (final obj in rogue.pack) {
     if (obj.ichar == ch) return obj;
   }
   return null;
 }
 
 String nameOf(Object obj) {
-  var w = obj.whatIs;
+  final w = obj.whatIs;
   if (w == SCROLL) {
     return obj.quantity > 1 ? "scrolls " : "scroll ";
   }
@@ -82,7 +82,7 @@ String nameOf(Object obj) {
     return "wand ";
   }
   if (w == WEAPON) {
-    var k = obj.whichKind;
+    final k = obj.whichKind;
     if (k == ARROW) {
       return obj.quantity > 1 ? "arrows " : "arrow ";
     }
@@ -102,7 +102,7 @@ String nameOf(Object obj) {
 }
 
 Object getRandObject() {
-  var obj = getAnObject();
+  final obj = getAnObject();
   if (g.foods < g.currentLevel / 2) {
     obj.whatIs = FOOD;
   } else {
@@ -110,7 +110,7 @@ Object getRandObject() {
   }
   obj.identified = 0;
 
-  var w = obj.whatIs;
+  final w = obj.whatIs;
   if (w == SCROLL) {
     getRandScroll(obj);
   } else if (w == POTION) {
@@ -130,7 +130,7 @@ Object getRandObject() {
 }
 
 int getRandWhatIs() {
-  var percent = getRand(1, 92);
+  final percent = getRand(1, 92);
 
   if (percent <= 30) {
     return SCROLL;
@@ -151,7 +151,7 @@ int getRandWhatIs() {
 }
 
 void getRandScroll(Object obj) {
-  var percent = getRand(0, 82);
+  final percent = getRand(0, 82);
 
   if (percent <= 5) {
     obj.whichKind = PROTECT_ARMOR;
@@ -179,7 +179,7 @@ void getRandScroll(Object obj) {
 }
 
 void getRandPotion(Object obj) {
-  var percent = getRand(1, 105);
+  final percent = getRand(1, 105);
 
   if (percent <= 5) {
     obj.whichKind = RAISE_LEVEL;
@@ -219,8 +219,8 @@ void getRandWeapon(Object obj) {
   obj.toHitEnchantment = 0;
   obj.damageEnchantment = 0;
 
-  var percent = getRand(1, obj.whichKind == LONG_SWORD ? 32 : 96);
-  var blessing = getRand(1, 3);
+  final percent = getRand(1, obj.whichKind == LONG_SWORD ? 32 : 96);
+  final blessing = getRand(1, 3);
   obj.isCursed = 0;
 
   var increment = 0;
@@ -239,7 +239,7 @@ void getRandWeapon(Object obj) {
       }
     }
   }
-  var k = obj.whichKind;
+  final k = obj.whichKind;
   if (k == BOW) {
     obj.damage = "1d2";
   } else if (k == ARROW) {
@@ -265,8 +265,8 @@ void getRandArmor(Object obj) {
   obj.isProtected = 0;
   obj.damageEnchantment = 0;
 
-  var percent = getRand(1, 100);
-  var blessing = getRand(1, 3);
+  final percent = getRand(1, 100);
+  final blessing = getRand(1, 3);
 
   if (percent <= 16) {
     obj.isCursed = 1;
@@ -287,7 +287,7 @@ void getFood(Object obj) {
 }
 
 void putStairs() {
-  var (row, col) = getRandRowCol(FLOOR | TUNNEL);
+  final (row, col) = getRandRowCol(FLOOR | TUNNEL);
   screen[row][col] = STAIRS;
 }
 
@@ -308,20 +308,20 @@ void makeParty() {
 }
 
 void showObjects() {
-  for (var obj in g.levelObjects) {
+  for (final obj in g.levelObjects) {
     mvaddch(obj.row, obj.col, getRoomChar(obj.whatIs, obj.row, obj.col));
   }
 }
 
 void putAmulet() {
-  var obj = getAnObject();
+  final obj = getAnObject();
   obj.whatIs = AMULET;
   putObjectRandLocation(obj);
   addToPack(obj, g.levelObjects, false);
 }
 
 void putObjectRandLocation(Object obj) {
-  var (row, col) = getRandRowCol(FLOOR | TUNNEL);
+  final (row, col) = getRandRowCol(FLOOR | TUNNEL);
   addMask(row, col, obj.whatIs);
   obj.row = row;
   obj.col = col;

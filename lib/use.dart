@@ -287,7 +287,7 @@ void hallucinate() {
   if (g.blind > 0) {
     return;
   }
-  for (var obj in g.levelObjects) {
+  for (final obj in g.levelObjects) {
     final ch = mvinch(obj.row, obj.col);
     if ((!isLetter(ch)) && (obj.row != rogue.row || obj.col != rogue.col)) {
       if (ch != ' ' && ch != '.' && ch != '#' && ch != '+') {
@@ -295,7 +295,7 @@ void hallucinate() {
       }
     }
   }
-  for (var obj in g.levelMonsters) {
+  for (final obj in g.levelMonsters) {
     final ch = mvinch(obj.row, obj.col);
     if (isLetter(ch)) {
       addch(String.fromCharCode(getRand('A'.codeUnitAt(0), 'Z'.codeUnitAt(0))));

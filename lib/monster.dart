@@ -1,10 +1,10 @@
 import 'globals.dart';
 
 void putMonsters() {
-  var n = getRand(3, 7);
+  final n = getRand(3, 7);
 
   for (var i = 0; i < n; i++) {
-    var monster = getRandomMonster();
+    final monster = getRandomMonster();
     if ((monster.mFlags & WANDERS) != 0 && randPercent(50)) {
       wakeUp(monster);
     }
@@ -35,7 +35,7 @@ Monster getRandomMonster() {
 }
 
 void moveMonsters() {
-  for (var monster in g.levelMonsters) {
+  for (final monster in g.levelMonsters) {
     if (monster.mFlags & HASTED != 0) {
       mvMonster(monster, rogue.row, rogue.col);
     } else if (monster.mFlags & SLOWED != 0) {
@@ -56,7 +56,7 @@ void moveMonsters() {
 }
 
 void fillRoomWithMonsters(int rn, int n) {
-  var r = rooms[rn];
+  final r = rooms[rn];
   for (var i = 0; i < n + n ~/ 2; i++) {
     if (noRoomForMonster(rn)) break;
     int row;
@@ -71,7 +71,7 @@ void fillRoomWithMonsters(int rn, int n) {
 }
 
 String getMonsterCharRowCol(int row, int col) {
-  var monster = objectAt(g.levelMonsters, row, col)!;
+  final monster = objectAt(g.levelMonsters, row, col)!;
   if ((!g.detectMonster && (monster.mFlags & IS_INVIS) != 0) || g.blind > 0) {
     return getRoomChar(screen[row][col] & ~MONSTER, row, col);
   }
@@ -161,7 +161,7 @@ void mvMonster(Monster monster, int row, int col) {
 
   final tried = List.filled(6, 0);
   for (var i = 0; i < 6; i++) {
-    var n = getRand(0, 5);
+    final n = getRand(0, 5);
     if (n == 0) {
       if (tried[n] == 0 && mTry(monster, row, monster.col - 1)) {
         return;
@@ -203,7 +203,7 @@ void moveMonsterTo(Monster monster, int row, int col) {
   addMask(row, col, MONSTER);
   removeMask(monster.row, monster.col, MONSTER);
 
-  var c = mvinch(monster.row, monster.col);
+  final c = mvinch(monster.row, monster.col);
 
   if ('A'.codeUnitAt(0) <= c.codeUnitAt(0) && c.codeUnitAt(0) <= 'Z'.codeUnitAt(0)) {
     mvaddch(monster.row, monster.col, getRoomChar(screen[monster.row][monster.col], monster.row, monster.col));
@@ -229,9 +229,9 @@ void moveMonsterTo(Monster monster, int row, int col) {
 }
 
 bool monsterCanGo(Monster monster, int row, int col) {
-  var dr = monster.row - row;
+  final dr = monster.row - row;
   if (dr <= -2 || dr >= 2) return false;
-  var dc = monster.col - col;
+  final dc = monster.col - col;
   if (dc <= -2 || dc >= 2) return false;
 
   if (screen[monster.row][col] == 0 || screen[row][monster.col] == 0) {
@@ -253,7 +253,7 @@ bool monsterCanGo(Monster monster, int row, int col) {
   }
 
   if (screen[row][col] & SCROLL != 0) {
-    var obj = objectAt(g.levelObjects, row, col);
+    final obj = objectAt(g.levelObjects, row, col);
     if (obj!.whichKind == SCARE_MONSTER) {
       return false;
     }
@@ -267,9 +267,9 @@ void wakeUp(Monster monster) {
 }
 
 void wakeRoom(int rn, bool entering, int row, int col) {
-  var wakePercent = rn == g.partyRoom ? PARTY_WAKE_PERCENT : WAKE_PERCENT;
+  final wakePercent = rn == g.partyRoom ? PARTY_WAKE_PERCENT : WAKE_PERCENT;
 
-  for (var monster in g.levelMonsters) {
+  for (final monster in g.levelMonsters) {
     if ((monster.mFlags & WAKENS != 0 || rn == g.partyRoom) && rn == getRoomNumber(monster.row, monster.col)) {
       if (monster.ichar == 'X' && rn == g.partyRoom) {
         monster.mFlags |= WAKENS;
@@ -300,8 +300,8 @@ String monsterName(Monster monster) {
 }
 
 bool rogueIsAround(int row, int col) {
-  var rdif = (row - rogue.row).abs();
-  var cdif = (col - rogue.col).abs();
+  final rdif = (row - rogue.row).abs();
+  final cdif = (col - rogue.col).abs();
   return rdif < 2 && cdif < 2;
 }
 
@@ -313,7 +313,7 @@ void startWanderer() {
   }
   wakeUp(monster);
   for (var i = 0; i < 12; i++) {
-    var (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
+    final (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
     if (!canSee(row, col)) {
       putMonsterAt(row, col, monster);
       return;
@@ -324,7 +324,7 @@ void startWanderer() {
 void showMonsters() {
   if (g.blind > 0) return;
 
-  for (var monster in g.levelMonsters) {
+  for (final monster in g.levelMonsters) {
     mvaddch(monster.row, monster.col, monster.ichar);
     if (monster.ichar == 'X') {
       monster.identified = 0;
@@ -333,8 +333,8 @@ void showMonsters() {
 }
 
 void createMonster() {
-  var inc1 = getRand(0, 1) == 1 ? 1 : -1;
-  var inc2 = getRand(0, 1) == 1 ? 1 : -1;
+  final inc1 = getRand(0, 1) == 1 ? 1 : -1;
+  final inc2 = getRand(0, 1) == 1 ? 1 : -1;
 
   var found = false;
   for (var i = inc1; i < 2 * -inc1; i -= inc1) {
@@ -353,10 +353,10 @@ void createMonster() {
       }
     }
     if (found) {
-      var monster = getRandomMonster();
+      final monster = getRandomMonster();
       putMonsterAt(row, col, monster);
       mvaddch(row, col, getMonsterChar(monster));
-      if ((monster.mFlags & WANDERS != 0)) {
+      if ((monster.mFlags & WANDERS) != 0) {
         wakeUp(monster);
       }
     } else {
@@ -380,8 +380,8 @@ bool flit(Monster monster) {
   if (!randPercent(FLIT_PERCENT)) {
     return false;
   }
-  var inc1 = getRand(0, 1) == 1 ? 1 : -1;
-  var inc2 = getRand(0, 1) == 1 ? 1 : -1;
+  final inc1 = getRand(0, 1) == 1 ? 1 : -1;
+  final inc2 = getRand(0, 1) == 1 ? 1 : -1;
 
   if (randPercent(10)) {
     return true;
@@ -389,8 +389,8 @@ bool flit(Monster monster) {
 
   for (var i = inc1; i < 2 * -inc1; i -= inc1) {
     for (var j = inc2; j < 2 * -inc2; j -= inc2) {
-      var row = monster.row + i;
-      var col = monster.col + j;
+      final row = monster.row + i;
+      final col = monster.col + j;
       if (row == rogue.row && col == rogue.col) {
         continue;
       }
@@ -403,7 +403,7 @@ bool flit(Monster monster) {
 }
 
 void putMonsterRandomLocation(Monster monster) {
-  var (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
+  final (row, col) = getRandRowCol(FLOOR | TUNNEL | IS_OBJECT);
   addMask(row, col, MONSTER);
   monster.row = row;
   monster.col = col;
@@ -414,7 +414,7 @@ String getRandomObjChar() {
 }
 
 bool noRoomForMonster(int rn) {
-  var r = rooms[rn];
+  final r = rooms[rn];
   for (var i = r.leftCol + 1; i < r.rightCol; i++) {
     for (var j = r.topRow + 1; j < r.bottomRow; j++) {
       if ((screen[j][i] & MONSTER) == 0) {
@@ -427,7 +427,7 @@ bool noRoomForMonster(int rn) {
 
 void aggravate() {
   message("you hear a high pitched humming noise");
-  for (var monster in g.levelMonsters) {
+  for (final monster in g.levelMonsters) {
     wakeUp(monster);
     if (monster.ichar == 'X') {
       monster.identified = 0;
@@ -436,7 +436,7 @@ void aggravate() {
 }
 
 bool monsterCanSee(Monster monster, int row, int col) {
-  var rn = getRoomNumber(row, col);
+  final rn = getRoomNumber(row, col);
 
   if (rn != NO_ROOM && rn == getRoomNumber(monster.row, monster.col)) {
     return true;
@@ -446,7 +446,7 @@ bool monsterCanSee(Monster monster, int row, int col) {
 }
 
 void mvAquatars() {
-  for (var monster in g.levelMonsters) {
+  for (final monster in g.levelMonsters) {
     if (monster.ichar == 'A') {
       mvMonster(monster, rogue.row, rogue.col);
     }
@@ -462,13 +462,13 @@ void doorCourse(Monster monster, bool entering, int row, int col) {
     return;
   }
 
-  var rn = getRoomNumber(row, col);
+  final rn = getRoomNumber(row, col);
 
   if (entering) {
     for (var i = 0; i < MAXROOMS; i++) {
       if (!rooms[i].isRoom || i == rn) continue;
       for (var j = 0; j < 4; j++) {
-        var d = rooms[i].doors[j];
+        final d = rooms[i].doors[j];
         if (d.otherRoom == rn) {
           monster.trow = d.otherRow;
           monster.tcol = d.otherCol;
@@ -480,7 +480,7 @@ void doorCourse(Monster monster, bool entering, int row, int col) {
       }
     }
   } else {
-    var (flag, r, c) = getOtherRoom(rn, row, col);
+    final (flag, r, c) = getOtherRoom(rn, row, col);
     if (flag) {
       monster.trow = r;
       monster.tcol = c;
