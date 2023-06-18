@@ -267,7 +267,7 @@ void callIt() {
   }
   final idTable = getIdTable(obj);
 
-  var buf = getInputLine(idTable[obj.whichKind].title, 0);
+  var buf = getInputLine("call it:", true);
   if (buf != '') {
     idTable[obj.whichKind].idStatus = CALLED;
     idTable[obj.whichKind].title = buf;

@@ -137,6 +137,11 @@ void addch(String ch) {
   if (ch == '\n') {
     _cx = 0;
     _cy++;
+  } else if (ch == '\b') {
+    if (--_cx < 0) {
+      _cx += COLS;
+      _cy--;
+    }
   } else {
     if (_cy >= 0 && _cy < LINES && _cx >= 0 && _cx < COLS) {
       _screen[_cy][_cx] = (_standout, ch);
